@@ -10,13 +10,14 @@ import com.example.tournote.Functionality.Repository.MainActivityRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.GroupData_Detailed_Model
 import kotlinx.coroutines.launch
+import android.util.Log // Added for logging potential issues
 
 class MainActivityViewModel : ViewModel() {
 
 
     private val repo = MainActivityRepository()
     val chatRepo = ChatRepository()
-    val chatView = ChatViewModel()
+    val chatView = ChatViewModel() // Consider if ChatViewModel should be initialized here or passed from UI
 
     private val _groupInfo = MutableLiveData<Result<GroupData_Detailed_Model>>()
     val groupInfo: LiveData<Result<GroupData_Detailed_Model>> = _groupInfo
@@ -29,17 +30,32 @@ class MainActivityViewModel : ViewModel() {
 
     fun loadGroup() {
         viewModelScope.launch {
-            val group = GlobalClass.GroupDetails_Everything
+            // 🔥 MODIFICATION: Find the currently selected group from the list
+            val selectedGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }
 
-            _groupId.value = group.groupID
-            _groupInfo.value = Result.success(group)
+            if (selectedGroup != null) {
+                _groupId.value = selectedGroup.groupID // Use properties of the found group
+                _groupInfo.value = Result.success(selectedGroup)
 
-            // 🔐 Now safe to call after data is ready
-            chatRepo.connectSocket(group.groupID!!)
+                // 🔐 Now safe to call after data is ready, using the found group's ID
+                selectedGroup.groupID?.let {
+                    chatRepo.connectSocket(it)
+                } ?: run {
+                    Log.e("MainActivityViewModel", "Group ID is null for selected group. Cannot connect chat socket.")
+                    _groupInfo.value = Result.failure(Exception("Selected group has no ID."))
+                }
+            } else {
+                // Handle case where selected group is not found (e.g., GlobalClass.selected_groupId is null or invalid)
+                Log.e("MainActivityViewModel", "Selected group not found in GlobalClass.GroupDetails_Everything or selected_groupId is null: ${GlobalClass.selected_groupId}")
+                _groupId.value = null
+                _groupInfo.value = Result.failure(Exception("Selected group data not found."))
+            }
         }
     }
 
     fun loadGroupValidity(valid : Boolean){
+        // This function sets the _isGroupValid LiveData based on an external 'valid' parameter.
+        // It does not fetch validity from the GlobalClass list, but rather updates the UI state.
         _isGroupValid.value=valid
     }
     fun turnOffGroupValidity(){
@@ -48,7 +64,15 @@ class MainActivityViewModel : ViewModel() {
 
     fun loadChatRoom() {
         viewModelScope.launch {
-            chatView.joinROOM(GlobalClass.GroupDetails_Everything.groupID!!)
+            // 🔥 MODIFICATION: Find the currently selected group to get its ID for the chat room
+            val selectedGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }
+
+            selectedGroup?.groupID?.let {
+                chatView.joinROOM(it)
+            } ?: run {
+                Log.e("MainActivityViewModel", "Group ID is null for selected group. Cannot join chat room.")
+                // Optionally, inform the UI about this error
+            }
         }
     }
 }

@@ -79,7 +79,7 @@ class ProfileFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         // Load the preference and set the switch state
-        val isTrackingEnabled = loadLocationTrackingPreference()
+        val isTrackingEnabled = GlobalClass.isTracking
         view?.findViewById<Switch>(R.id.switch1)?.isChecked = isTrackingEnabled
 
         // If the switch was previously enabled, ensure the service is running (e.g., if app was killed)
@@ -100,7 +100,7 @@ class ProfileFragment : Fragment() {
         val locationSwitch = view.findViewById<Switch>(R.id.switch1)
 
         // Set the initial state of the switch based on saved preference
-        locationSwitch.isChecked = loadLocationTrackingPreference()
+        locationSwitch.isChecked = GlobalClass.isTracking
 
         locationSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -137,6 +137,7 @@ class ProfileFragment : Fragment() {
      */
     private fun saveLocationTrackingPreference(isEnabled: Boolean) {
         val sharedPrefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        GlobalClass.isTracking=isEnabled
         with (sharedPrefs.edit()) {
             putBoolean(PREF_LOCATION_TRACKING_ENABLED, isEnabled)
             apply()
@@ -145,12 +146,12 @@ class ProfileFragment : Fragment() {
 
     /**
      * Load the location tracking preference from SharedPreferences
-     */
+     *//*
     private fun loadLocationTrackingPreference(): Boolean {
         val sharedPrefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
         return sharedPrefs.getBoolean(PREF_LOCATION_TRACKING_ENABLED, false) // Default to false
     }
-
+*/
     /**
      * Check if location permissions are granted
      */

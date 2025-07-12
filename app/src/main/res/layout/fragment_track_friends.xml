@@ -41,14 +41,53 @@
         android:layout_height="match_parent"
         android:background="@color/green_theme_Light_taskbar"
         android:visibility="gone"
+        android:layout_marginHorizontal="20dp"
         >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tracking functionality expired"
+            android:textSize="16sp"
+            android:textStyle="bold"
             android:textColor="@color/white"
             android:layout_gravity="center"
             />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/relTrackingReqManualOverride"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/green_theme_Light_taskbar"
+        android:visibility="gone"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="20dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tracking Functionality Disabbled"
+                android:layout_marginBottom="20dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tracking Functionality DisabbledFunctionality needs manual override from settings"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                />
+        </LinearLayout>
     </FrameLayout>
 
 

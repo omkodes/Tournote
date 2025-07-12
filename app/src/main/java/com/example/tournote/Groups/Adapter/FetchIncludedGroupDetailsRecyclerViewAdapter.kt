@@ -11,22 +11,17 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.tournote.Functionality.Activity.MainActivity
-import com.example.tournote.Functionality.Repository.MainActivityRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.DataClass.GroupInfoModel
-import com.example.tournote.Groups.ViewModel.GroupSelectorActivityViewModel
 import com.example.tournote.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+// Removed CoroutineScope and MainActivityRepository as they are no longer needed for direct data fetching here
 
 class FetchIncludedGroupDetailsRecyclerViewAdapter(
-    private val context: Context,
-    private val viewModel: GroupSelectorActivityViewModel,
-    private val coroutineScope: CoroutineScope  // 🔥 add this
+    private val context: Context
+    // Removed viewModel and coroutineScope as they are not used for direct data fetching anymore
 ) : RecyclerView.Adapter<FetchIncludedGroupDetailsRecyclerViewAdapter.ViewHolder>() {
 
     private var groupList: List<GroupInfoModel> = emptyList()
-    val repo2 = MainActivityRepository()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profilePhoto: ImageView = itemView.findViewById(R.id.imgProfilePic)
@@ -56,19 +51,13 @@ class FetchIncludedGroupDetailsRecyclerViewAdapter(
         }
 
         holder.clickable.setOnClickListener {
-            coroutineScope.launch {
-                val result = repo2.groupData(group.groupid ?: "")
-                result.onSuccess { groupData ->
-                    GlobalClass.GroupDetails_Everything = groupData
-                    val intent = Intent(context, MainActivity::class.java)
-                    //intent.putExtra("GROUP_ID", group.groupid ?: "")
-                    context.startActivity(intent)
-                }.onFailure {
-                    // Optional: show error
-                }
-            }
+            // 🔥 MODIFICATION: Just set selected_groupId and start MainActivity
+            // The actual detailed group data is already pre-loaded in GlobalClass.GroupDetails_Everything
+            GlobalClass.selected_groupId = group.groupid ?: "" // Set the selected group ID
+            val intent = Intent(context, MainActivity::class.java)
+            // No need to put "GROUP_ID" extra as MainActivity will now get it from GlobalClass.selected_groupId
+            context.startActivity(intent)
         }
-
     }
 
     override fun getItemCount(): Int = groupList.size

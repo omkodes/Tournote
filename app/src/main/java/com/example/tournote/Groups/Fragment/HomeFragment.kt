@@ -39,7 +39,7 @@ class HomeFragment : Fragment() {
 
     private fun setupRecyclerView() {
         // Initialize adapter once
-        adapter = FetchIncludedGroupDetailsRecyclerViewAdapter(requireContext(), viewModel, viewLifecycleOwner.lifecycleScope)
+        adapter = FetchIncludedGroupDetailsRecyclerViewAdapter(requireContext())
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())

@@ -68,13 +68,13 @@ class ChatsFragment : androidx.fragment.app.Fragment(), MenuActionHandler {
             startActivity(intent)
         }
 
-        group_name.text = GlobalClass.GroupDetails_Everything.name
-        if (GlobalClass.GroupDetails_Everything.profilePic == "null" || GlobalClass.GroupDetails_Everything.profilePic.isNullOrBlank()) {
+        group_name.text = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.name
+        if (GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.profilePic == "null" || GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.profilePic.isNullOrBlank()) {
             group_logo.setImageResource(R.drawable.defaultgroupimage)
         } else {
             // Load the image using Glide or any other image loading library
             com.bumptech.glide.Glide.with(this)
-                .load(GlobalClass.GroupDetails_Everything.profilePic)
+                .load(GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.profilePic)
                 .placeholder(R.drawable.defaultgroupimage)
                 .error(R.drawable.defaultgroupimage)
                 .into(group_logo)
@@ -96,7 +96,7 @@ class ChatsFragment : androidx.fragment.app.Fragment(), MenuActionHandler {
             stackFromEnd = true
         }
 
-        chatViewModel.getAllMsgFromDB(GlobalClass.GroupDetails_Everything.groupID?:"",requireContext())
+        chatViewModel.getAllMsgFromDB(GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.groupID?:"",requireContext())
         chatViewModel.messages.observe(viewLifecycleOwner) { messages ->
             val updated_msg = processMessages(messages)
             val itemList = chatViewModel.groupMessagesByDate(updated_msg)
@@ -286,10 +286,10 @@ class ChatsFragment : androidx.fragment.app.Fragment(), MenuActionHandler {
                 val userID = authViewmodel.repo.getUid()
                 if (userID != null) {
                     val user_data = authViewmodel.repo.userDetailGetLogin(userID)
-                    if (user_data != null && GlobalClass.GroupDetails_Everything.groupID != null) {
+                    if (user_data != null && GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.groupID != null) {
                         val user_name = user_data.child("name").value.toString()
                         val profile_url: String? = user_data.child("profilePic").value.toString()
-                        val group_id = GlobalClass.GroupDetails_Everything.groupID
+                        val group_id = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.groupID
                         val msg_id = chatViewModel.generateShortMessageId()
                         val msg = ChatMessage(
                             msg_content,

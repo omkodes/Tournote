@@ -36,13 +36,13 @@ class MemoriesFragment : Fragment() {
             startActivity(intent)
         }
 
-        group_name.text = GlobalClass.GroupDetails_Everything.name
-        if (GlobalClass.GroupDetails_Everything.profilePic == "null" || GlobalClass.GroupDetails_Everything.profilePic.isNullOrBlank()) {
+        group_name.text = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.name
+        if (GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.profilePic == "null" || GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.profilePic.isNullOrBlank()) {
             group_logo.setImageResource(R.drawable.defaultgroupimage)
         } else {
             // Load the image using Glide or any other image loading library
             com.bumptech.glide.Glide.with(this)
-                .load(GlobalClass.GroupDetails_Everything.profilePic)
+                .load(GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.profilePic)
                 .placeholder(R.drawable.defaultgroupimage)
                 .error(R.drawable.defaultgroupimage)
                 .into(group_logo)
