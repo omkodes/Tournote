@@ -82,7 +82,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tracking Functionality DisabbledFunctionality needs manual override from settings"
+                android:text="Functionality needs manual override from settings"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:layout_gravity="center"

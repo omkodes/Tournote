@@ -159,6 +159,21 @@
 
                     </LinearLayout>
 
+                    <RelativeLayout
+                        android:id="@+id/btnMore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:visibility="gone"
+                        >
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/more"
+                            android:layout_margin="15dp"
+                            />
+                    </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/btnSwap"
@@ -318,25 +333,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         >
-        <Button
-            android:id="@+id/btnAddMarker"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_weight="1"
-            android:text="Plot Route"
-            android:visibility="gone"
-            />
-        <Button
-            android:id="@+id/btnSmartRoute"
+            >
+            <Button
+                android:id="@+id/btnSmartRoute"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Smart Route"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Smart Route"
-            android:visibility="gone"
-            />
+            android:orientation="vertical"
+            android:layout_weight="1">
         <Button
             android:id="@+id/btnHideDirections"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Hide Directions"
@@ -344,12 +363,13 @@
             />
         <Button
             android:id="@+id/btnShowDirections"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="show directions"
             android:visibility="gone"
             />
+    </LinearLayout>
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

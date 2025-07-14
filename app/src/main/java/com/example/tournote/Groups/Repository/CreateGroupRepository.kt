@@ -1,6 +1,7 @@
 package com.example.tournote.Groups.Repository
 
 import com.example.tournote.GlobalClass
+import com.example.tournote.GroupData_Detailed_Model
 import com.example.tournote.Groups.DataClass.GroupInfoModel
 import com.example.tournote.Onboarding.Repository.authRepository
 import com.example.tournote.UserModel
@@ -159,6 +160,22 @@ class CreateGroupRepository {
 
             // Add groupId to each user's /users/{uid}/Groups/{groupId}: true
             addGroupIdToUsersByEmail(memberEmails, groupId)
+
+            // Create GroupData_Detailed_Model and append to GlobalClass.GroupDetails_Everything
+            val newGroupData = GroupData_Detailed_Model(
+                groupID = groupId,
+                name = name,
+                description = description,
+                profilePic = groupProfileUrl,
+                owner = GlobalClass.Me ?: UserModel(), // Assuming owner is current user
+                createdAt = System.currentTimeMillis(),
+                isGroupValid = true,
+                members = members,
+                admins = admins,
+                trackFriends = emptyList()
+            )
+
+            GlobalClass.GroupDetails_Everything = GlobalClass.GroupDetails_Everything + newGroupData
 
             Result.success(groupId)
         } catch (e: Exception) {

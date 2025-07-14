@@ -39,7 +39,7 @@
             height: 48px; /* Fixed height for the image container - ensures square for circle */
             aspect-ratio: 1 / 1; /* 👈 Force square ((MOST IMPORTANT TO KEEP THE SHAPE OF IMAGE BOX CIRCULAR))*/
             border-radius: 50%; /* Makes the image display as a perfect circle */
-            border: 2px solid #fff; /* White border around the image */
+            border: 2px solid #D1C6C6; /* Grey border around the image */
             box-shadow: 0 0 5px rgba(0,0,0,0.5); /* Subtle shadow for depth */
             object-fit: cover; /* **This is crucial:** Crops the image to fit the container while maintaining aspect ratio */
             object-position: center center; /* Centers the image content within the circular frame */
@@ -55,7 +55,7 @@
             height: 0;
             border-left: 6px solid transparent;
             border-right: 6px solid transparent;
-            border-top: 8px solid #fff; /* White color for the pointer */
+            border-top: 8px solid #D1C6C6; /* Grey color for the pointer */
             margin-top: 2px; /* Small gap between image and pointer */
             filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); /* Shadow for the pointer */
             z-index: 2; /* Same as image, or just below */
@@ -132,12 +132,18 @@
     // Current location is Dhule, Maharashtra, India (approximate coordinates)
     map.setView([21.1458, 79.0882], 5); // Default to a reasonable zoom level for a country/state view
 
+    // Default profile image URL
+    const DEFAULT_PROFILE_IMAGE = 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png';
+
     // Custom icon function that generates a divIcon with image and ripples
     function createProfilePicIcon(profilePicUrl) {
+        // Use the default image if profilePicUrl is not provided, empty, null, or undefined
+        var imageUrl = profilePicUrl && profilePicUrl.trim() !== '' ? profilePicUrl : DEFAULT_PROFILE_IMAGE;
+
         return L.divIcon({
             className: 'custom-marker',
             html: `
-                <img src="${profilePicUrl || 'https://via.placeholder.com/48/0000FF/FFFFFF?text=?'}" alt="Profile">
+                <img src="${imageUrl}" alt="Profile" onerror="this.src='${DEFAULT_PROFILE_IMAGE}'">
                 <div class="marker-pointer"></div>
                 <div class="location-dot"></div>
                 <div class="ripple ripple-1"></div>
@@ -220,7 +226,7 @@
 
     /**
      * Adds a new friend marker to the map. If a marker with the same ID exists, it will be updated.
-     * @param {string} id - Unique ID for the friend.
+     * @param {string} id - Unique ID for the friend. (Changed to string)
      * @param {string} name - Name of the friend.
      * @param {number} lat - Latitude of the friend's location.
      * @param {number} lng - Longitude of the friend's location.
@@ -229,8 +235,10 @@
      */
     function addFriendMarker(id, name, lat, lng, status, profilePicUrl) {
         if (friendMarkers[id]) {
-            // If marker already exists, remove it before adding a new one (to ensure icon updates)
-            map.removeLayer(friendMarkers[id]);
+            // If marker already exists, update it instead of removing and re-adding
+            updateFriendLocation(id, lat, lng, status, profilePicUrl);
+            console.log('Updated existing friend marker via add:', id, name);
+            return;
         }
 
         var marker = L.marker([lat, lng], {icon: createProfilePicIcon(profilePicUrl)}).addTo(map);
@@ -242,12 +250,13 @@
             '</div>';
         marker.bindPopup(popupContent);
         friendMarkers[id] = marker;
+        console.log('Added new friend marker:', id, name);
     }
 
     /**
      * Updates an existing friend's location and popup on the map.
      * If the friend marker does not exist, it will add a new one.
-     * @param {string} id - Unique ID for the friend.
+     * @param {string} id - Unique ID for the friend. (Changed to string)
      * @param {number} lat - New latitude of the friend's location.
      * @param {number} lng - New longitude of the friend's location.
      * @param {string} status - Friend's updated status.
@@ -262,8 +271,15 @@
             marker.setIcon(createProfilePicIcon(profilePicUrl));
 
             // Update popup content
-            // Placeholder name if actual name isn't passed for update
-            var name = marker.getPopup() ? marker.getPopup().getContent().match(/<b>👤 (.*?)<\/b>/)?.[1] || "Friend " + id : "Friend " + id;
+            // Retrieve current name from popup if available, otherwise use a placeholder
+            var name = "Friend " + id; // Default if not found
+            if (marker.getPopup() && marker.getPopup().getContent()) {
+                const match = marker.getPopup().getContent().match(/<b>👤 (.*?)<\/b>/);
+                if (match && match[1]) {
+                    name = match[1];
+                }
+            }
+
             var popupContent = '<div>' +
                 '<b>👤 ' + name + '</b><br>' +
                 '🟢 Status: ' + (status || 'online') + '<br>' +
@@ -271,21 +287,25 @@
                 '<small>⏰ Last seen: ' + new Date().toLocaleTimeString() + '</small>' +
                 '</div>';
             marker.getPopup().setContent(popupContent);
+            console.log('Updated friend marker:', id, name);
         } else {
             // If marker doesn't exist, add it as a new one
-            addFriendMarker(id, "Friend " + id, lat, lng, status, profilePicUrl);
+            console.warn('Marker with ID ' + id + ' not found for update, adding it as new.');
+            addFriendMarker(id, "Friend " + id, lat, lng, status, profilePicUrl); // Call addFriendMarker directly
         }
     }
 
     /**
      * Removes a friend's marker from the map.
-     * @param {string} id - Unique ID of the friend to remove.
+     * @param {string} id - Unique ID of the friend to remove. (Changed to string)
      */
     function removeFriendMarker(id) {
         if (friendMarkers[id]) {
             map.removeLayer(friendMarkers[id]);
             delete friendMarkers[id];
             console.log('Removed friend marker:', id);
+        } else {
+            console.log('Attempted to remove non-existent marker:', id);
         }
     }
 
@@ -324,28 +344,27 @@
     // --- Example Usage (for testing in a browser or initial load) ---
     // You would call these functions from your Android code via WebView.evaluateJavascript()
 
-    // Example: Set user location (Dhule)
-    // setUserLocation(21.1738, 74.3214, 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/National_Geographic_Lion_%286826622436%29.jpg/640px-National_Geographic_Lion_%286826622436%29.jpg');
-    // setUserLocation(21.1458, 79.0882, 'https://via.placeholder.com/48/FF0000/FFFFFF?text=YOU');
+    // Example: Set user location (Dhule) - testing with no profile URL
+    // setUserLocation(21.1738, 74.3214, '');
 
-    // Example: Add a friend
+    // Example: Add a friend with no profile URL
     // setTimeout(() => {
-    //     addFriendMarker('friend1', 'Alice', 21.1500, 79.0950, 'online', 'https://via.placeholder.com/48/00FF00/FFFFFF?text=AL');
+    //     addFriendMarker('example_uid_alice', 'Alice', 21.1500, 79.0950, 'online', '');
     // }, 2000);
 
-    // Example: Add another friend
+    // Example: Add another friend with a valid profile URL
     // setTimeout(() => {
-    //     addFriendMarker('friend2', 'Bob', 21.1400, 79.0800, 'busy', 'https://via.placeholder.com/48/0000FF/FFFFFF?text=BOB');
+    //     addFriendMarker('example_uid_bob', 'Bob', 21.1400, 79.0800, 'busy', 'https://via.placeholder.com/48/0000FF/FFFFFF?text=BOB');
     // }, 4000);
 
     // Example: Update friend's location
     // setTimeout(() => {
-    //     updateFriendLocation('friend1', 21.1600, 79.1000, 'online', 'https://via.placeholder.com/48/FFFF00/000000?text=AL');
+    //     updateFriendLocation('example_uid_alice', 21.1600, 79.1000, 'online', null);
     // }, 6000);
 
     // Example: Remove a friend
     // setTimeout(() => {
-    //     removeFriendMarker('friend2');
+    //     removeFriendMarker('example_uid_bob');
     // }, 8000);
 </script>
 </body>

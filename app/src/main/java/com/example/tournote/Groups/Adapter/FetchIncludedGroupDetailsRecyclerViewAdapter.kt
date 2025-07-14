@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.tournote.Functionality.Activity.MainActivity
 import com.example.tournote.GlobalClass
+import com.example.tournote.GroupData_Detailed_Model
 import com.example.tournote.Groups.DataClass.GroupInfoModel
 import com.example.tournote.R
 // Removed CoroutineScope and MainActivityRepository as they are no longer needed for direct data fetching here
@@ -21,7 +22,7 @@ class FetchIncludedGroupDetailsRecyclerViewAdapter(
     // Removed viewModel and coroutineScope as they are not used for direct data fetching anymore
 ) : RecyclerView.Adapter<FetchIncludedGroupDetailsRecyclerViewAdapter.ViewHolder>() {
 
-    private var groupList: List<GroupInfoModel> = emptyList()
+    private var groupList: List<GroupData_Detailed_Model> = emptyList()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profilePhoto: ImageView = itemView.findViewById(R.id.imgProfilePic)
@@ -53,7 +54,7 @@ class FetchIncludedGroupDetailsRecyclerViewAdapter(
         holder.clickable.setOnClickListener {
             // 🔥 MODIFICATION: Just set selected_groupId and start MainActivity
             // The actual detailed group data is already pre-loaded in GlobalClass.GroupDetails_Everything
-            GlobalClass.selected_groupId = group.groupid ?: "" // Set the selected group ID
+            GlobalClass.selected_groupId = group.groupID ?: "" // Set the selected group ID
             val intent = Intent(context, MainActivity::class.java)
             // No need to put "GROUP_ID" extra as MainActivity will now get it from GlobalClass.selected_groupId
             context.startActivity(intent)
@@ -63,7 +64,7 @@ class FetchIncludedGroupDetailsRecyclerViewAdapter(
     override fun getItemCount(): Int = groupList.size
 
     // Function to update the adapter data
-    fun updateGroupList(newGroupList: List<GroupInfoModel>) {
+    fun updateGroupList(newGroupList: List<GroupData_Detailed_Model>) {
         groupList = newGroupList
         notifyDataSetChanged()
     }

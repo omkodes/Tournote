@@ -2,8 +2,10 @@ package com.example.tournote.Functionality.Segments.SmartRoutePlanner.Fragment
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,6 +20,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -26,9 +29,11 @@ import com.example.tournote.Functionality.Segments.SmartRoutePlanner.Adapter.Geo
 import com.example.tournote.Functionality.Segments.SmartRoutePlanner.DataClass.GeocodingResultsDataClass
 import com.example.tournote.Functionality.Segments.SmartRoutePlanner.Adapter.RoutePointsAdapter
 import com.example.tournote.Functionality.Segments.SmartRoutePlanner.DataClass.RoutePointDataClass
+import com.example.tournote.R
 import com.example.tournote.databinding.FragmentSmartRoutePlannerBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -245,21 +250,6 @@ class SmartRoutePlannerFragment: Fragment() {
     }
 
     private fun setupButtons() {
-        // Create Route button now uses stored start, stop (if any), and end points
-        binding.btnAddMarker.setOnClickListener { // Renamed from Add Marker conceptually
-            binding.frmFullRoute.visibility=View.GONE
-
-            if (isSmartRouteEnabled && originalRoutePoints.isNotEmpty()) {
-                fullRoutePoints.clear()
-                fullRoutePoints.addAll(originalRoutePoints)
-                routePointsAdapter.updateRoutePoints(fullRoutePoints.toList()) // Update RecyclerView
-                updateStopsCountText() // Update the stop count display if needed
-            }
-
-            isSmartRouteEnabled=false
-            mediator_createRouteToDestination_ForInitialRoutes()
-
-        }
 
         binding.btnSmartRoute.setOnClickListener {
             binding.frmFullRoute.visibility=View.GONE
@@ -350,6 +340,10 @@ class SmartRoutePlannerFragment: Fragment() {
 
         binding.btnResetSearch.setOnClickListener {
             binding.txtSearch.setText("")
+        }
+
+        binding.btnMore.setOnClickListener {
+            showMoreBsFragment()
         }
 
         // Button to set start point to current location
@@ -569,6 +563,8 @@ class SmartRoutePlannerFragment: Fragment() {
                 binding.txtSearch.setText("") // Clear search box for new stop
             }
         }
+
+
         // Handle back button in search frame
         binding.btnBackToMap.setOnClickListener {
             binding.frmSearch.visibility = View.GONE
@@ -638,12 +634,60 @@ class SmartRoutePlannerFragment: Fragment() {
         }
 
         if (hasStart && hasEnd) {
-            binding.btnAddMarker.visibility = View.VISIBLE
+            binding.btnMore.visibility=View.VISIBLE
             binding.btnStops.visibility = View.VISIBLE
         } else {
-            binding.btnAddMarker.visibility = View.GONE
+            binding.btnMore.visibility=View.GONE
             binding.btnStops.visibility = View.GONE
         }
+    }
+
+    private fun showMoreBsFragment() {
+        val dialog = BottomSheetDialog(requireContext()).apply {
+            setContentView(R.layout.bsfragment_more_smartroute)
+            setCanceledOnTouchOutside(true)
+            setCancelable(true)
+        }
+
+        val share = dialog.findViewById<RelativeLayout>(R.id.btnShareRoute)
+        val google = dialog.findViewById<RelativeLayout>(R.id.btnGoogle)
+        val oldRouteSetter = dialog.findViewById<RelativeLayout>(R.id.btnOldRoute)
+
+        share?.setOnClickListener {
+            shareGoogleMapsRoute(generateRouteGoogleMapsLink())
+        }
+
+        google?.setOnClickListener {
+            val url = generateRouteGoogleMapsLink() // Your function should return a full URL as a String
+
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                setPackage("com.google.android.apps.maps")
+            }
+
+            if (intent.resolveActivity(requireContext().packageManager) != null) {
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireContext(), "Google Maps not installed", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        oldRouteSetter?.setOnClickListener {
+            binding.frmFullRoute.visibility=View.GONE
+
+            if (isSmartRouteEnabled && originalRoutePoints.isNotEmpty()) {
+                fullRoutePoints.clear()
+                fullRoutePoints.addAll(originalRoutePoints)
+                routePointsAdapter.updateRoutePoints(fullRoutePoints.toList()) // Update RecyclerView
+                updateStopsCountText() // Update the stop count display if needed
+            }
+
+            isSmartRouteEnabled=false
+            mediator_createRouteToDestination_ForInitialRoutes()
+
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun performGeocodingSearch(query: String) {
@@ -1069,6 +1113,31 @@ class SmartRoutePlannerFragment: Fragment() {
             }
         }
     }
+
+    fun generateRouteGoogleMapsLink(): String {
+        var uriString = "https://www.google.com/maps/dir/"
+        for (waypoint in fullRoutePoints) {
+            uriString += "${waypoint.latitude},${waypoint.longitude}/"
+        }
+        return uriString
+    }
+
+    fun shareGoogleMapsRoute(url : String){
+        val shareMessage = """
+    Hey! Check out this amazing road trip route planned with Tournote :
+    $url
+""".trimIndent()
+
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, shareMessage)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, "Share route via")
+        startActivity(shareIntent)
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

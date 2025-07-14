@@ -7,6 +7,7 @@ import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.example.tournote.GlobalClass
+import com.example.tournote.GroupData_Detailed_Model
 import com.example.tournote.Groups.DataClass.GroupInfoModel
 import com.example.tournote.Groups.Repository.CreateGroupRepository
 import com.example.tournote.UserModel
@@ -42,8 +43,8 @@ class GroupSelectorActivityViewModel : ViewModel() {
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    private val _groups = MutableLiveData<List<GroupInfoModel>>()
-    val groups: LiveData<List<GroupInfoModel>> = _groups
+    private val _groups = MutableLiveData<List<GroupData_Detailed_Model>>()
+    val groups: LiveData<List<GroupData_Detailed_Model>> = _groups
 
     fun navToHomeSwitch() {
         _resetUI.value=true
@@ -147,12 +148,8 @@ class GroupSelectorActivityViewModel : ViewModel() {
 
     fun fetchGroupDetails(){
         viewModelScope.launch {
-            val result= repo.fetchDetailsOfGroups()
-            result.onSuccess {  groupArray->
-                _groups.value=groupArray
-            }.onFailure {e ->
-                _error.value = e.message
-            }
+            _groups.value= GlobalClass.GroupDetails_Everything
+
         }
     }
 

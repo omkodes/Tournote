@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -42,6 +43,8 @@ class CustomSplashScreen : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.blue)
 
         GlobalClass.isTracking=loadLocationTrackingPreference()
 
@@ -130,7 +133,7 @@ class CustomSplashScreen : AppCompatActivity() {
      * Load the location tracking preference from SharedPreferences
      */
     private fun loadLocationTrackingPreference(): Boolean {
-        val sharedPrefs = this.getPreferences(Context.MODE_PRIVATE)
-        return sharedPrefs.getBoolean(PREF_LOCATION_TRACKING_ENABLED, false) // Default to false
+        val editor = getSharedPreferences("MY_SETTING", MODE_PRIVATE)
+        return editor.getBoolean(PREF_LOCATION_TRACKING_ENABLED, false)
     }
 }

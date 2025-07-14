@@ -153,6 +153,8 @@ class MainActivityRepository {
         }
     }
 
+
+
     suspend fun EnableMyTrackingOnCurrentGroup() {
         try {
             val groupID = GlobalClass.selected_groupId ?: return
@@ -233,6 +235,8 @@ class MainActivityRepository {
         }
     }
 
+
+
     suspend fun DeleteCurrentGroupFromRoot(){
         val grpId = GlobalClass.selected_groupId // Use the globally saved selected group ID
         // Need to iterate through GlobalClass.GroupDetails_Everything if it's a list
@@ -286,6 +290,20 @@ class MainActivityRepository {
             throw e
         }
     }
+
+    suspend fun DeletGroupFromMyList(){
+        val uid = GlobalClass.Me?.uid
+        val grpId = GlobalClass.selected_groupId
+
+        if(uid!=null){
+            val userRef = db.getReference("users").child(uid).child("Groups")
+            if(grpId!=null){
+                userRef.child(grpId).removeValue().await()
+            }
+        }
+    }
+
+
 
     suspend fun AddMemberToGroup(UserInfo: UserModel) {
         try {
@@ -345,6 +363,34 @@ class MainActivityRepository {
             throw e
         }
     }
+
+
+    suspend fun PramoteUserToAdmin(member : UserModel){
+        try {
+            val groupID = GlobalClass.selected_groupId ?: return
+            val email = member.email?.replace(".",",") ?: return  // prevent null call
+
+            val groupRef = db.getReference("groups").child(groupID).child("Admins")
+            groupRef.child(email).setValue(true).await()
+
+        } catch (e: Exception) {
+            Log.e("Adminship", "pramoting user to adminship: ${e.message}")
+        }
+    }
+    suspend fun DemoteUserFromAdmin(member : UserModel){
+        try {
+            val groupID = GlobalClass.selected_groupId ?: return
+            val email = member.email?.replace(".",",") ?: return  // prevent null call
+
+            val groupRef = db.getReference("groups").child(groupID).child("Admins")
+            groupRef.child(email).removeValue().await()
+
+        } catch (e: Exception) {
+            Log.e("Adminship", "Error demoting user from adminship: ${e.message}")
+        }
+    }
+
+
 
     suspend fun EndTour(){
         // Using GlobalClass.selected_groupId if it's meant to be the "current" group

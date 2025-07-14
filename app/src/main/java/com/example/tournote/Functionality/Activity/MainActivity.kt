@@ -263,7 +263,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        redirectToActivity(GroupSelectorActivity::class.java)
+        if(viewPager.currentItem==3){
+            viewPager.setCurrentItem(0, false)
+        }else{
+            redirectToActivity(GroupSelectorActivity::class.java)
+        }
     }
 
     override fun onStop() {

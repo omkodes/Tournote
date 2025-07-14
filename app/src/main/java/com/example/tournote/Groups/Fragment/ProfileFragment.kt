@@ -2,6 +2,7 @@ package com.example.tournote.Groups.Fragment
 
 import android.Manifest
 import android.content.Context // Import Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -30,6 +31,7 @@ class ProfileFragment : Fragment() {
 
     // Add this constant for SharedPreferences key
     private val PREF_LOCATION_TRACKING_ENABLED = "location_tracking_enabled"
+    var toggled = false
 
     // Location permission launcher
     private val locationPermissionLauncher = registerForActivityResult(
@@ -103,6 +105,9 @@ class ProfileFragment : Fragment() {
         locationSwitch.isChecked = GlobalClass.isTracking
 
         locationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if(!toggled){
+                toggled=true
+            }
             if (isChecked) {
                 // Switch is ON - Start location tracking
                 if (hasLocationPermissions()) {
@@ -136,12 +141,9 @@ class ProfileFragment : Fragment() {
      * Save the location tracking preference to SharedPreferences
      */
     private fun saveLocationTrackingPreference(isEnabled: Boolean) {
-        val sharedPrefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
-        GlobalClass.isTracking=isEnabled
-        with (sharedPrefs.edit()) {
-            putBoolean(PREF_LOCATION_TRACKING_ENABLED, isEnabled)
-            apply()
-        }
+        val editor=requireContext().getSharedPreferences("MY_SETTING", MODE_PRIVATE).edit()
+        editor.putBoolean(PREF_LOCATION_TRACKING_ENABLED,isEnabled)
+        editor.apply()
     }
 
     /**
@@ -193,7 +195,9 @@ class ProfileFragment : Fragment() {
                 requireContext().startService(serviceIntent)
             }
 
-            Toast.makeText(requireContext(), "Location tracking started", Toast.LENGTH_SHORT).show()
+            if(toggled){
+                Toast.makeText(requireContext(), "Location tracking started", Toast.LENGTH_SHORT).show()
+            }
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Failed to start location tracking: ${e.message}", Toast.LENGTH_SHORT).show()
             // Turn off switch and save preference if service failed to start
@@ -210,7 +214,9 @@ class ProfileFragment : Fragment() {
             val serviceIntent = Intent(requireContext(), LocationTrackingService::class.java)
             serviceIntent.action = LocationTrackingService.ACTION_STOP_LOCATION_TRACKING
             requireContext().startService(serviceIntent)
-            Toast.makeText(requireContext(), "Location tracking stopped", Toast.LENGTH_SHORT).show()
+            if(toggled){
+                Toast.makeText(requireContext(), "Location tracking stopped", Toast.LENGTH_SHORT).show()
+            }
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Failed to stop location tracking: ${e.message}", Toast.LENGTH_SHORT).show()
         }

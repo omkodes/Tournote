@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.Adapter.FetchIncludedGroupDetailsRecyclerViewAdapter
 import com.example.tournote.Groups.ViewModel.GroupSelectorActivityViewModel
 import com.example.tournote.databinding.FragmentHomeBinding
@@ -49,6 +50,7 @@ class HomeFragment : Fragment() {
 
     private fun observeViewModel() {
         // Observe groups data
+
         viewModel.groups.observe(viewLifecycleOwner) { groups ->
             adapter.updateGroupList(groups)
 
