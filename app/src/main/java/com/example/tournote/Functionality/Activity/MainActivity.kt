@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.tournote.Functionality.Adapter.FunctionalityPagerAdapter
 import com.example.tournote.Functionality.Segments.ChatRoom.Object.SocketManager
+import com.example.tournote.Functionality.Segments.Expenses.ExpensesDataClass
 import com.example.tournote.Functionality.ViewModel.MainActivityViewModel
 import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.Activity.GroupSelectorActivity
@@ -273,6 +274,9 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         Log.d("ChatDebug", "socket disconnected")
+
+        GlobalClass.expenses=emptyList<ExpensesDataClass>()
+
         SocketManager.disconnect()
     }
 

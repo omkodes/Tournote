@@ -115,4 +115,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 // Use latest
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    implementation("com.kizitonwose.calendar:view:2.7.0")
+// Check MavenCentral for the latest stable version
 }

@@ -109,6 +109,9 @@ class AddExpenseActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.btnCalender.setOnClickListener {
+
+        }
         binding.btnSave.setOnClickListener {
             if (IsEverythingNonEmpty()) {
                 // Show loading state

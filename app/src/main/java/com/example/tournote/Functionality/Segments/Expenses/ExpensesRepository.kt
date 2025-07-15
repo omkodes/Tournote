@@ -8,6 +8,9 @@ import com.cloudinary.android.callback.UploadCallback
 import com.example.tournote.GlobalClass
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import java.io.File
@@ -61,6 +64,9 @@ class ExpensesRepository {
 
         // Update group reference
         reffGroup.child(iD).setValue(true).await()
+
+        // Update global class expenses list after successfully pushing to Firebase
+        getAllExpenseAsAList()
     }
 
     /**
@@ -134,8 +140,120 @@ class ExpensesRepository {
         }
     }
 
-    suspend fun getAllExpenseAsAList(){
+    /**
+     * Fetches all expenses for the selected group and updates the global expenses list
+     */
+    suspend fun getAllExpenseAsAList() {
+        return suspendCancellableCoroutine { continuation ->
+            try {
+                val groupId = GlobalClass.selected_groupId
+                if (groupId == null) {
+                    continuation.resumeWithException(Exception("No group selected"))
+                    return@suspendCancellableCoroutine
+                }
 
+                val groupExpensesRef = db.getReference("groups").child(groupId).child("Expenses")
+
+                groupExpensesRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(groupSnapshot: DataSnapshot) {
+                        val expenseIds = mutableListOf<String>()
+
+                        // Get all expense IDs from the group
+                        for (expenseSnapshot in groupSnapshot.children) {
+                            val expenseId = expenseSnapshot.key
+                            if (expenseId != null && expenseSnapshot.getValue(Boolean::class.java) == true) {
+                                expenseIds.add(expenseId)
+                            }
+                        }
+
+                        if (expenseIds.isEmpty()) {
+                            // No expenses found, update global class with empty list
+                            GlobalClass.expenses = emptyList()
+                            continuation.resume(Unit)
+                            return
+                        }
+
+                        // Counter to track completed requests
+                        var completedRequests = 0
+                        val totalRequests = expenseIds.size
+                        val expensesList = mutableListOf<ExpensesDataClass>()
+                        var hasError = false
+
+                        // Fetch each expense details
+                        for (expenseId in expenseIds) {
+                            val expenseRef = db.getReference("expenses").child(expenseId)
+
+                            expenseRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(expenseSnapshot: DataSnapshot) {
+                                    if (hasError) return
+
+                                    try {
+                                        // Get primary details
+                                        val primaryDetails = expenseSnapshot.child("PrimaryDetails")
+                                        val locationDetails = expenseSnapshot.child("Location")
+
+                                        val details = primaryDetails.child("details").getValue(String::class.java) ?: ""
+                                        val amount = primaryDetails.child("amount").getValue(String::class.java) ?: ""
+                                        val paidBy = primaryDetails.child("paidBy").getValue(String::class.java) ?: ""
+                                        val timestamp = primaryDetails.child("timestamp").getValue(String::class.java) ?: ""
+                                        val billImageUrl = primaryDetails.child("billImageUrl").getValue(String::class.java)
+
+                                        // Get location data
+                                        val latitude = locationDetails.child("latitude").getValue(Double::class.java)
+                                        val longitude = locationDetails.child("longitude").getValue(Double::class.java)
+
+                                        val expense = ExpensesDataClass(
+                                            details = details,
+                                            amount = amount,
+                                            paidBy = paidBy,
+                                            timestamp = timestamp,
+                                            billImageUrl = billImageUrl,
+                                            latitude = latitude,
+                                            longitude = longitude
+                                        )
+
+                                        expensesList.add(expense)
+                                        completedRequests++
+
+                                        // Check if all requests are completed
+                                        if (completedRequests == totalRequests) {
+                                            // Sort expenses by timestamp (newest first)
+                                            val sortedExpenses = expensesList.sortedByDescending { it.timestamp }
+                                            GlobalClass.expenses = sortedExpenses
+                                            continuation.resume(Unit)
+                                        }
+                                    } catch (e: Exception) {
+                                        if (!hasError) {
+                                            hasError = true
+                                            continuation.resumeWithException(e)
+                                        }
+                                    }
+                                }
+
+                                override fun onCancelled(error: DatabaseError) {
+                                    if (!hasError) {
+                                        hasError = true
+                                        continuation.resumeWithException(Exception("Database error: ${error.message}"))
+                                    }
+                                }
+                            })
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        continuation.resumeWithException(Exception("Database error: ${error.message}"))
+                    }
+                })
+
+                // Handle cancellation
+                continuation.invokeOnCancellation {
+                    // Clean up if needed
+                }
+
+            } catch (e: Exception) {
+                continuation.resumeWithException(e)
+            }
+        }
     }
 
     /**
@@ -164,5 +282,4 @@ class ExpensesRepository {
             null
         }
     }
-
 }
