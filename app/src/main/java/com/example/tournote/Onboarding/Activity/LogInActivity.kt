@@ -150,6 +150,7 @@ class LogInActivity : AppCompatActivity() {
                 val name = user.displayName ?: ""
                 val userId = user.uid
                 CoroutineScope(Dispatchers.Main).launch {
+                    viewModel.saveFCM(userId)
                     val snapshot = viewModel.repo.userDetailGetLogin(userId)
                     if (snapshot == null) {
                         // Network error or permission issue

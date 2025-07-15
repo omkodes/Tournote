@@ -140,6 +140,10 @@ class TrackFriendsFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        binding.btnAlert.setOnClickListener {
+            viewModel.showAlertAPI()
+        }
+
         binding.btnPermission.setOnClickListener {
             viewModel.onPermissionGranted()
         }

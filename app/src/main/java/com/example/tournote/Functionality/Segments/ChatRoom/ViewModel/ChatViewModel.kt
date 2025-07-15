@@ -122,7 +122,8 @@ class ChatViewModel: ViewModel() {
 
         val index = messageList.indexOfFirst { it.message_id == userMessage.message_id }
         if (index != -1) {
-            messageList.removeAt(index)
+            messageList[index].message_content = "⊘ Message Deleted."
+            messageList[index].edited = false
         }
         _messages.value = messageList.toList()
 
@@ -138,7 +139,8 @@ class ChatViewModel: ViewModel() {
     }
 
     fun listenMsgDelete() {
-        repo.listenUpdate { args ->
+        repo.listenDelete { args ->
+            Log.d("ChatDebug", "Deleting message: $args")
             val data = args[0] as JSONObject
             val msg_id = data.optString("message_id")
 
@@ -146,8 +148,19 @@ class ChatViewModel: ViewModel() {
             viewModelScope.launch {
                 withContext(Dispatchers.Main) {
                     val index = messageList.indexOfFirst { it.message_id == msg_id }
+                    val msg_data = ChatMessage(
+                        message_id = msg_id,
+                        message_content = "⊘ Message Deleted.",
+                        user_name = messageList[index].user_name,
+                        group_id = messageList[index].group_id,
+                        user_id = messageList[index].user_id,
+                        timestamp = messageList[index].timestamp,
+                        edited = false,
+                        isUser = false,
+                        profile_pic = messageList[index].profile_pic
+                    )
                     if (index != -1) {
-                        messageList.removeAt(index)
+                        messageList[index] = msg_data  // Replace the element
                     }
                     _messages.value = messageList.toList()
                 }

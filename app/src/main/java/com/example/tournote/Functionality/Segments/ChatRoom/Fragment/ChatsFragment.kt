@@ -193,8 +193,10 @@ class ChatsFragment : androidx.fragment.app.Fragment(), MenuActionHandler {
                 val msg_data = chatAdapter.getSelectedMessage()
                 if (msg_data != null){
                     chatViewModel.sendDelete(msg_data)
+                    chatAdapter.clearSelection()
                     Toast.makeText(requireContext(), "Message deleted successfully", Toast.LENGTH_SHORT).show()
                 }else{
+                    chatAdapter.clearSelection()
                     Toast.makeText(requireContext(), "Message can't be delete", Toast.LENGTH_SHORT).show()
                 }
             }

@@ -80,9 +80,20 @@ class ChatAdapter(val context: Context): ListAdapter<ChatItem, RecyclerView.View
 
     // Moved formatTime function inside the class
     private fun formatTime(timestamp: Long): String {
-        val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
-        return sdf.format(Date(timestamp))
+        try {
+            // Check if timestamp looks like it's in seconds (e.g., 1699778399), convert to millis
+            val correctedTimestamp = if (timestamp < 1_000_000_000_000L) {
+                timestamp * 1000
+            } else timestamp
+
+            val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
+            return sdf.format(Date(correctedTimestamp))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return "" // fallback to empty
+        }
     }
+
 
     inner class UserMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val messageTextView = itemView.findViewById<TextView>(R.id.messageText)

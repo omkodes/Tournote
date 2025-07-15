@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="12:30"
+                android:text="12:30 PM"
                 android:textColor="#E3F2FD"
                 android:textSize="12sp" />
             <TextView

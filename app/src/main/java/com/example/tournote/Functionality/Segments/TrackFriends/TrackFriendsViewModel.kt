@@ -17,6 +17,7 @@ class TrackFriendsViewModel(application: Application) : AndroidViewModel(applica
 
     private val mainRepo = MainActivityRepository()
     private val authRepo = authRepository()
+    private val repo = TrackFriendRepository()
     private val locationRepo = LocationRepository() // Initialize LocationRepository
 
     // LiveData for UI states
@@ -379,6 +380,29 @@ class TrackFriendsViewModel(application: Application) : AndroidViewModel(applica
         _webViewCommand.value = WebViewCommand.UpdateFriendLocation(
             id, lat, lng, status, profilePicUrl
         )
+    }
+
+    fun showAlertAPI() {
+        val currentUser = GlobalClass.Me
+        val selectedGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }
+        viewModelScope.launch {
+            val result =repo.showAlertAPI(
+                currentUser?.name!!,
+                currentUser.uid!!,
+                selectedGroup?.groupID!!,
+                selectedGroup.name!!
+            )
+
+            result.fold(
+                onSuccess = { Log.d("TrackFriendsVM", "Alert API success")
+                            _errorMessage.value = "Alert sent successfully"
+                            },
+                onFailure = { Log.e("TrackFriendsVM", "Alert API failure", it)
+                    _errorMessage.value = it.message
+                }
+            )
+
+        }
     }
 
     fun removeFriendFromMap(id: Int) {

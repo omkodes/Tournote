@@ -19,6 +19,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.io.File
 
 class authViewModel: ViewModel() {
@@ -84,6 +85,8 @@ class authViewModel: ViewModel() {
             isLoading.value = true
             val result = repo.custom_login(email, pass)
             if (result.isSuccess){
+                val userID = result.getOrNull()?.user?.uid
+                saveFCM(userID?:"")
                 if (email != null) {
                     val result = repo1.getUserByMailId(email ?: "")
                     result.onSuccess { user ->
@@ -108,6 +111,7 @@ class authViewModel: ViewModel() {
             isLoading.value = true
             val result = repo.custom_signUp(email, pass)
             if (result.isSuccess) {
+                saveFCM(repo.getUid() ?: "")
                 user_dataTO_firebase(repo.getUid() ?: "", name, email, phone, profilePicUrl)
             } else {
                 isLoading.value = false
@@ -166,6 +170,23 @@ class authViewModel: ViewModel() {
             }
         }
     }
+
+    fun saveFCM(userId: String) {
+        viewModelScope.launch {
+            val result = repo.userFcmSave(userId)
+            result.fold(
+                onSuccess = {
+                    Log.d("FCM", "Saved successfully: ${it.data?.token}")
+                },
+                onFailure = {
+                    Log.e("FCM", "Error saving FCM: ${it.message}")
+                    _toastmsg.value = it.message
+                }
+            )
+        }
+
+    }
+
 
     fun clearToast() {
         _toastmsg.value = null

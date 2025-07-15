@@ -102,6 +102,28 @@
             android:id="@+id/WebView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+        <RelativeLayout
+            android:id="@+id/btnAlert"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="30dp"
+            android:clickable="true"
+            android:layout_gravity="bottom"
+            android:focusable="true"
+            android:layout_marginHorizontal="20dp"
+            android:background="@drawable/redbutton"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Give alert"
+                android:textColor="@color/black"
+                android:layout_centerInParent="true"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                />
+        </RelativeLayout>
+
 
     </FrameLayout>
 

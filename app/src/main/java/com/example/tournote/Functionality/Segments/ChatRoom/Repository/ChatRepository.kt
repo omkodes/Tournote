@@ -13,12 +13,16 @@ import retrofit2.Response
 class ChatRepository {
 
 
-    fun connectSocket(groupId: String){
+    fun connectSocket(groupId: String, userId: String) {
         SocketManager.connect()
         SocketManager.on(Socket.EVENT_CONNECT) {
             Log.d("Socket", "🎉 Connected to socket")
 
-            // 👇 Automatically join room after connecting
+            // ✅ Register the user after connection
+            SocketManager.emit("register_user", userId)
+            Log.d("Socket", "📡 Emitted register_user: $userId")
+
+            // ✅ Join the chat room
             joinRoom(JSONObject().put("id", groupId)) {
                 Log.d("Socket", "✅ Joined room $groupId: ${it?.getOrNull(0)}")
             }

@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.database.ktx)
+    implementation(libs.firebase.messaging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -107,6 +108,8 @@ dependencies {
 
     // For OkHttp (simple HTTP client)
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    implementation("com.karumi:dexter:6.2.3")
 // Use the latest version
 // For Kotlin Coroutines (for debouncing search)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")

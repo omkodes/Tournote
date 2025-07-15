@@ -2,6 +2,9 @@ package com.example.tournote.Onboarding.Repository
 
 import android.util.Log
 import com.example.tournote.Functionality.Repository.MainActivityRepository
+import com.example.tournote.Functionality.Segments.ChatRoom.DataClass.FcmResponse
+import com.example.tournote.Functionality.Segments.ChatRoom.DataClass.fcmSave
+import com.example.tournote.Functionality.Segments.ChatRoom.Object.APIClient
 import com.example.tournote.GlobalClass
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
@@ -13,8 +16,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.database
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.firestore
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -140,4 +143,31 @@ class authRepository {
         }
 
     }
+
+    suspend fun userFcmSave(userId: String): Result<FcmResponse> {
+        return try {
+            val fcmToken = FirebaseMessaging.getInstance().token.await()
+            val request = fcmSave(token = fcmToken, userId = userId)
+
+            val res = APIClient.api_fcm.saveToken(request)
+            if (res.isSuccessful) {
+                val body = res.body()
+                if (body?.success == true) {
+                    Result.success(body)
+                } else {
+                    Result.failure(Exception("FCM save failed: ${body?.error ?: body?.message}"))
+                }
+            } else {
+                val errorBody = res.errorBody()?.string()
+                Result.failure(Exception("HTTP ${res.code()} — ${errorBody ?: "Unknown error"}"))
+            }
+
+        } catch (e: Exception) {
+            Log.e("FCM_SAVE", "Exception during FCM save", e)
+            Result.failure(e)
+        }
+    }
+
+
+
 }

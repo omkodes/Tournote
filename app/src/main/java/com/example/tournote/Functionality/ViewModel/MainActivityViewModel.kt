@@ -39,7 +39,7 @@ class MainActivityViewModel : ViewModel() {
 
                 // 🔐 Now safe to call after data is ready, using the found group's ID
                 selectedGroup.groupID?.let {
-                    chatRepo.connectSocket(it)
+                    chatRepo.connectSocket(it, GlobalClass.Me?.uid.toString())
                 } ?: run {
                     Log.e("MainActivityViewModel", "Group ID is null for selected group. Cannot connect chat socket.")
                     _groupInfo.value = Result.failure(Exception("Selected group has no ID."))
