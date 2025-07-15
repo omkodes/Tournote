@@ -8,7 +8,7 @@ import io.socket.emitter.Emitter
 
 object SocketManager {
 
-    private const val SOCKET_URL = "http://192.168.0.101:3000"
+    private const val SOCKET_URL = "https://tournote-chat-backend.onrender.com"
 
     private lateinit var socket : Socket
 

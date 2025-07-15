@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide
 import com.example.tournote.Functionality.Activity.MainActivity
 import com.example.tournote.GlobalClass
 import com.example.tournote.GroupData_Detailed_Model
-import com.example.tournote.Groups.DataClass.GroupInfoModel
 import com.example.tournote.R
 // Removed CoroutineScope and MainActivityRepository as they are no longer needed for direct data fetching here
 
@@ -32,7 +31,7 @@ class FetchIncludedGroupDetailsRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context)
-            .inflate(R.layout.inclusivegroup_rvitem, parent, false)
+            .inflate(R.layout.item_inclusivegroup, parent, false)
         return ViewHolder(view)
     }
 

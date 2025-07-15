@@ -11,7 +11,6 @@ import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 
 class CreateGroupRepository {
-    private val db = Firebase.firestore
     private val repo = authRepository()
     val realDB = Firebase.database
 

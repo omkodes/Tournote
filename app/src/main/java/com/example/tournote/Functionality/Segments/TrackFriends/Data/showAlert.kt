@@ -1,4 +1,4 @@
-package com.example.tournote.Functionality.Segments.TrackFriends.data
+package com.example.tournote.Functionality.Segments.TrackFriends.Data
 
 data class showAlert(
     var user_name: String? = "",

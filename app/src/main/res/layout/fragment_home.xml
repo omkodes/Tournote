@@ -47,6 +47,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:listitem="@layout/inclusivegroup_rvitem"/>
+        tools:listitem="@layout/item_inclusivegroup"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

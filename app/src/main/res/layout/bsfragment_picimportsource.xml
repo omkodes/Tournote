@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@drawable/dialog_background"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        >
+        <RelativeLayout
+            android:id="@+id/btnCamera"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:paddingRight="40dp"
+            android:paddingLeft="40dp"
+            android:clickable="true"
+            android:layout_marginBottom="20dp"
+            android:focusable="true"
+            android:background="@drawable/greenbutton"
+            >
+            <TextView
+                android:id="@+id/txtbtnAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Take a picture"
+                android:textColor="@color/black"
+                android:layout_centerInParent="true"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/btnGallery"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:paddingRight="40dp"
+            android:paddingLeft="40dp"
+            android:layout_marginTop="5dp"
+            android:clickable="true"
+            android:layout_marginBottom="20dp"
+            android:focusable="true"
+            android:background="@drawable/greenbutton"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose from gallery"
+                android:textColor="@color/black"
+                android:layout_centerInParent="true"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/btnRemove"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:paddingRight="40dp"
+            android:paddingLeft="40dp"
+            android:layout_marginTop="5dp"
+            android:clickable="true"
+            android:layout_marginBottom="20dp"
+            android:focusable="true"
+            android:visibility="gone"
+            android:background="@drawable/greenbutton"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remove from group"
+                android:textColor="@color/black"
+                android:layout_centerInParent="true"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

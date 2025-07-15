@@ -36,7 +36,7 @@ class AddUsers_CreateGroupRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context)
-            .inflate(R.layout.searchmembers_rvitem, parent, false)
+            .inflate(R.layout.item_searchmembers, parent, false)
         return ViewHolder(view)
     }
 

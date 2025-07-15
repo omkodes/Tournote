@@ -1,22 +1,11 @@
-package com.example.tournote.Functionality.Segments.TrackFriends
+package com.example.tournote.Functionality.Segments.TrackFriends.Repository
 
 import android.util.Log
 import com.example.tournote.Functionality.Segments.ChatRoom.DataClass.FcmResponse
-import com.example.tournote.Functionality.Segments.ChatRoom.DataClass.fcmSave
 import com.example.tournote.Functionality.Segments.ChatRoom.Object.APIClient
-import com.example.tournote.Functionality.Segments.TrackFriends.data.showAlert
-import com.google.firebase.messaging.FirebaseMessaging
-import kotlinx.coroutines.tasks.await
+import com.example.tournote.Functionality.Segments.TrackFriends.Data.showAlert
 
-class TrackFriendRepository {
-
-
-
-
-
-
-
-
+class AlertRepository {
 
     suspend fun showAlertAPI(user_name: String, user_id: String,group_id: String, group_name: String): Result<FcmResponse> {
         return try {

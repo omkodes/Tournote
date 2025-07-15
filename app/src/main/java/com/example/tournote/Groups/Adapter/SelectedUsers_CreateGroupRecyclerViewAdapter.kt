@@ -33,7 +33,7 @@ class SelectedUsers_CreateGroupRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context)
-            .inflate(R.layout.selectedmembers_rvitem, parent, false)
+            .inflate(R.layout.item_selectedmembers, parent, false)
         return ViewHolder(view)
     }
 

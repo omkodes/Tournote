@@ -1,7 +1,7 @@
 package com.example.tournote.Functionality.Repository
 
 import android.util.Log
-import com.example.tournote.Functionality.Model.UserLocationData
+import com.example.tournote.Functionality.Segments.TrackFriends.Data.UserLocationData
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase

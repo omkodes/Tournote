@@ -52,14 +52,14 @@ class grpMemberAdapter(val grpList: MutableList<UserModel>, val context: Context
                 val selectedGroup = GlobalClass.GroupDetails_Everything
                     .find { it.groupID == GlobalClass.selected_groupId }
 
-                /*if (selectedGroup != null &&
+                if (selectedGroup != null &&
                     (GlobalClass.Me == selectedGroup.owner || selectedGroup.admins.contains(GlobalClass.Me))) {
                     showBottomSheet(user,position)
                 }else{
                     val intent = Intent(context, activityProfileInfo::class.java)
                     intent.putExtra("user", user)
                     context.startActivity(intent)
-                }*/
+                }
             }
 
         }
@@ -72,7 +72,7 @@ class grpMemberAdapter(val grpList: MutableList<UserModel>, val context: Context
         notifyDataSetChanged()
     }
 
-    /*private fun showBottomSheet(user: UserModel, position: Int) {
+    private fun showBottomSheet(user: UserModel, position: Int) {
         val dialog = BottomSheetDialog(context).apply {
             setContentView(R.layout.bsfragment_admin)
             setCanceledOnTouchOutside(true)
@@ -84,7 +84,9 @@ class grpMemberAdapter(val grpList: MutableList<UserModel>, val context: Context
         val btnInfo = dialog.findViewById<RelativeLayout>(R.id.btnInfo)
         val btnRemoveMember = dialog.findViewById<RelativeLayout>(R.id.btnRemove)
 
-        val isAdmin = viewModel.checkForPresence_AdminList(user)
+        btnAdmin?.visibility=View.GONE
+        btnRemoveMember?.visibility=View.VISIBLE
+        /*val isAdmin = viewModel.checkForPresence_AdminList(user)
         txtAdminAction?.text = if (isAdmin) "Remove from group admin" else "Make group admin"
 
         btnAdmin?.setOnClickListener {
@@ -96,7 +98,7 @@ class grpMemberAdapter(val grpList: MutableList<UserModel>, val context: Context
 
             notifyItemChanged(position) // ⬅️ This will rebind the item and update admin tag
             dialog.dismiss()
-        }
+        }*/
 
         btnInfo?.setOnClickListener {
             val intent = Intent(context, activityProfileInfo::class.java)
@@ -105,7 +107,7 @@ class grpMemberAdapter(val grpList: MutableList<UserModel>, val context: Context
         }
 
         dialog.show()
-    }*/
+    }
 
     override fun getItemCount(): Int {
         return grpList.size

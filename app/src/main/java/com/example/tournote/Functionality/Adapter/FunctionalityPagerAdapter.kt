@@ -7,7 +7,7 @@ import com.example.tournote.Functionality.Segments.ChatRoom.Fragment.ChatsFragme
 import com.example.tournote.Functionality.Segments.Expenses.ExpensesFragment
 import com.example.tournote.Functionality.Segments.Memories.MemoriesFragment
 import com.example.tournote.Functionality.Segments.SmartRoutePlanner.Fragment.SmartRoutePlannerFragment
-import com.example.tournote.Functionality.Segments.TrackFriends.TrackFriendsFragment
+import com.example.tournote.Functionality.Segments.TrackFriends.Fragment.TrackFriendsFragment
 
 class FunctionalityPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity){
     override fun getItemCount(): Int = 5

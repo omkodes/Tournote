@@ -1,40 +1,48 @@
-package com.example.tournote.Functionality.Segments.TrackFriends
+package com.example.tournote.Functionality.Segments.TrackFriends.Fragment
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.ConsoleMessage
+import android.webkit.ValueCallback
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.webkit.WebSettings
-import android.webkit.ValueCallback
+import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.annotation.RequiresPermission
-import com.google.android.gms.location.*
-import com.google.android.gms.tasks.CancellationTokenSource
-import com.example.tournote.R
-import android.util.Log
-import android.webkit.WebChromeClient
-import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.example.tournote.Functionality.Segments.TrackFriends.ViewModel.TrackFriendsViewModel
 import com.example.tournote.GlobalClass
+import com.example.tournote.R
 import com.example.tournote.databinding.FragmentTrackFriendsBinding
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 
 class TrackFriendsFragment : Fragment() {
 
@@ -63,7 +71,7 @@ class TrackFriendsFragment : Fragment() {
         _binding = FragmentTrackFriendsBinding.inflate(inflater, container, false)
 
         if(GlobalClass.isTracking){
-            binding.relTrackingReqManualOverride.visibility=View.GONE
+            binding.relTrackingReqManualOverride.visibility= View.GONE
             if (GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.isGroupValid == false) {
                 binding.relGroupInvalid.visibility = View.VISIBLE
             } else {
@@ -81,10 +89,10 @@ class TrackFriendsFragment : Fragment() {
                 viewModel.startTrackingFriendsInGroup()
             }
         }else{
-            binding.relTrackingReqManualOverride.visibility=View.VISIBLE
-            binding.relPermissions.visibility=View.GONE
-            binding.relWebView.visibility=View.GONE
-            binding.relGroupInvalid.visibility=View.GONE
+            binding.relTrackingReqManualOverride.visibility= View.VISIBLE
+            binding.relPermissions.visibility= View.GONE
+            binding.relWebView.visibility= View.GONE
+            binding.relGroupInvalid.visibility= View.GONE
         }
 
 
@@ -171,12 +179,12 @@ class TrackFriendsFragment : Fragment() {
         }
 
         // Enable remote debugging for WebView
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true)
         }
 
         webView.webViewClient = object : WebViewClient() {
-            override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
                 Log.d("TrackFriendsFragment", "WebView started loading: $url")
             }
@@ -191,12 +199,12 @@ class TrackFriendsFragment : Fragment() {
 
             override fun onReceivedError(
                 view: WebView?,
-                request: android.webkit.WebResourceRequest?,
-                error: android.webkit.WebResourceError?
+                request: WebResourceRequest?,
+                error: WebResourceError?
             ) {
                 super.onReceivedError(view, request, error)
 
-                val errorDescription = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                val errorDescription = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     error?.description?.toString() ?: "Unknown error"
                 } else {
                     "WebView error occurred"
@@ -223,7 +231,7 @@ class TrackFriendsFragment : Fragment() {
         }
 
         webView.webChromeClient = object : WebChromeClient() {
-            override fun onConsoleMessage(consoleMessage: android.webkit.ConsoleMessage?): Boolean {
+            override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
                 consoleMessage?.apply {
                     Log.d("WebViewConsole", "${message()} -- From ${sourceId()}:${lineNumber()}")
                 }

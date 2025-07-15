@@ -1,4 +1,4 @@
-package com.example.tournote.Functionality.Segments.TrackFriends
+package com.example.tournote.Functionality.Segments.TrackFriends.ViewModel
 
 import android.app.Application
 import android.location.Location
@@ -7,8 +7,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.tournote.Functionality.Repository.LocationRepository
 import com.example.tournote.Functionality.Repository.MainActivityRepository
-import com.example.tournote.Functionality.Repository.LocationRepository // Import new repo
+import com.example.tournote.Functionality.Segments.TrackFriends.Repository.AlertRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.Onboarding.Repository.authRepository
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ class TrackFriendsViewModel(application: Application) : AndroidViewModel(applica
 
     private val mainRepo = MainActivityRepository()
     private val authRepo = authRepository()
-    private val repo = TrackFriendRepository()
+    private val repo = AlertRepository()
     private val locationRepo = LocationRepository() // Initialize LocationRepository
 
     // LiveData for UI states

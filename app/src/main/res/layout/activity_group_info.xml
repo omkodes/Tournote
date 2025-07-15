@@ -303,7 +303,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:padding="5dp"
-                                tools:listitem="@layout/searchmembers_rvitem" />
+                                tools:listitem="@layout/item_searchmembers" />
 
                         </androidx.cardview.widget.CardView>
 

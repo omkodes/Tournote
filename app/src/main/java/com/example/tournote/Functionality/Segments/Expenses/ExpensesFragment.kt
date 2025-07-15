@@ -1,5 +1,6 @@
 package com.example.tournote.Functionality.Segments.Expenses
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -14,16 +15,23 @@ import com.example.tournote.Groups.Activity.activityGroupInfo
 import com.example.tournote.Functionality.ViewModel.MainActivityViewModel
 import com.example.tournote.GlobalClass
 import com.example.tournote.R
+import com.example.tournote.databinding.FragmentExpensesBinding
+import com.example.tournote.databinding.FragmentTrackFriendsBinding
+import kotlinx.coroutines.flow.combine
 import kotlin.getValue
 
 class ExpensesFragment : Fragment() {
 
+    private var _binding: FragmentExpensesBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: MainActivityViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        _binding = FragmentExpensesBinding.inflate(inflater, container, false)
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_expenses, container, false)
 
@@ -48,8 +56,17 @@ class ExpensesFragment : Fragment() {
                 .into(group_logo)
         }
 
-        // Inflate the layout for this fragment
-        return view
+
+        binding.btnAddExpense.setOnClickListener {
+            redirectToActivity(AddExpenseActivity::class.java)
+        }
+
+        return binding.root
+    }
+
+    private fun redirectToActivity(activityClass: Class<*>) {
+        val intent = Intent(requireContext(), activityClass)
+        startActivity(intent)
     }
 
 }

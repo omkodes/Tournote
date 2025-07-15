@@ -1,4 +1,4 @@
-package com.example.tournote.Functionality.Model // Adjust package as needed
+package com.example.tournote.Functionality.Segments.TrackFriends.Data
 
 data class UserLocationData(
     val isRefreshing: Boolean = false,
