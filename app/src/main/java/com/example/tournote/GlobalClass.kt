@@ -2,7 +2,7 @@ package com.example.tournote
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.tournote.Functionality.Segments.Expenses.ExpensesDataClass
+import com.example.tournote.Functionality.Segments.Expenses.DataClass.ExpensesDataClass
 
 object GlobalClass {
     var Me: UserModel? = null

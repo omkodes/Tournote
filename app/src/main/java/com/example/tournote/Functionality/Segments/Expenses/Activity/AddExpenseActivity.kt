@@ -1,4 +1,4 @@
-package com.example.tournote.Functionality.Segments.Expenses
+package com.example.tournote.Functionality.Segments.Expenses.Activity
 
 import android.Manifest
 import android.content.Intent
@@ -13,7 +13,6 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.RelativeLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,10 +23,10 @@ import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.tournote.Functionality.Segments.Expenses.DataClass.ExpensesDataClass
+import com.example.tournote.Functionality.Segments.Expenses.Repository.ExpensesRepository
 import com.example.tournote.GlobalClass
-import com.example.tournote.Groups.Activity.activityProfileInfo
 import com.example.tournote.R
-import com.example.tournote.UserModel
 import com.example.tournote.databinding.ActivityAddExpenseBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -35,8 +34,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+
 
 class AddExpenseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddExpenseBinding
@@ -48,6 +49,20 @@ class AddExpenseActivity : AppCompatActivity() {
     private var photoUri: Uri? = null
     private var isImageFromCamera: Boolean = false // Track image source
     private var capturedImageFile: File? = null // Store reference to captured image file
+    private var note: String? = null
+
+
+    private var selectedDate : Long?=null
+
+    private val noteLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val note = result.data?.getStringExtra("note_data")
+            if (!note.isNullOrBlank()) {
+                this.note = note
+                // Optional: update UI with this note
+            }
+        }
+    }
 
     private val ImagePickerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -82,6 +97,7 @@ class AddExpenseActivity : AppCompatActivity() {
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
         private const val CAMERA_PERMISSION_REQUEST_CODE = 2
+        const val RESULT_OK_EXPENSE_ADDED = AppCompatActivity.RESULT_OK + 1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,6 +108,7 @@ class AddExpenseActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         window.statusBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -106,12 +123,50 @@ class AddExpenseActivity : AppCompatActivity() {
         checkLocationPermission()
 
         binding.btnCloseActivity.setOnClickListener {
+            setResult(RESULT_OK_EXPENSE_ADDED)
             finish()
         }
 
-        binding.btnCalender.setOnClickListener {
 
+        binding.btnNote.setOnClickListener {
+            val intent = Intent(this, ExpenseNoteActivity::class.java)
+            noteLauncher.launch(intent)
         }
+
+
+        binding.btnCalender.setOnClickListener {
+            binding.rellayoutCalender.visibility=View.VISIBLE
+        }
+
+        binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.YEAR, year)
+            calendar.set(Calendar.MONTH, month)
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+            // Set time to 12:00 PM
+            calendar.set(Calendar.HOUR_OF_DAY, 12)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+
+            // Get the formatted date
+            val sdf = SimpleDateFormat("MMM d", Locale.getDefault())
+            val formattedDate = sdf.format(calendar.time)
+
+            // Set formatted date in TextView
+            binding.txtSelectedDate.text = formattedDate
+
+            // Save the timestamp at 12:00 PM
+             selectedDate = calendar.timeInMillis
+            // You can now use selectedTimestamp to store or pass the selected date
+
+            // Hide calendar
+            binding.rellayoutCalender.visibility = View.GONE
+        }
+
+
+
         binding.btnSave.setOnClickListener {
             if (IsEverythingNonEmpty()) {
                 // Show loading state
@@ -134,13 +189,15 @@ class AddExpenseActivity : AppCompatActivity() {
 
                         // Create expense details
                         val expense = ExpensesDataClass(
+                            "null",
                             binding.txtDescription.text.toString(),
                             binding.txtAmount.text.toString(),
                             (GlobalClass.Me?.uid)!!,
-                            System.currentTimeMillis().toString(),
+                             (if (selectedDate == null) System.currentTimeMillis().toString() else selectedDate.toString()),
                             imageUrl,// Add image URL to expense data
                             savedLatitude,
-                            savedLongitude
+                            savedLongitude,
+                            note
                         )
 
                         repo.pushExpenseToFirebase(expense)
@@ -238,6 +295,11 @@ class AddExpenseActivity : AppCompatActivity() {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
             CameraLauncher.launch(intent)
         }
+    }
+
+    private fun redirectToActivity(activityClass: Class<*>) {
+        val intent = Intent(this, activityClass)
+        startActivity(intent)
     }
 
     private fun createImageFile(): Uri? {
@@ -384,6 +446,12 @@ class AddExpenseActivity : AppCompatActivity() {
     }
 
     private fun IsEverythingNonEmpty(): Boolean {
+        if(binding.txtDescription.text.isNullOrEmpty()){
+            Toast.makeText(this, "Description field cannot be empty.", Toast.LENGTH_SHORT).show()
+        }
+        if(binding.txtAmount.text.isNullOrEmpty()){
+            Toast.makeText(this, "Amount field cannot be empty.", Toast.LENGTH_SHORT).show()
+        }
         return binding.txtDescription.text.isNotEmpty() && binding.txtAmount.text.isNotEmpty()
     }
 

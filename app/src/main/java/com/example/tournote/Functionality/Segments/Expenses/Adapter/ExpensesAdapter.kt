@@ -1,18 +1,23 @@
-package com.example.tournote.Functionality.Segments.Expenses
+package com.example.tournote.Functionality.Segments.Expenses.Adapter
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tournote.Functionality.Segments.Expenses.Activity.ExpenseInfoActivity
+import com.example.tournote.Functionality.Segments.Expenses.SealedClass.ExpenseListItem
+import com.example.tournote.Functionality.Segments.Expenses.DataClass.ExpensesDataClass
 import com.example.tournote.GlobalClass
 import com.example.tournote.R
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -45,26 +50,14 @@ class ExpensesAdapter : ListAdapter<ExpenseListItem, RecyclerView.ViewHolder>(Ex
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        // Bind data based on the item type
-        when (holder.itemViewType) {
-            ITEM_TYPE_EXPENSE -> {
-                val expenseItem = getItem(position) as ExpenseListItem.ExpenseItem
-                (holder as ExpenseViewHolder).bind(expenseItem.expense)
-            }
-            ITEM_TYPE_HEADER -> {
-                val headerItem = getItem(position) as ExpenseListItem.MonthHeader
-                (holder as MonthHeaderViewHolder).bind(headerItem.monthYear)
-            }
-        }
-    }
-
     // Existing ViewHolder for individual expense items
     inner class ExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val txtMonth: TextView = itemView.findViewById(R.id.txtMonth)
         private val txtDate: TextView = itemView.findViewById(R.id.txtDate)
         private val txtDescription: TextView = itemView.findViewById(R.id.txtDescription)
         private val txtWhoPaidToWhom: TextView = itemView.findViewById(R.id.txtWhoPaidToWhom)
+
+        val body : ConstraintLayout = itemView.findViewById(R.id.itemBody)
 
         fun bind(expense: ExpensesDataClass) {
             val timestampLong = expense.timestamp.toLongOrNull()
@@ -102,6 +95,31 @@ class ExpensesAdapter : ListAdapter<ExpenseListItem, RecyclerView.ViewHolder>(Ex
 
         }
     }
+
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder.itemViewType) {
+            ITEM_TYPE_EXPENSE -> {
+                val expenseItem = getItem(position) as ExpenseListItem.ExpenseItem
+                val expense = expenseItem.expense
+                (holder as ExpenseViewHolder).bind(expense)
+
+                holder.body.setOnClickListener {
+                    val context = holder.itemView.context // ✅ correct context
+                    val intent = Intent(context, ExpenseInfoActivity::class.java)
+                    intent.putExtra("expenseId", expense.expenseId) // ✅ pass the ID
+                    context.startActivity(intent)
+                }
+            }
+
+            ITEM_TYPE_HEADER -> {
+                val headerItem = getItem(position) as ExpenseListItem.MonthHeader
+                (holder as MonthHeaderViewHolder).bind(headerItem.monthYear)
+            }
+        }
+    }
+
+
 
     // NEW: ViewHolder for the Month/Year Header
     inner class MonthHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

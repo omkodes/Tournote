@@ -1,16 +1,17 @@
-package com.example.tournote.Functionality.Segments.Expenses
+package com.example.tournote.Functionality.Segments.Expenses.Repository
 
 import android.content.Context
 import android.net.Uri
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
+import com.example.tournote.Functionality.Segments.Expenses.DataClass.ExpensesDataClass
 import com.example.tournote.GlobalClass
 import com.google.firebase.Firebase
-import com.google.firebase.database.database
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import java.io.File
@@ -41,13 +42,15 @@ class ExpensesRepository {
 
         // Create expense data without location for PrimaryDetails
         val expenseWithoutLocation = ExpensesDataClass(
+            expenseId = iD,
             details = expense.details,
             amount = expense.amount,
             paidBy = expense.paidBy,
             timestamp = expense.timestamp,
             billImageUrl = expense.billImageUrl,
             latitude = null,
-            longitude = null
+            longitude = null,
+            note = expense.note?:null
         )
 
         // Save primary details without location
@@ -192,24 +195,35 @@ class ExpensesRepository {
                                         val primaryDetails = expenseSnapshot.child("PrimaryDetails")
                                         val locationDetails = expenseSnapshot.child("Location")
 
-                                        val details = primaryDetails.child("details").getValue(String::class.java) ?: ""
-                                        val amount = primaryDetails.child("amount").getValue(String::class.java) ?: ""
-                                        val paidBy = primaryDetails.child("paidBy").getValue(String::class.java) ?: ""
-                                        val timestamp = primaryDetails.child("timestamp").getValue(String::class.java) ?: ""
-                                        val billImageUrl = primaryDetails.child("billImageUrl").getValue(String::class.java)
+                                        val details = primaryDetails.child("details")
+                                            .getValue(String::class.java) ?: ""
+                                        val amount = primaryDetails.child("amount")
+                                            .getValue(String::class.java) ?: ""
+                                        val paidBy = primaryDetails.child("paidBy")
+                                            .getValue(String::class.java) ?: ""
+                                        val timestamp = primaryDetails.child("timestamp")
+                                            .getValue(String::class.java) ?: ""
+                                        val billImageUrl = primaryDetails.child("billImageUrl")
+                                            .getValue(String::class.java)
+                                        val note = primaryDetails.child("note")
+                                            .getValue(String::class.java)
 
                                         // Get location data
-                                        val latitude = locationDetails.child("latitude").getValue(Double::class.java)
-                                        val longitude = locationDetails.child("longitude").getValue(Double::class.java)
+                                        val latitude = locationDetails.child("latitude")
+                                            .getValue(Double::class.java)
+                                        val longitude = locationDetails.child("longitude")
+                                            .getValue(Double::class.java)
 
                                         val expense = ExpensesDataClass(
+                                            expenseId = expenseId,
                                             details = details,
                                             amount = amount,
                                             paidBy = paidBy,
                                             timestamp = timestamp,
                                             billImageUrl = billImageUrl,
                                             latitude = latitude,
-                                            longitude = longitude
+                                            longitude = longitude,
+                                            note = note
                                         )
 
                                         expensesList.add(expense)
@@ -218,7 +232,8 @@ class ExpensesRepository {
                                         // Check if all requests are completed
                                         if (completedRequests == totalRequests) {
                                             // Sort expenses by timestamp (newest first)
-                                            val sortedExpenses = expensesList.sortedByDescending { it.timestamp }
+                                            val sortedExpenses =
+                                                expensesList.sortedByDescending { it.timestamp }
                                             GlobalClass.expenses = sortedExpenses
                                             continuation.resume(Unit)
                                         }
@@ -266,7 +281,8 @@ class ExpensesRepository {
         return try {
             val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
             inputStream?.let {
-                val tempFile = File(context.cacheDir, "temp_image_${System.currentTimeMillis()}.jpg")
+                val tempFile =
+                    File(context.cacheDir, "temp_image_${System.currentTimeMillis()}.jpg")
                 val outputStream = FileOutputStream(tempFile)
 
                 inputStream.use { input ->
