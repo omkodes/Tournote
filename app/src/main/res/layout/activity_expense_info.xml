@@ -8,7 +8,6 @@
     tools:context=".Functionality.Segments.Expenses.Activity.ExpenseInfoActivity"
     android:background="@color/green_theme_Light">
 
-    <!-- Toolbar -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -59,11 +58,11 @@
             android:layout_gravity="center_vertical"
             android:layout_marginVertical="4dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btnEdit"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginRight="10dp"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-        <ImageView
+        <!--<ImageView
             android:layout_width="wrap_content"
             android:id="@+id/btnEdit"
             android:layout_height="wrap_content"
@@ -74,7 +73,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
-
+-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
@@ -180,14 +179,12 @@
                 android:text="Added by you on 17 July 2025"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"/>
 
-            <!--share display-->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -226,7 +223,17 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Bill Preview Section -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewSplitMembers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_split_member"
+                android:layout_marginTop="-5dp"
+                android:visibility="gone"/>
+
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardBillPreview"
                 android:layout_width="match_parent"
@@ -246,7 +253,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Map WebView Section -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardWebView"
                 android:layout_width="match_parent"

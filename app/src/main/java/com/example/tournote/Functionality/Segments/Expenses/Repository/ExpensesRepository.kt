@@ -1,3 +1,4 @@
+// File: com.example.tournote.Functionality.Segments.Expenses.Repository.kt
 package com.example.tournote.Functionality.Segments.Expenses.Repository
 
 import android.content.Context
@@ -6,6 +7,8 @@ import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.example.tournote.Functionality.Segments.Expenses.DataClass.ExpensesDataClass
+import com.example.tournote.Functionality.Segments.Expenses.DataClass.MemberShare
+import com.example.tournote.Functionality.Segments.Expenses.DataClass.SplitType
 import com.example.tournote.GlobalClass
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
@@ -19,6 +22,7 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.collections.ArrayList // Explicitly import ArrayList
 
 class ExpensesRepository {
 
@@ -28,33 +32,42 @@ class ExpensesRepository {
         val reff = db.getReference("expenses")
         val reffGroup = db.getReference("groups").child(GlobalClass.selected_groupId!!).child("Expenses")
 
-        /*utility of "!!"
-        :
-
-        "I, the developer, am absolutely certain that this value will not be null at this point in the execution."
-
-        "Therefore, treat this expression as its non-nullable type."*/
-
         val iD = reff.push().key
 
-        val reffMain = reff.child(iD!!).child("PrimaryDetails")
-        val reffLocation = reff.child(iD).child("Location")
+        if (iD == null) {
+            throw Exception("Failed to generate unique expense ID.")
+        }
 
-        // Create expense data without location for PrimaryDetails
-        val expenseWithoutLocation = ExpensesDataClass(
-            expenseId = iD,
+        val reffMain = reff.child(iD).child("PrimaryDetails")
+        val reffLocation = reff.child(iD).child("Location")
+        val reffDistribution = reff.child(iD).child("Distribution") // Reference for Distribution node
+
+        // Filter out members with 0 share amount and determine overall split type
+        val filteredSplitMembers = expense.splitMembers?.filter { it.shareAmount != 0.0 }
+
+        val overallSplitTypeString = if (!filteredSplitMembers.isNullOrEmpty()) {
+            filteredSplitMembers[0].shareType.name // Take the type of the first (non-zero) member's share
+        } else {
+            "null" // Default to "null" if no split members or all shares are zero
+        }
+
+        // Create expense data for PrimaryDetails
+        val expenseForPrimaryDetails = ExpensesDataClass(
+            expenseId = null, // expenseId will be the key
             details = expense.details,
             amount = expense.amount,
             paidBy = expense.paidBy,
             timestamp = expense.timestamp,
             billImageUrl = expense.billImageUrl,
-            latitude = null,
-            longitude = null,
-            note = expense.note?:null
+            latitude = null, // Latitude/Longitude are stored separately
+            longitude = null, // Latitude/Longitude are stored separately
+            note = expense.note,
+            splitType = overallSplitTypeString, // Set the overall split type
+            splitMembers = null // Do not store splitMembers list directly in PrimaryDetails
         )
 
-        // Save primary details without location
-        reffMain.setValue(expenseWithoutLocation).await()
+        // Save primary details
+        reffMain.setValue(expenseForPrimaryDetails).await()
 
         // Save location data separately if available
         if (expense.latitude != null && expense.longitude != null) {
@@ -63,6 +76,18 @@ class ExpensesRepository {
                 "longitude" to expense.longitude
             )
             reffLocation.setValue(locationData).await()
+        }
+
+        // Save split distribution details if available (only for filtered members)
+        if (!filteredSplitMembers.isNullOrEmpty()) {
+            for (memberShare in filteredSplitMembers) {
+                val memberDistributionData = hashMapOf<String, Any>(
+                    "shareAmount" to memberShare.shareAmount,
+                    "paid" to false // Initially set to false
+                    // memberName, shareType, originalInputValue are no longer stored here
+                )
+                reffDistribution.child(memberShare.memberUid).setValue(memberDistributionData).await()
+            }
         }
 
         // Update group reference
@@ -92,8 +117,8 @@ class ExpensesRepository {
                     "public_id" to "expense_${System.currentTimeMillis()}",
                     "folder" to "expense_bills",
                     "resource_type" to "image",
-                    "quality" to "auto",     // Move quality directly here
-                    "fetch_format" to "auto" // Move fetch_format directly here
+                    "quality" to "auto",
+                    "fetch_format" to "auto"
                 )
 
                 val uploadRequest = MediaManager.get()
@@ -132,9 +157,8 @@ class ExpensesRepository {
 
                 uploadRequest.dispatch()
 
-                // Handle cancellation
                 continuation.invokeOnCancellation {
-
+                    // Consider cancelling the upload if necessary
                 }
 
             } catch (e: Exception) {
@@ -176,7 +200,6 @@ class ExpensesRepository {
                             return
                         }
 
-                        // Counter to track completed requests
                         var completedRequests = 0
                         val totalRequests = expenseIds.size
                         val expensesList = mutableListOf<ExpensesDataClass>()
@@ -192,27 +215,58 @@ class ExpensesRepository {
 
                                     try {
                                         // Get primary details
-                                        val primaryDetails = expenseSnapshot.child("PrimaryDetails")
-                                        val locationDetails = expenseSnapshot.child("Location")
+                                        val primaryDetailsSnapshot = expenseSnapshot.child("PrimaryDetails")
+                                        val locationDetailsSnapshot = expenseSnapshot.child("Location")
+                                        val distributionDetailsSnapshot = expenseSnapshot.child("Distribution")
 
-                                        val details = primaryDetails.child("details")
+                                        val details = primaryDetailsSnapshot.child("details")
                                             .getValue(String::class.java) ?: ""
-                                        val amount = primaryDetails.child("amount")
+                                        val amount = primaryDetailsSnapshot.child("amount")
                                             .getValue(String::class.java) ?: ""
-                                        val paidBy = primaryDetails.child("paidBy")
+                                        val paidBy = primaryDetailsSnapshot.child("paidBy")
                                             .getValue(String::class.java) ?: ""
-                                        val timestamp = primaryDetails.child("timestamp")
+                                        val timestamp = primaryDetailsSnapshot.child("timestamp")
                                             .getValue(String::class.java) ?: ""
-                                        val billImageUrl = primaryDetails.child("billImageUrl")
+                                        val billImageUrl = primaryDetailsSnapshot.child("billImageUrl")
                                             .getValue(String::class.java)
-                                        val note = primaryDetails.child("note")
+                                        val note = primaryDetailsSnapshot.child("note")
                                             .getValue(String::class.java)
+                                        val splitTypeString = primaryDetailsSnapshot.child("splitType")
+                                            .getValue(String::class.java)?: "null" // Overall split type as string
 
                                         // Get location data
-                                        val latitude = locationDetails.child("latitude")
+                                        val latitude = locationDetailsSnapshot.child("latitude")
                                             .getValue(Double::class.java)
-                                        val longitude = locationDetails.child("longitude")
+                                        val longitude = locationDetailsSnapshot.child("longitude")
                                             .getValue(Double::class.java)
+
+                                        // Reconstruct SplitType enum from the global splitTypeString
+                                        val overallSplitType = try {
+                                            SplitType.valueOf(splitTypeString)
+                                        } catch (e: IllegalArgumentException) {
+                                            SplitType.EQUAL // Fallback if string is invalid
+                                        }
+
+                                        // Fetch split distribution details
+                                        val fetchedSplitMembers = ArrayList<MemberShare>()
+                                        for (memberDistributionSnapshot in distributionDetailsSnapshot.children) {
+                                            val memberUid = memberDistributionSnapshot.key
+                                            if (memberUid != null) {
+                                                val fetchedShareAmount = memberDistributionSnapshot.child("shareAmount").getValue(Double::class.java) ?: 0.0
+                                                // memberName, shareType, originalInputValue are NOT stored here.
+                                                // We will use placeholders or infer for MemberShare construction.
+
+                                                fetchedSplitMembers.add(
+                                                    MemberShare(
+                                                        memberUid = memberUid,
+                                                        memberName = "", // Placeholder: You need to fetch member names independently using memberUid
+                                                        shareAmount = fetchedShareAmount,
+                                                        shareType = overallSplitType, // Use the overall expense split type
+                                                        originalInputValue = null // Not stored, so null
+                                                    )
+                                                )
+                                            }
+                                        }
 
                                         val expense = ExpensesDataClass(
                                             expenseId = expenseId,
@@ -223,7 +277,9 @@ class ExpensesRepository {
                                             billImageUrl = billImageUrl,
                                             latitude = latitude,
                                             longitude = longitude,
-                                            note = note
+                                            note = note,
+                                            splitType = splitTypeString, // Store the string as per ExpensesDataClass
+                                            splitMembers = if (fetchedSplitMembers.isNotEmpty()) fetchedSplitMembers else null
                                         )
 
                                         expensesList.add(expense)
@@ -231,7 +287,6 @@ class ExpensesRepository {
 
                                         // Check if all requests are completed
                                         if (completedRequests == totalRequests) {
-                                            // Sort expenses by timestamp (newest first)
                                             val sortedExpenses =
                                                 expensesList.sortedByDescending { it.timestamp }
                                             GlobalClass.expenses = sortedExpenses
@@ -260,9 +315,8 @@ class ExpensesRepository {
                     }
                 })
 
-                // Handle cancellation
                 continuation.invokeOnCancellation {
-                    // Clean up if needed
+                    // Any cleanup if the coroutine is cancelled
                 }
 
             } catch (e: Exception) {
@@ -298,4 +352,44 @@ class ExpensesRepository {
             null
         }
     }
+
+    /**
+     * Deletes an expense from Firebase Realtime Database.
+     * Deletes from the main 'expenses' branch and the 'groups/{groupId}/Expenses' branch.
+     * After deletion, it refreshes the global expenses list.
+     *
+     * @param expenseId The ID of the expense to delete.
+     * @throws Exception if the group ID is not selected or deletion fails.
+     */
+    suspend fun deleteExpense(expenseId: String) {
+        return suspendCancellableCoroutine { continuation ->
+            val groupId = GlobalClass.selected_groupId
+            if (groupId == null) {
+                continuation.resumeWithException(Exception("No group selected. Cannot delete expense."))
+                return@suspendCancellableCoroutine
+            }
+
+            val expenseRef = db.getReference("expenses").child(expenseId)
+            val groupExpenseRef = db.getReference("groups").child(groupId).child("Expenses").child(expenseId)
+
+            // Build a map of paths to null for atomic multi-location deletion
+            val updates = hashMapOf<String, Any?>(
+                "/expenses/$expenseId" to null,
+                "/groups/$groupId/Expenses/$expenseId" to null
+            )
+
+            db.reference.updateChildren(updates).addOnSuccessListener {
+                // Remove from GlobalClass.expenses
+                GlobalClass.expenses = GlobalClass.expenses.filterNot { it.expenseId == expenseId }
+                continuation.resume(Unit)
+            }.addOnFailureListener { exception ->
+                continuation.resumeWithException(exception)
+            }
+
+            continuation.invokeOnCancellation {
+                // No cleanup needed, Firebase handles this
+            }
+        }
+    }
+
 }

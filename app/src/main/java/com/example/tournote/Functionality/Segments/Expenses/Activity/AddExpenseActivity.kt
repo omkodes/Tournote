@@ -1,3 +1,4 @@
+// File: com.example.tournote.Functionality.Segments.Expenses.Activity.AddExpenseActivity.kt
 package com.example.tournote.Functionality.Segments.Expenses.Activity
 
 import android.Manifest
@@ -7,6 +8,7 @@ import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log // Added for logging
 import android.view.MotionEvent
 import android.view.View
 import android.webkit.JavascriptInterface
@@ -24,6 +26,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.tournote.Functionality.Segments.Expenses.DataClass.ExpensesDataClass
+import com.example.tournote.Functionality.Segments.Expenses.DataClass.MemberShare // Import MemberShare
+import com.example.tournote.Functionality.Segments.Expenses.DataClass.SplitType // Import SplitType
 import com.example.tournote.Functionality.Segments.Expenses.Repository.ExpensesRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.R
@@ -37,7 +41,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-
+import kotlin.collections.ArrayList // Explicitly import ArrayList for Parcelable list
 
 class AddExpenseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddExpenseBinding
@@ -47,19 +51,49 @@ class AddExpenseActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var selectedImageUri: Uri? = null
     private var photoUri: Uri? = null
-    private var isImageFromCamera: Boolean = false // Track image source
-    private var capturedImageFile: File? = null // Store reference to captured image file
+    private var isImageFromCamera: Boolean = false
+    private var capturedImageFile: File? = null
     private var note: String? = null
 
+    private var selectedDate : Long? = null
 
-    private var selectedDate : Long?=null
+    // New properties to store split information received from ExpenseSplitterActivity
+    private var splitMemberShares: ArrayList<MemberShare>? = null
+    private var selectedSplitType: SplitType? = null
+
+    // ActivityResultLauncher for ExpenseSplitterActivity
+    private val expenseSplitterLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == ExpenseSplitterActivity.RESULT_OK_SPLIT) {
+            result.data?.let { intent ->
+                // Retrieve the member shares list
+                splitMemberShares = intent.getParcelableArrayListExtra(ExpenseSplitterActivity.EXTRA_MEMBER_SHARES)
+                // Retrieve the split type name (String) and convert it back to SplitType enum
+                val splitTypeName = intent.getStringExtra(ExpenseSplitterActivity.EXTRA_SPLIT_TYPE)
+                selectedSplitType = splitTypeName?.let { SplitType.valueOf(it) }
+
+                // Update the txtBtnSplit text based on the selected split type
+                updateSplitButtonText()
+
+                Log.d("AddExpenseActivity", "Received Split Data: Shares=$splitMemberShares, Type=$selectedSplitType")
+            }
+        } else if (result.resultCode == RESULT_CANCELED) {
+            // User cancelled the split operation in ExpenseSplitterActivity
+            // Clear any previously saved split data and reset the button text
+            splitMemberShares = null
+            selectedSplitType = null
+            updateSplitButtonText()
+            Log.d("AddExpenseActivity", "Split activity cancelled. Split data cleared.")
+        }
+    }
 
     private val noteLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             val note = result.data?.getStringExtra("note_data")
             if (!note.isNullOrBlank()) {
                 this.note = note
-                // Optional: update UI with this note
+                // Optional: update UI with this note, e.g., binding.txtNotePreview.text = note
             }
         }
     }
@@ -127,15 +161,24 @@ class AddExpenseActivity : AppCompatActivity() {
             finish()
         }
 
-
         binding.btnNote.setOnClickListener {
             val intent = Intent(this, ExpenseNoteActivity::class.java)
             noteLauncher.launch(intent)
         }
 
-
         binding.btnCalender.setOnClickListener {
             binding.rellayoutCalender.visibility=View.VISIBLE
+        }
+
+        binding.btnSplit.setOnClickListener{
+            if(binding.txtAmount.text.isEmpty()){
+                Toast.makeText(this, "Please enter the amount first.", Toast.LENGTH_SHORT).show()
+            }else{
+                val intent = Intent(this, ExpenseSplitterActivity::class.java)
+                intent.putExtra("totalAmount", binding.txtAmount.text.toString())
+                // Use the new launcher to start ExpenseSplitterActivity
+                expenseSplitterLauncher.launch(intent)
+            }
         }
 
         binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
@@ -144,13 +187,13 @@ class AddExpenseActivity : AppCompatActivity() {
             calendar.set(Calendar.MONTH, month)
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-            // Set time to 12:00 PM
+            // Set time to 12:00 PM for consistency if storing as a timestamp
             calendar.set(Calendar.HOUR_OF_DAY, 12)
             calendar.set(Calendar.MINUTE, 0)
             calendar.set(Calendar.SECOND, 0)
             calendar.set(Calendar.MILLISECOND, 0)
 
-            // Get the formatted date
+            // Get the formatted date for display
             val sdf = SimpleDateFormat("MMM d", Locale.getDefault())
             val formattedDate = sdf.format(calendar.time)
 
@@ -158,14 +201,11 @@ class AddExpenseActivity : AppCompatActivity() {
             binding.txtSelectedDate.text = formattedDate
 
             // Save the timestamp at 12:00 PM
-             selectedDate = calendar.timeInMillis
-            // You can now use selectedTimestamp to store or pass the selected date
+            selectedDate = calendar.timeInMillis
 
             // Hide calendar
             binding.rellayoutCalender.visibility = View.GONE
         }
-
-
 
         binding.btnSave.setOnClickListener {
             if (IsEverythingNonEmpty()) {
@@ -183,21 +223,30 @@ class AddExpenseActivity : AppCompatActivity() {
                                 imageUrl = repo.uploadImageToCloudinary(uri, this@AddExpenseActivity)
                             } catch (e: Exception) {
                                 Toast.makeText(this@AddExpenseActivity, "Image upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
-                                // Continue without image
+                                // Continue without image if upload fails
                             }
                         }
 
-                        // Create expense details
+                        val splitType = when (selectedSplitType) {
+                            SplitType.EQUAL -> "Equally"
+                            SplitType.EXACT_AMOUNT -> "ExactAmounts"
+                            SplitType.PERCENTAGE -> "Percentages"
+                            null -> "null" // No split selected or cancelled
+                        }
+
+                        // Create expense details, including the split information
                         val expense = ExpensesDataClass(
-                            "null",
+                            "null", // Expense ID will be generated by Firebase
                             binding.txtDescription.text.toString(),
                             binding.txtAmount.text.toString(),
                             (GlobalClass.Me?.uid)!!,
-                             (if (selectedDate == null) System.currentTimeMillis().toString() else selectedDate.toString()),
-                            imageUrl,// Add image URL to expense data
+                            (if (selectedDate == null) System.currentTimeMillis().toString() else selectedDate.toString()),
+                            imageUrl,
                             savedLatitude,
                             savedLongitude,
-                            note
+                            note,
+                            splitType,
+                            splitMemberShares // Pass the collected split shares here
                         )
 
                         repo.pushExpenseToFirebase(expense)
@@ -206,12 +255,14 @@ class AddExpenseActivity : AppCompatActivity() {
                         cleanupCameraImage()
 
                         Toast.makeText(this@AddExpenseActivity, "Expense saved successfully!", Toast.LENGTH_SHORT).show()
+                        // Set result and finish to go back to previous activity (e.g., Home or Segment Details)
+                        setResult(RESULT_OK_EXPENSE_ADDED)
                         finish()
 
                     } catch (e: Exception) {
                         Toast.makeText(this@AddExpenseActivity, "Failed to save expense: ${e.message}", Toast.LENGTH_SHORT).show()
                     } finally {
-                        // Reset button state
+                        // Reset button state regardless of success or failure
                         binding.btnSave.isEnabled = true
                         binding.progressBar.visibility=View.GONE
                     }
@@ -225,8 +276,22 @@ class AddExpenseActivity : AppCompatActivity() {
     }
 
     /**
-     * Deletes the camera-captured image file if it exists
-     * Only deletes images captured by camera, not gallery selections
+     * Updates the text of the split button based on the selected split type.
+     * Also changes its color for visual feedback.
+     */
+    private fun updateSplitButtonText() {
+        binding.txtbtnSplit.text = when (selectedSplitType) {
+            SplitType.EQUAL -> "Equally"
+            SplitType.EXACT_AMOUNT -> "Exact Amounts"
+            SplitType.PERCENTAGE -> "Percentages"
+            null -> "Split" // No split selected or cancelled
+        }
+
+    }
+
+    /**
+     * Deletes the camera-captured image file if it exists.
+     * Only deletes images captured by camera, not gallery selections.
      */
     private fun cleanupCameraImage() {
         if (isImageFromCamera && capturedImageFile != null) {
@@ -234,13 +299,13 @@ class AddExpenseActivity : AppCompatActivity() {
                 if (capturedImageFile!!.exists()) {
                     val deleted = capturedImageFile!!.delete()
                     if (deleted) {
-                        // Optional: Log success or show debug message
-                        // Toast.makeText(this, "Camera image cleaned up", Toast.LENGTH_SHORT).show()
+                        Log.d("AddExpenseActivity", "Camera image file deleted successfully: ${capturedImageFile!!.absolutePath}")
+                    } else {
+                        Log.w("AddExpenseActivity", "Failed to delete camera image file: ${capturedImageFile!!.absolutePath}")
                     }
                 }
             } catch (e: Exception) {
-                // Handle deletion error silently or log it
-                e.printStackTrace()
+                Log.e("AddExpenseActivity", "Error during camera image cleanup: ${e.message}", e)
             }
         }
     }
@@ -297,20 +362,16 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
-    private fun redirectToActivity(activityClass: Class<*>) {
-        val intent = Intent(this, activityClass)
-        startActivity(intent)
-    }
-
     private fun createImageFile(): Uri? {
         return try {
             // Create an image file name
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val imageFileName = "JPEG_${timeStamp}_"
-            val storageDir = File(filesDir, "images")
+            // Use getExternalFilesDir for app-specific, private storage that gets cleared on uninstall
+            val storageDir = getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES)
 
             // Create the directory if it doesn't exist
-            if (!storageDir.exists()) {
+            if (storageDir != null && !storageDir.exists()) {
                 storageDir.mkdirs()
             }
 
@@ -326,18 +387,19 @@ class AddExpenseActivity : AppCompatActivity() {
             // Get the URI using FileProvider
             FileProvider.getUriForFile(
                 this,
-                "${packageName}.fileprovider",
+                "${packageName}.fileprovider", // Make sure this matches your manifest's <provider> authority
                 imageFile
             )
         } catch (ex: Exception) {
             Toast.makeText(this, "Error creating image file: ${ex.message}", Toast.LENGTH_SHORT).show()
+            Log.e("AddExpenseActivity", "Error creating image file", ex)
             capturedImageFile = null
             null
         }
     }
 
     private fun setupWebView() {
-        val webView = binding.webView // Make sure this matches your layout
+        val webView = binding.webView // Make sure this matches your layout ID
         webView.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
@@ -389,7 +451,8 @@ class AddExpenseActivity : AppCompatActivity() {
                 LOCATION_PERMISSION_REQUEST_CODE
             )
         } else {
-            // Permission already granted, but wait for WebView to load
+            // Permission already granted, but we call getCurrentLocation() after WebView loads
+            // so no need to call it here directly.
         }
     }
 
@@ -406,7 +469,7 @@ class AddExpenseActivity : AppCompatActivity() {
                     savedLatitude = latitude
                     savedLongitude = longitude
 
-                    // Show location on map
+                    // Show location on map using JavaScript
                     binding.webView.loadUrl("javascript:showLocationOnMap($latitude, $longitude)")
 
                     //Toast.makeText(this, "Current location loaded", Toast.LENGTH_SHORT).show()
@@ -415,6 +478,7 @@ class AddExpenseActivity : AppCompatActivity() {
                 }
             }.addOnFailureListener {
                 Toast.makeText(this, "Error getting location: ${it.message}", Toast.LENGTH_SHORT).show()
+                Log.e("AddExpenseActivity", "Error getting last location", it)
             }
         }
     }
@@ -430,14 +494,14 @@ class AddExpenseActivity : AppCompatActivity() {
             LOCATION_PERMISSION_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Location permission granted", Toast.LENGTH_SHORT).show()
-                    getCurrentLocation()
+                    getCurrentLocation() // Try to get location after permission is granted
                 } else {
                     Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()
                 }
             }
             CAMERA_PERMISSION_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    openCamera()
+                    openCamera() // Open camera after permission is granted
                 } else {
                     Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show()
                 }
@@ -448,17 +512,18 @@ class AddExpenseActivity : AppCompatActivity() {
     private fun IsEverythingNonEmpty(): Boolean {
         if(binding.txtDescription.text.isNullOrEmpty()){
             Toast.makeText(this, "Description field cannot be empty.", Toast.LENGTH_SHORT).show()
+            return false
         }
         if(binding.txtAmount.text.isNullOrEmpty()){
             Toast.makeText(this, "Amount field cannot be empty.", Toast.LENGTH_SHORT).show()
+            return false
         }
-        return binding.txtDescription.text.isNotEmpty() && binding.txtAmount.text.isNotEmpty()
+        return true
     }
 
     override fun onDestroy() {
         super.onDestroy()
         // Clean up camera image if activity is destroyed without saving
-        // This handles cases where user exits without saving
         if (isImageFromCamera && capturedImageFile != null) {
             cleanupCameraImage()
         }
@@ -474,7 +539,7 @@ class AddExpenseActivity : AppCompatActivity() {
             runOnUiThread {
                 Toast.makeText(
                     this@AddExpenseActivity,
-                    "Location saved: $latitude, $longitude",
+                    "Map location saved: $latitude, $longitude", // More descriptive toast
                     Toast.LENGTH_SHORT
                 ).show()
             }

@@ -20,6 +20,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Functionality.Segments.Expenses.Activity.ExpenseSplitterActivity"
+            android:exported="false" />
+        <activity
             android:name=".Functionality.Segments.Expenses.Activity.ExpenseNoteActivity"
             android:exported="false" />
         <activity

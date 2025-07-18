@@ -255,9 +255,10 @@
                     android:background="@drawable/greenbutton"
                     >
                     <TextView
+                        android:id="@+id/txtbtnSplit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="equally"
+                        android:text="null"
                         android:textColor="@color/black"
                         android:layout_centerInParent="true"
                         android:textStyle="bold"
