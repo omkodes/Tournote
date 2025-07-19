@@ -12,12 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.tournote.Functionality.Segments.Expenses.Activity.AddExpenseActivity
+import com.example.tournote.Functionality.Segments.Expenses.Activity.ExpenseAddActivity
 import com.example.tournote.Functionality.Segments.Expenses.SealedClass.ExpenseListItem
 import com.example.tournote.Functionality.Segments.Expenses.Adapter.ExpensesAdapter
 import com.example.tournote.Functionality.Segments.Expenses.Adapter.FinalDistributionAdapter // Import new adapter
 import com.example.tournote.Functionality.Segments.Expenses.DataClass.ExpensesDataClass
-import com.example.tournote.Functionality.Segments.Expenses.DataClass.MemberShare // Import MemberShare
 import com.example.tournote.Functionality.Segments.Expenses.Repository.ExpensesRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.Activity.activityGroupInfo
@@ -46,7 +45,7 @@ class ExpensesFragment : Fragment() {
     private lateinit var recvwFinalDistributionRelaventtoMe: RecyclerView
 
     private val addExpenseLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == AddExpenseActivity.RESULT_OK_EXPENSE_ADDED) {
+        if (result.resultCode == ExpenseAddActivity.RESULT_OK_EXPENSE_ADDED) {
             refreshExpensesList() // Refresh all data when expense is added
         }
     }
@@ -100,7 +99,7 @@ class ExpensesFragment : Fragment() {
         fetchAndDisplayExpenses()
 
         binding.btnAddExpense.setOnClickListener {
-            val intent = Intent(requireContext(), AddExpenseActivity::class.java)
+            val intent = Intent(requireContext(), ExpenseAddActivity::class.java)
             addExpenseLauncher.launch(intent)
         }
 
@@ -110,7 +109,6 @@ class ExpensesFragment : Fragment() {
         }
 
         // Handle other buttons (Settle Up, Charts, Balances, Totals)
-        binding.btnSettleUp.setOnClickListener { /* Implement Settle Up logic */ }
         binding.btnCharts.setOnClickListener { /* Implement Charts logic */ }
         binding.btnBalances.setOnClickListener { /* Implement Balances logic */ }
         binding.btnTotals.setOnClickListener { /* Implement Totals logic */ }
@@ -232,7 +230,7 @@ class ExpensesFragment : Fragment() {
                         expense.splitMembers?.forEach { share ->
                             if (share.memberUid == otherMemberUid) {
                                 if(share.paid==false){
-                                    directNetAmount += share.shareAmount
+                                    directNetAmount += (share.shareAmount-(share.partialPayment?:0.00))
                                 }
                             }
                         }
@@ -245,7 +243,7 @@ class ExpensesFragment : Fragment() {
                         expense.splitMembers?.forEach { share ->
                             if (share.memberUid == myUid) {
                                 if(share.paid==false){
-                                    directNetAmount -= share.shareAmount
+                                    directNetAmount -= (share.shareAmount-(share.partialPayment?:0.00))
                                 }
                             }
                         }

@@ -9,7 +9,9 @@ data class MemberShare(
     val shareAmount: Double,
     val shareType: SplitType, // The SplitType enum
     val originalInputValue: Double? = null, // Stores the exact amount or percentage entered
-    var paid: Boolean? = false
+    var paid: Boolean? = false,
+
+    var partialPayment: Double?=0.00,///if during data retrival it value is 0.00 -> payment not done, "originalValue" -> full payment done
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,

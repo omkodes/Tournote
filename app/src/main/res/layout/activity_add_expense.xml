@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Functionality.Segments.Expenses.Activity.AddExpenseActivity"
+    tools:context=".Functionality.Segments.Expenses.Activity.ExpenseAddActivity"
     android:background="@color/green_theme_Light">
 
     <ProgressBar

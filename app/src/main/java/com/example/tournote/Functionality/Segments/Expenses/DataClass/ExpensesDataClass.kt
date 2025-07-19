@@ -11,5 +11,5 @@ data class ExpensesDataClass(
     val longitude: Double? = null,
     val note : String?= null,
     val splitType : String ?= "null",
-    val splitMembers: ArrayList<MemberShare>? = null
+    var splitMembers: ArrayList<MemberShare>? = null
 )

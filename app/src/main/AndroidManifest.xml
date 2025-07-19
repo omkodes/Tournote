@@ -20,6 +20,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Functionality.Segments.Expenses.Activity.ExpenseRecordPaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Functionality.Segments.Expenses.Activity.ExpenseSettleUpActivity"
+            android:exported="false" />
+        <activity
             android:name=".Functionality.Segments.Expenses.Activity.ExpenseSplitterActivity"
             android:exported="false" />
         <activity
@@ -29,7 +35,7 @@
             android:name=".Functionality.Segments.Expenses.Activity.ExpenseInfoActivity"
             android:exported="false" />
         <activity
-            android:name=".Functionality.Segments.Expenses.Activity.AddExpenseActivity"
+            android:name=".Functionality.Segments.Expenses.Activity.ExpenseAddActivity"
             android:exported="false" />
         <activity
             android:name=".Groups.Activity.activityProfileInfo"

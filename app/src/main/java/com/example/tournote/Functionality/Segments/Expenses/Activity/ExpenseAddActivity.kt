@@ -43,7 +43,7 @@ import java.util.Date
 import java.util.Locale
 import kotlin.collections.ArrayList // Explicitly import ArrayList for Parcelable list
 
-class AddExpenseActivity : AppCompatActivity() {
+class ExpenseAddActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddExpenseBinding
     private val repo = ExpensesRepository()
     private var savedLatitude: Double? = null
@@ -223,9 +223,9 @@ class AddExpenseActivity : AppCompatActivity() {
                         // Upload image if one is selected
                         selectedImageUri?.let { uri ->
                             try {
-                                imageUrl = repo.uploadImageToCloudinary(uri, this@AddExpenseActivity)
+                                imageUrl = repo.uploadImageToCloudinary(uri, this@ExpenseAddActivity)
                             } catch (e: Exception) {
-                                Toast.makeText(this@AddExpenseActivity, "Image upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@ExpenseAddActivity, "Image upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
                                 // Continue without image if upload fails
                             }
                         }
@@ -261,13 +261,13 @@ class AddExpenseActivity : AppCompatActivity() {
                         // Clean up camera-captured image after saving
                         cleanupCameraImage()
 
-                        Toast.makeText(this@AddExpenseActivity, "Expense saved successfully!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@ExpenseAddActivity, "Expense saved successfully!", Toast.LENGTH_SHORT).show()
                         // Set result and finish to go back to previous activity (e.g., Home or Segment Details)
                         setResult(RESULT_OK_EXPENSE_ADDED)
                         finish()
 
                     } catch (e: Exception) {
-                        Toast.makeText(this@AddExpenseActivity, "Failed to save expense: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@ExpenseAddActivity, "Failed to save expense: ${e.message}", Toast.LENGTH_SHORT).show()
                     } finally {
                         // Reset button state regardless of success or failure
                         binding.btnSave.isEnabled = true
@@ -580,7 +580,7 @@ class AddExpenseActivity : AppCompatActivity() {
 
             runOnUiThread {
                 Toast.makeText(
-                    this@AddExpenseActivity,
+                    this@ExpenseAddActivity,
                     "Map location saved: $latitude, $longitude", // More descriptive toast
                     Toast.LENGTH_SHORT
                 ).show()

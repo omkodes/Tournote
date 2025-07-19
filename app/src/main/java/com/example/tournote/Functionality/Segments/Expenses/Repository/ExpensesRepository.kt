@@ -1,6 +1,7 @@
 // File: com.example.tournote.Functionality.Segments.Expenses.Repository.kt
 package com.example.tournote.Functionality.Segments.Expenses.Repository
 
+import android.R
 import android.content.Context
 import android.net.Uri
 import com.cloudinary.android.MediaManager
@@ -15,6 +16,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import java.io.File
@@ -83,7 +87,8 @@ class ExpensesRepository {
             for (memberShare in filteredSplitMembers) {
                 val memberDistributionData = hashMapOf<String, Any>(
                     "shareAmount" to memberShare.shareAmount,
-                    "paid" to false // Initially set to false
+                    "paid" to false, // Initially set to false
+                    "partialPayment" to (memberShare.partialPayment)!!
                     // memberName, shareType, originalInputValue are no longer stored here
                 )
                 reffDistribution.child(memberShare.memberUid).setValue(memberDistributionData).await()
@@ -167,6 +172,9 @@ class ExpensesRepository {
         }
     }
 
+    /**
+     * Fetches all expenses for the selected group and updates the global expenses list
+     */
     /**
      * Fetches all expenses for the selected group and updates the global expenses list
      */
@@ -254,8 +262,7 @@ class ExpensesRepository {
                                             if (memberUid != null) {
                                                 val fetchedShareAmount = memberDistributionSnapshot.child("shareAmount").getValue(Double::class.java) ?: 0.0
                                                 val paid = memberDistributionSnapshot.child("paid").getValue(Boolean::class.java)?:false
-                                                // memberName, shareType, originalInputValue are NOT stored here.
-                                                // We will use placeholders or infer for MemberShare construction.
+                                                val partialPayment = memberDistributionSnapshot.child("partialPayment").getValue(Double::class.java) ?: 0.0
 
                                                 fetchedSplitMembers.add(
                                                     MemberShare(
@@ -263,8 +270,9 @@ class ExpensesRepository {
                                                         memberName = "", // Placeholder: You need to fetch member names independently using memberUid
                                                         shareAmount = fetchedShareAmount,
                                                         shareType = overallSplitType, // Use the overall expense split type
-                                                        originalInputValue = null ,// Not stored, so null
-                                                        paid = paid
+                                                        originalInputValue = null, // Not stored, so null
+                                                        paid = paid,
+                                                        partialPayment = partialPayment
                                                     )
                                                 )
                                             }
@@ -326,6 +334,48 @@ class ExpensesRepository {
             }
         }
     }
+
+    suspend fun updateSettling(expenseId: String, uid: String, paidFinally: Boolean, partialPay: Double) {
+        return suspendCancellableCoroutine { continuation ->
+            val expenseDistributionRef = db.getReference("expenses")
+                .child(expenseId)
+                .child("Distribution")
+                .child(uid)
+
+            // Create a map for atomic updates
+            val updates = hashMapOf<String, Any>(
+                "paid" to paidFinally,
+                "partialPayment" to partialPay
+            )
+
+            expenseDistributionRef.updateChildren(updates)
+                .addOnSuccessListener {
+                    // Update GlobalClass data
+                    val expense = GlobalClass.expenses.find { it.expenseId == expenseId }
+                    expense?.splitMembers?.let { memberList ->
+                        val memberIndex = memberList.indexOfFirst { it.memberUid == uid }
+                        if (memberIndex != -1) {
+                            memberList[memberIndex].paid = paidFinally
+                            memberList[memberIndex].partialPayment = partialPay
+                        }
+                    }
+
+                    // IMPORTANT: Resume the continuation to complete the coroutine
+                    continuation.resume(Unit)
+                }
+                .addOnFailureListener { exception ->
+                    // IMPORTANT: Resume with exception to complete the coroutine
+                    continuation.resumeWithException(exception)
+                }
+
+            continuation.invokeOnCancellation {
+                // No specific cleanup needed for Firebase operations on cancellation
+            }
+        }
+    }
+
+
+
 
     /**
      * Converts a URI to a File object
@@ -393,5 +443,6 @@ class ExpensesRepository {
             }
         }
     }
+
 
 }
