@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -19,8 +20,7 @@
         android:background="@color/green_theme_Light_taskbar"
         app:layout_constraintTop_toTopOf="parent"
         android:gravity="center_vertical"
-        android:visibility="visible"
-        >
+        android:visibility="visible">
 
         <RelativeLayout
             android:id="@+id/btnCancel"
@@ -28,16 +28,15 @@
             android:layout_height="30dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            >
+            app:layout_constraintBottom_toBottomOf="parent">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancel"
                 android:textColor="@color/bluetext"
                 android:layout_centerInParent="true"
-                android:textSize="18sp"
-                />
+                android:textSize="18sp" />
         </RelativeLayout>
 
         <TextView
@@ -53,8 +52,7 @@
             android:layout_marginRight="20dp"
             android:layout_weight="1"
             android:textColor="#E0E0E0"
-            android:textSize="22sp"
-            />
+            android:textSize="22sp" />
 
         <RelativeLayout
             android:id="@+id/btnDone"
@@ -62,18 +60,16 @@
             android:layout_height="30dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            >
+            app:layout_constraintBottom_toBottomOf="parent">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Done"
                 android:textColor="@color/bluetext"
                 android:layout_centerInParent="true"
-                android:textSize="18sp"
-                />
+                android:textSize="18sp" />
         </RelativeLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
@@ -84,8 +80,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="horizontal"
-        android:padding="5dp"
-        >
+        android:padding="5dp">
+
+        <RelativeLayout
+            android:id="@+id/btnSelf"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/greenbutton_sharpedge">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:text="Self"
+                android:textColor="@color/black"
+                android:layout_centerInParent="true"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/btnEqual"
             android:layout_width="0dp"
@@ -94,8 +111,8 @@
             android:layout_marginHorizontal="5dp"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/greenbutton_sharpedge"
-            >
+            android:background="@drawable/whitebutton_sharpedge">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -104,9 +121,9 @@
                 android:textColor="@color/black"
                 android:layout_centerInParent="true"
                 android:textStyle="bold"
-                android:textSize="14sp"
-                />
+                android:textSize="14sp" />
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/btnExact"
             android:layout_width="0dp"
@@ -115,8 +132,8 @@
             android:layout_marginHorizontal="5dp"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/whitebutton_sharpedge"
-            >
+            android:background="@drawable/whitebutton_sharpedge">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -125,9 +142,9 @@
                 android:textColor="@color/black"
                 android:layout_centerInParent="true"
                 android:textStyle="bold"
-                android:textSize="14sp"
-                />
+                android:textSize="14sp" />
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/btnPercentage"
             android:layout_width="0dp"
@@ -136,8 +153,8 @@
             android:layout_marginHorizontal="5dp"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/whitebutton_sharpedge"
-            >
+            android:background="@drawable/whitebutton_sharpedge">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -146,8 +163,7 @@
                 android:textColor="@color/black"
                 android:layout_centerInParent="true"
                 android:textStyle="bold"
-                android:textSize="14sp"
-                />
+                android:textSize="14sp" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -158,34 +174,35 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llSplitSelector"
         app:layout_constraintBottom_toTopOf="@id/bottomNav"
-        android:layout_marginTop="10dp"
-        >
+        android:layout_marginTop="10dp">
 
         <ViewFlipper
             android:id="@+id/viewFlipperRecyclerViews"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <FrameLayout
+                android:id="@+id/recyclerSelf"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewEqual"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/item_expensesplitter_equal"
-                />
+                tools:listitem="@layout/item_expensesplitter_equal" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewExactAmt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/item_expensesplitter_exactamt"
-                />
+                tools:listitem="@layout/item_expensesplitter_exactamt" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViePercentage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/item_expensesplitter_percentage"
-                />
+                tools:listitem="@layout/item_expensesplitter_percentage" />
         </ViewFlipper>
     </RelativeLayout>
 
@@ -197,19 +214,51 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@color/green_theme_Light_taskbar"
-        android:elevation="20dp"
-        >
+        android:elevation="20dp">
+
         <ViewFlipper
             android:id="@+id/viewFlipperBottomNav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintSelfBottomNav"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="15dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
+                    <TextView
+                        android:id="@+id/textView_self_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/textView_self_message"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintEqualBottomNav"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
-                >
+                android:padding="15dp">
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -218,16 +267,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/llAllTick"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    >
+                    app:layout_constraintBottom_toBottomOf="parent">
+
                     <TextView
                         android:id="@+id/textView_amount_per_person"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
                         android:textColor="@color/white"
-                        android:textSize="18sp"
-                        />
+                        android:textSize="18sp" />
+
                     <TextView
                         android:id="@+id/textView_people_count"
                         android:layout_width="wrap_content"
@@ -235,9 +284,9 @@
                         android:text=""
                         android:layout_marginTop="5dp"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
-                        />
+                        android:textSize="14sp" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/llAllTick"
                     android:layout_width="wrap_content"
@@ -245,8 +294,8 @@
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    >
+                    app:layout_constraintBottom_toBottomOf="parent">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -254,8 +303,8 @@
                         android:textColor="@color/white"
                         android:text="All"
                         android:textStyle="bold"
-                        android:layout_marginRight="15dp"
-                        />
+                        android:layout_marginRight="15dp" />
+
                     <ImageView
                         android:id="@+id/imgtick"
                         android:layout_width="25dp"
@@ -264,8 +313,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginRight="20dp"
-                        android:src="@drawable/untick"
-                        />
+                        android:src="@drawable/untick" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -273,8 +321,8 @@
                 android:id="@+id/constraintExactAmtBottomNav"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
-                >
+                android:padding="15dp">
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -283,16 +331,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    >
+                    app:layout_constraintBottom_toBottomOf="parent">
+
                     <TextView
                         android:id="@+id/textView_allocated_amount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="₹3,000 of ₹4,000"
                         android:textColor="@color/white"
-                        android:textSize="18sp"
-                        />
+                        android:textSize="18sp" />
+
                     <TextView
                         android:id="@+id/textView_remaining_amount"
                         android:layout_width="wrap_content"
@@ -300,8 +348,7 @@
                         android:layout_marginTop="5dp"
                         android:text="₹1,000 left"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
-                        />
+                        android:textSize="14sp" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -309,8 +356,8 @@
                 android:id="@+id/constraintPercentBottomNav"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
-                >
+                android:padding="15dp">
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -319,16 +366,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    >
+                    app:layout_constraintBottom_toBottomOf="parent">
+
                     <TextView
                         android:id="@+id/textView_total_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
                         android:textColor="@color/white"
-                        android:textSize="18sp"
-                        />
+                        android:textSize="18sp" />
+
                     <TextView
                         android:id="@+id/textView_remaining_percentage"
                         android:layout_width="wrap_content"
@@ -336,11 +383,9 @@
                         android:layout_marginTop="5dp"
                         android:text=""
                         android:textColor="@color/white"
-                        android:textSize="14sp"
-                        />
+                        android:textSize="14sp" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ViewFlipper>
     </RelativeLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

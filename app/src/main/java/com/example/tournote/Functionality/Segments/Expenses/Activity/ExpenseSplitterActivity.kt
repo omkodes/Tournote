@@ -22,7 +22,7 @@ import com.example.tournote.Functionality.Segments.Expenses.Adapter.OnMemberSele
 import com.example.tournote.Functionality.Segments.Expenses.Adapter.OnPercentageChangeListener
 import com.example.tournote.Functionality.Segments.Expenses.Adapter.OnExactAmountChangeListener
 import com.example.tournote.Functionality.Segments.Expenses.DataClass.MemberShare
-import com.example.tournote.Functionality.Segments.Expenses.DataClass.SplitType // Make sure SplitType is imported
+import com.example.tournote.Functionality.Segments.Expenses.DataClass.SplitType
 import com.example.tournote.Functionality.Segments.Expenses.DataClass.UserModelForSplitter
 import com.example.tournote.GlobalClass
 import com.example.tournote.R
@@ -38,10 +38,12 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
     private lateinit var exactamtAdapter: ExpenseSplitExactAmt_rvAdapter
     private lateinit var percentageAdapter: ExpenseSplitPercentage_rvAdapter
 
-    private var currentSplitIndex: Int = 0 // 0: Equal, 1: Exact Amt, 2: Percentage
-    private var isAllTicked: Boolean = false
+    // Adjusted indices for split types: 0: Self, 1: Equal, 2: Exact Amt, 3: Percentage
+    private var currentSplitIndex: Int = 0
+    private var isAllTicked: Boolean = false // Only relevant for Equal split
 
     private var totalAmount: Double = 0.0
+    private lateinit var myUid: String // To store the current user's UID for 'Self' split
 
     private var finalMemberShares: MutableList<MemberShare> = mutableListOf()
 
@@ -66,6 +68,9 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
         val totalAmountString = intent.getStringExtra("totalAmount")
         totalAmount = totalAmountString?.toDoubleOrNull() ?: 0.0
 
+        myUid = GlobalClass.Me?.uid ?: "" // Get current user's UID
+        val myName = GlobalClass.Me?.name ?: "You" // Get current user's name
+
         val currentGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }
         val groupMembers: MutableList<UserModelForSplitter> =
             currentGroup?.members?.map {
@@ -75,9 +80,10 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
                     name = it.name,
                     profilePic = it.profilePic,
                     phoneNumber = it.phoneNumber,
-                    isSelected = false,
-                    exactAmount = 0.0,
-                    percentage = 0.0
+                    // Initially, only the current user is selected for 'Self' default
+                    isSelected = (it.uid == myUid), // Automatically select 'me' for self split
+                    exactAmount = if (it.uid == myUid) totalAmount else 0.0, // Pre-fill amount for self
+                    percentage = if (it.uid == myUid) 100.0 else 0.0 // Pre-fill percentage for self
                 )
             }?.toMutableList() ?: mutableListOf()
 
@@ -94,9 +100,12 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
         binding.viewFlipperBottomNav.inAnimation = slideInRight
         binding.viewFlipperBottomNav.outAnimation = slideOutLeft
 
-        equalAdapter = ExpenseSplitEqual_rvAdapter(groupMembers, this, this)
-        exactamtAdapter = ExpenseSplitExactAmt_rvAdapter(groupMembers, this, this)
-        percentageAdapter = ExpenseSplitPercentage_rvAdapter(groupMembers, this, this)
+        // Initialize adapters
+        // Pass groupMembers list to adapters. For Equal, it needs the initial selection state.
+        // For Exact and Percentage, pre-fill for 'me' only if it's the initial 'Self' tab.
+        equalAdapter = ExpenseSplitEqual_rvAdapter(groupMembers.toMutableList(), this, this) // Pass a copy for independent state
+        exactamtAdapter = ExpenseSplitExactAmt_rvAdapter(groupMembers.toMutableList(), this, this) // Pass a copy
+        percentageAdapter = ExpenseSplitPercentage_rvAdapter(groupMembers.toMutableList(), this, this) // Pass a copy
 
         binding.recyclerViewEqual.layoutManager = LinearLayoutManager(this)
         binding.recyclerViewExactAmt.layoutManager = LinearLayoutManager(this)
@@ -118,24 +127,41 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
         }
 
         setupSplitSelectorControls()
+        setupSelfBottomNavControls() // NEW: Setup for Self split
         setupEqualBottomNavControls()
         setupPercentageBottomNavControls()
         setupExactAmountBottomNavControls()
 
-        updateSplitUI(0)
-        updateEqualSplitUI()
-        calculateAndStoreEqualShares() // Initial calculation for default tab
+        // Initial UI setup - default to SELF
+        currentSplitIndex = 0 // Ensure starting with SELF
+        updateSplitUI(currentSplitIndex)
+        updateSelfSplitUI() // Update Self UI on start
+        calculateAndStoreSelfShare() // Initial calculation for default tab
 
+        // *** RESTORED btnDone FUNCTIONALITY ***
         binding.btnDone.setOnClickListener {
             var selectedSplitType: SplitType? = null
             var canProceed = true
 
             when (currentSplitIndex) {
                 0 -> {
-                    calculateAndStoreEqualShares()
-                    selectedSplitType = SplitType.EQUAL
+                    // Self split
+                    calculateAndStoreSelfShare()
+                    selectedSplitType = SplitType.SELF
+                    // Self split is always valid as it assigns the entire amount to the current user
                 }
                 1 -> {
+                    // Equal split
+                    calculateAndStoreEqualShares()
+                    selectedSplitType = SplitType.EQUAL
+                    // Check if at least one member is selected
+                    if (finalMemberShares.isEmpty()) {
+                        canProceed = false
+                        Toast.makeText(this, "Please select at least one member for equal split.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                2 -> {
+                    // Exact amount split
                     calculateAndStoreExactShares()
                     selectedSplitType = SplitType.EXACT_AMOUNT
                     val currentAllocatedAmount = exactamtAdapter.getAllMembersWithExactAmounts().sumOf { it.exactAmount }
@@ -145,7 +171,8 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
                         Toast.makeText(this, "Exact amounts do not sum to total amount. Please adjust.", Toast.LENGTH_LONG).show()
                     }
                 }
-                2 -> {
+                3 -> {
+                    // Percentage split
                     calculateAndStorePercentageShares()
                     selectedSplitType = SplitType.PERCENTAGE
                     val currentTotalPercentage = percentageAdapter.getAllMembersWithPercentages().sumOf { it.percentage }
@@ -172,41 +199,66 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
     }
 
     private fun setupSplitSelectorControls() {
-        binding.btnEqual.setOnClickListener {
-            if (currentSplitIndex != 0) {
+        binding.btnSelf.setOnClickListener {
+            if (currentSplitIndex != 0) { // If not already on Self
                 setFlipperAnimations(currentSplitIndex, 0)
-                binding.viewFlipperRecyclerViews.displayedChild = 0
-                binding.viewFlipperBottomNav.displayedChild = 0
+                binding.viewFlipperRecyclerViews.displayedChild = 0 // Index for Self View
+                binding.viewFlipperBottomNav.displayedChild = 0 // Index for Self Bottom Nav
                 currentSplitIndex = 0
                 updateSplitUI(0)
+                updateSelfSplitUI()
+                calculateAndStoreSelfShare()
+            }
+        }
+        binding.btnEqual.setOnClickListener {
+            if (currentSplitIndex != 1) { // If not already on Equal
+                setFlipperAnimations(currentSplitIndex, 1)
+                binding.viewFlipperRecyclerViews.displayedChild = 1 // Index for Equal RV
+                binding.viewFlipperBottomNav.displayedChild = 1 // Index for Equal Bottom Nav
+                currentSplitIndex = 1
+                updateSplitUI(1)
                 updateEqualSplitUI()
                 calculateAndStoreEqualShares()
             }
         }
 
         binding.btnExact.setOnClickListener {
-            if (currentSplitIndex != 1) {
-                setFlipperAnimations(currentSplitIndex, 1)
-                binding.viewFlipperRecyclerViews.displayedChild = 1
-                binding.viewFlipperBottomNav.displayedChild = 1
-                currentSplitIndex = 1
-                updateSplitUI(1)
+            if (currentSplitIndex != 2) { // If not already on Exact
+                setFlipperAnimations(currentSplitIndex, 2)
+                binding.viewFlipperRecyclerViews.displayedChild = 2 // Index for Exact RV
+                binding.viewFlipperBottomNav.displayedChild = 2 // Index for Exact Bottom Nav
+                currentSplitIndex = 2
+                updateSplitUI(2)
                 updateExactSplitUI()
                 calculateAndStoreExactShares()
             }
         }
 
         binding.btnPercentage.setOnClickListener {
-            if (currentSplitIndex != 2) {
-                setFlipperAnimations(currentSplitIndex, 2)
-                binding.viewFlipperRecyclerViews.displayedChild = 2
-                binding.viewFlipperBottomNav.displayedChild = 2
-                currentSplitIndex = 2
-                updateSplitUI(2)
+            if (currentSplitIndex != 3) { // If not already on Percentage
+                setFlipperAnimations(currentSplitIndex, 3)
+                binding.viewFlipperRecyclerViews.displayedChild = 3 // Index for Percentage RV
+                binding.viewFlipperBottomNav.displayedChild = 3 // Index for Percentage Bottom Nav
+                currentSplitIndex = 3
+                updateSplitUI(3)
                 updatePercentageSplitUI()
                 calculateAndStorePercentageShares()
             }
         }
+    }
+
+    // --- NEW: Self Split Specific Controls ---
+    private fun setupSelfBottomNavControls() {
+        // No interactive controls needed for Self split in the bottom nav.
+        // It's purely for display.
+    }
+
+    private fun updateSelfSplitUI() {
+        val formattedAmount = NumberFormat.getCurrencyInstance(Locale("en", "IN")).format(totalAmount)
+            .replace(NumberFormat.getCurrencyInstance(Locale("en", "IN")).currency?.symbol ?: "₹", "₹")
+
+        binding.constraintSelfBottomNav.findViewById<TextView>(R.id.textView_self_amount).text = formattedAmount
+        binding.constraintSelfBottomNav.findViewById<TextView>(R.id.textView_self_message).text = formattedAmount
     }
 
     // --- Equal Split Specific Controls ---
@@ -235,7 +287,6 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
         }
         binding.constraintEqualBottomNav.findViewById<TextView>(R.id.textView_people_count).text = "($selectedCount people)"
         updateAllTickUI()
-        //binding.btnDone.visibility = if (selectedCount > 0) View.VISIBLE else View.GONE
     }
 
     // --- Percentage Split Specific Controls ---
@@ -260,15 +311,13 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
         if (Math.abs(remainingPercentage) > epsilon) {
             tvRemainingPercentage.setTextColor(ContextCompat.getColor(this, R.color.mapEndPoint))
             tvTotalPercentage.setTextColor(ContextCompat.getColor(this, R.color.mapEndPoint))
-            //binding.btnDone.visibility = View.GONE
         } else {
             tvRemainingPercentage.setTextColor(ContextCompat.getColor(this, R.color.white))
             tvTotalPercentage.setTextColor(ContextCompat.getColor(this, R.color.white))
-            //binding.btnDone.visibility = View.VISIBLE
         }
     }
 
-    // --- NEW: Exact Amount Split Specific Controls ---
+    // --- Exact Amount Split Specific Controls ---
     private fun setupExactAmountBottomNavControls() {
         // You could add buttons like "Clear All" or "Fill Remaining" here for exact amounts if desired.
     }
@@ -297,11 +346,9 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
         if (Math.abs(remainingAmount) > epsilon) {
             tvRemainingAmount.setTextColor(ContextCompat.getColor(this, R.color.mapEndPoint))
             tvAllocatedAmount.setTextColor(ContextCompat.getColor(this, R.color.mapEndPoint))
-            //binding.btnDone.visibility = View.GONE
         } else {
             tvRemainingAmount.setTextColor(ContextCompat.getColor(this, R.color.white))
             tvAllocatedAmount.setTextColor(ContextCompat.getColor(this, R.color.white))
-            //binding.btnDone.visibility = View.VISIBLE
         }
     }
 
@@ -321,14 +368,18 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
     }
 
     private fun updateSplitUI(selectedIndex: Int) {
+        // Reset all buttons to default
+        binding.btnSelf.background = ContextCompat.getDrawable(this, R.drawable.whitebutton_sharpedge)
         binding.btnEqual.background = ContextCompat.getDrawable(this, R.drawable.whitebutton_sharpedge)
         binding.btnExact.background = ContextCompat.getDrawable(this, R.drawable.whitebutton_sharpedge)
         binding.btnPercentage.background = ContextCompat.getDrawable(this, R.drawable.whitebutton_sharpedge)
 
+        // Highlight the selected button
         when (selectedIndex) {
-            0 -> binding.btnEqual.background = ContextCompat.getDrawable(this, R.drawable.greenbutton_sharpedge)
-            1 -> binding.btnExact.background = ContextCompat.getDrawable(this, R.drawable.greenbutton_sharpedge)
-            2 -> binding.btnPercentage.background = ContextCompat.getDrawable(this, R.drawable.greenbutton_sharpedge)
+            0 -> binding.btnSelf.background = ContextCompat.getDrawable(this, R.drawable.greenbutton_sharpedge)
+            1 -> binding.btnEqual.background = ContextCompat.getDrawable(this, R.drawable.greenbutton_sharpedge)
+            2 -> binding.btnExact.background = ContextCompat.getDrawable(this, R.drawable.greenbutton_sharpedge)
+            3 -> binding.btnPercentage.background = ContextCompat.getDrawable(this, R.drawable.greenbutton_sharpedge)
         }
     }
 
@@ -341,6 +392,23 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
     }
 
     // --- Share Calculation Functions ---
+
+    // NEW: Calculate and Store Self Share
+    private fun calculateAndStoreSelfShare() {
+        finalMemberShares.clear()
+        val myName = GlobalClass.Me?.name ?: "You" // Get current user's name
+
+        finalMemberShares.add(
+            MemberShare(
+                memberUid = myUid,
+                memberName = myName,
+                shareAmount = totalAmount,
+                shareType = SplitType.SELF,
+                originalInputValue = totalAmount
+            )
+        )
+        Log.d("ExpenseSplitter", "Self Share: $finalMemberShares")
+    }
 
     private fun calculateAndStoreEqualShares() {
         finalMemberShares.clear()
@@ -449,7 +517,7 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
         calculateAndStorePercentageShares()
     }
 
-    // --- NEW: OnExactAmountChangeListener (for Exact Amount split) ---
+    // --- OnExactAmountChangeListener (for Exact Amount split) ---
     override fun onExactAmountChanged(member: UserModelForSplitter, newAmount: Double) {
         updateExactSplitUI()
         calculateAndStoreExactShares()

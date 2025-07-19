@@ -29,14 +29,13 @@ class SplitMembersAdapter(private val members: List<SplitMemberDisplayData>) :
 
             // Share Amount and "owes" text - NOW USING CURRENCY FORMATTER
             val currencyFormat = NumberFormat.getCurrencyInstance(Locale.getDefault()) // Get currency format
-            val formattedShareAmount = currencyFormat.format(member.shareAmount)
 
 
             // As per image, it's always "X owes Y" or "You owe Y"
             txtShareAmount.text = if (member.isCurrentUser) {
-                "You owe $formattedShareAmount" // Use formatted amount
+                "You owe ${member.shareAmount}" // Use formatted amount
             } else {
-                "${member.memberName} owes $formattedShareAmount" // Use formatted amount
+                "${member.memberName} owes ₹${member.shareAmount}" // Use formatted amount
             }
 
             // Load profile picture

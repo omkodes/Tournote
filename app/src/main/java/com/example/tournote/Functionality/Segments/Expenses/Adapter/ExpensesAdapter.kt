@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tournote.Functionality.Segments.Expenses.Activity.ExpenseInfoActivity
 import com.example.tournote.Functionality.Segments.Expenses.SealedClass.ExpenseListItem
 import com.example.tournote.Functionality.Segments.Expenses.DataClass.ExpensesDataClass
+import com.example.tournote.Functionality.Segments.Expenses.DataClass.SplitType
 import com.example.tournote.GlobalClass
 import com.example.tournote.R
 import java.text.SimpleDateFormat
@@ -56,6 +58,9 @@ class ExpensesAdapter : ListAdapter<ExpenseListItem, RecyclerView.ViewHolder>(Ex
         private val txtDate: TextView = itemView.findViewById(R.id.txtDate)
         private val txtDescription: TextView = itemView.findViewById(R.id.txtDescription)
         private val txtWhoPaidToWhom: TextView = itemView.findViewById(R.id.txtWhoPaidToWhom)
+        val txtStatus: TextView = itemView.findViewById(R.id.txtStatus)
+        val txtAmount: TextView = itemView.findViewById(R.id.txtAmount)
+        val txtWhoPaid : TextView = itemView.findViewById(R.id.txtWhoPaidToWhom)
 
         val body : ConstraintLayout = itemView.findViewById(R.id.itemBody)
 
@@ -87,10 +92,10 @@ class ExpensesAdapter : ListAdapter<ExpenseListItem, RecyclerView.ViewHolder>(Ex
             val currentGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }
 
             if (GlobalClass.Me?.uid == paidByUid) {
-                txtWhoPaidToWhom.text = "You paid to yourself"
+                txtWhoPaidToWhom.text = "You paid ₹${expense.amount}"
             } else {
                 val payerName = currentGroup?.members?.find { it.uid == paidByUid }?.name
-                txtWhoPaidToWhom.text = "${payerName ?: "Someone"} paid to oneself"
+                txtWhoPaidToWhom.text = "${payerName ?: "Someone"} paid ₹${expense.amount}"
             }
 
         }
@@ -100,15 +105,49 @@ class ExpensesAdapter : ListAdapter<ExpenseListItem, RecyclerView.ViewHolder>(Ex
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             ITEM_TYPE_EXPENSE -> {
+                val context = holder.itemView.context // ✅ correct context
                 val expenseItem = getItem(position) as ExpenseListItem.ExpenseItem
                 val expense = expenseItem.expense
                 (holder as ExpenseViewHolder).bind(expense)
 
                 holder.body.setOnClickListener {
-                    val context = holder.itemView.context // ✅ correct context
                     val intent = Intent(context, ExpenseInfoActivity::class.java)
                     intent.putExtra("expenseId", expense.expenseId) // ✅ pass the ID
                     context.startActivity(intent)
+                }
+
+                if(GlobalClass.Me?.uid==expense.paidBy){
+                    holder.txtStatus.text="you lent"
+                    holder.txtStatus.setTextColor(ContextCompat.getColor(context, R.color.textGreen))
+                    holder.txtAmount.setTextColor(ContextCompat.getColor(context, R.color.textGreen))
+
+
+                    if((expense.splitType=="SELF")||(expense.splitType=="null")){
+                        holder.txtStatus.setTextColor(ContextCompat.getColor(context, R.color.white))
+                        holder.txtAmount.visibility=View.GONE
+                        holder.txtStatus.text="No balence"
+                    }else{
+                        var total = 0.00
+                        for(member in (expense.splitMembers)!!){
+                            if((member.memberUid!= GlobalClass.Me?.uid)&&(member.paid==false)){
+                                total+=member.shareAmount.toDouble()
+                            }
+                        }
+                        holder.txtAmount.text = "₹" + String.format("%.2f", total)
+                    }
+
+                }else{
+                    if((expense.splitMembers?.find { it.memberUid == GlobalClass.Me?.uid } ==null)||(expense.splitMembers?.find { it.memberUid == GlobalClass.Me?.uid }?.paid ==true)){
+                        holder.txtStatus.setTextColor(ContextCompat.getColor(context, R.color.white))
+                        holder.txtAmount.visibility=View.GONE
+                        holder.txtStatus.text="No balence"
+                    }
+                    else{
+                        holder.txtStatus.setTextColor(ContextCompat.getColor(context, R.color.textRed))
+                        holder.txtAmount.setTextColor(ContextCompat.getColor(context, R.color.textRed))
+                        holder.txtStatus.text="you borrowed"
+                        holder.txtAmount.text="₹"+ String.format("%.2f", (expense.splitMembers?.find { it.memberUid == GlobalClass.Me?.uid }?.shareAmount))
+                    }
                 }
             }
 

@@ -59,7 +59,7 @@ class AddExpenseActivity : AppCompatActivity() {
 
     // New properties to store split information received from ExpenseSplitterActivity
     private var splitMemberShares: ArrayList<MemberShare>? = null
-    private var selectedSplitType: SplitType? = null
+    private var selectedSplitType: SplitType = SplitType.SELF // Initialize with SELF as default
 
     // ActivityResultLauncher for ExpenseSplitterActivity
     private val expenseSplitterLauncher = registerForActivityResult(
@@ -71,7 +71,7 @@ class AddExpenseActivity : AppCompatActivity() {
                 splitMemberShares = intent.getParcelableArrayListExtra(ExpenseSplitterActivity.EXTRA_MEMBER_SHARES)
                 // Retrieve the split type name (String) and convert it back to SplitType enum
                 val splitTypeName = intent.getStringExtra(ExpenseSplitterActivity.EXTRA_SPLIT_TYPE)
-                selectedSplitType = splitTypeName?.let { SplitType.valueOf(it) }
+                selectedSplitType = splitTypeName?.let { SplitType.valueOf(it) } ?: SplitType.SELF
 
                 // Update the txtBtnSplit text based on the selected split type
                 updateSplitButtonText()
@@ -80,11 +80,10 @@ class AddExpenseActivity : AppCompatActivity() {
             }
         } else if (result.resultCode == RESULT_CANCELED) {
             // User cancelled the split operation in ExpenseSplitterActivity
-            // Clear any previously saved split data and reset the button text
-            splitMemberShares = null
-            selectedSplitType = null
+            // Reset to default SELF split instead of null
+            initializeDefaultSelfSplit()
             updateSplitButtonText()
-            Log.d("AddExpenseActivity", "Split activity cancelled. Split data cleared.")
+            Log.d("AddExpenseActivity", "Split activity cancelled. Reset to SELF split.")
         }
     }
 
@@ -155,6 +154,10 @@ class AddExpenseActivity : AppCompatActivity() {
 
         setupWebView()
         checkLocationPermission()
+
+        // Initialize default self-split
+        initializeDefaultSelfSplit()
+        updateSplitButtonText()
 
         binding.btnCloseActivity.setOnClickListener {
             setResult(RESULT_OK_EXPENSE_ADDED)
@@ -227,12 +230,16 @@ class AddExpenseActivity : AppCompatActivity() {
                             }
                         }
 
+                        // Convert SplitType enum to string, guaranteed to be non-null
                         val splitType = when (selectedSplitType) {
                             SplitType.EQUAL -> "Equally"
                             SplitType.EXACT_AMOUNT -> "ExactAmounts"
                             SplitType.PERCENTAGE -> "Percentages"
-                            null -> "null" // No split selected or cancelled
+                            SplitType.SELF -> "Self"
                         }
+
+                        // Ensure we have split member shares, create default if somehow null
+                        val finalSplitMemberShares = splitMemberShares ?: createDefaultSelfSplit()
 
                         // Create expense details, including the split information
                         val expense = ExpensesDataClass(
@@ -245,8 +252,8 @@ class AddExpenseActivity : AppCompatActivity() {
                             savedLatitude,
                             savedLongitude,
                             note,
-                            splitType,
-                            splitMemberShares // Pass the collected split shares here
+                            splitType, // This will always be "Self" if btnSplit was never clicked
+                            finalSplitMemberShares // Pass the split shares
                         )
 
                         repo.pushExpenseToFirebase(expense)
@@ -276,6 +283,40 @@ class AddExpenseActivity : AppCompatActivity() {
     }
 
     /**
+     * Initializes default self-split with current total amount or 0.0 if no amount entered yet
+     */
+    private fun initializeDefaultSelfSplit() {
+        val totalAmountString = binding.txtAmount.text.toString()
+        val totalAmount = totalAmountString.toDoubleOrNull() ?: 0.0
+
+        val myUid = GlobalClass.Me?.uid ?: ""
+        val myName = GlobalClass.Me?.name ?: "You"
+
+        selectedSplitType = SplitType.SELF
+        splitMemberShares = createDefaultSelfSplit(totalAmount)
+    }
+
+    /**
+     * Creates default self split with given amount
+     */
+    private fun createDefaultSelfSplit(totalAmount: Double = 0.0): ArrayList<MemberShare> {
+        val myUid = GlobalClass.Me?.uid ?: ""
+        val myName = GlobalClass.Me?.name ?: "You"
+
+        return ArrayList<MemberShare>().apply {
+            add(
+                MemberShare(
+                    memberUid = myUid,
+                    memberName = myName,
+                    shareAmount = totalAmount,
+                    shareType = SplitType.SELF,
+                    originalInputValue = totalAmount
+                )
+            )
+        }
+    }
+
+    /**
      * Updates the text of the split button based on the selected split type.
      * Also changes its color for visual feedback.
      */
@@ -284,9 +325,10 @@ class AddExpenseActivity : AppCompatActivity() {
             SplitType.EQUAL -> "Equally"
             SplitType.EXACT_AMOUNT -> "Exact Amounts"
             SplitType.PERCENTAGE -> "Percentages"
-            null -> "Split" // No split selected or cancelled
+            SplitType.SELF -> "Self"
         }
-
+        // You might want to change the color here too for visual feedback
+        // e.g., binding.txtbtnSplit.setTextColor(ContextCompat.getColor(this, R.color.green_accent))
     }
 
     /**

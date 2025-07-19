@@ -48,7 +48,7 @@ class ExpensesRepository {
         val overallSplitTypeString = if (!filteredSplitMembers.isNullOrEmpty()) {
             filteredSplitMembers[0].shareType.name // Take the type of the first (non-zero) member's share
         } else {
-            "null" // Default to "null" if no split members or all shares are zero
+            "SELF" // Default to "null" if no split members or all shares are zero
         }
 
         // Create expense data for PrimaryDetails
@@ -232,7 +232,7 @@ class ExpensesRepository {
                                         val note = primaryDetailsSnapshot.child("note")
                                             .getValue(String::class.java)
                                         val splitTypeString = primaryDetailsSnapshot.child("splitType")
-                                            .getValue(String::class.java)?: "null" // Overall split type as string
+                                            .getValue(String::class.java)?: "SELF" // Overall split type as string
 
                                         // Get location data
                                         val latitude = locationDetailsSnapshot.child("latitude")
@@ -244,7 +244,7 @@ class ExpensesRepository {
                                         val overallSplitType = try {
                                             SplitType.valueOf(splitTypeString)
                                         } catch (e: IllegalArgumentException) {
-                                            SplitType.EQUAL // Fallback if string is invalid
+                                            SplitType.SELF // Fallback if string is invalid
                                         }
 
                                         // Fetch split distribution details
@@ -253,6 +253,7 @@ class ExpensesRepository {
                                             val memberUid = memberDistributionSnapshot.key
                                             if (memberUid != null) {
                                                 val fetchedShareAmount = memberDistributionSnapshot.child("shareAmount").getValue(Double::class.java) ?: 0.0
+                                                val paid = memberDistributionSnapshot.child("paid").getValue(Boolean::class.java)?:false
                                                 // memberName, shareType, originalInputValue are NOT stored here.
                                                 // We will use placeholders or infer for MemberShare construction.
 
@@ -262,7 +263,8 @@ class ExpensesRepository {
                                                         memberName = "", // Placeholder: You need to fetch member names independently using memberUid
                                                         shareAmount = fetchedShareAmount,
                                                         shareType = overallSplitType, // Use the overall expense split type
-                                                        originalInputValue = null // Not stored, so null
+                                                        originalInputValue = null ,// Not stored, so null
+                                                        paid = paid
                                                     )
                                                 )
                                             }

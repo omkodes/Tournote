@@ -64,7 +64,7 @@
             app:layout_constraintStart_toEndOf="@id/imgRepresentation"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/txtStatus"
+            app:layout_constraintEnd_toStartOf="@id/llStatus"
             android:gravity="start"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"
@@ -86,18 +86,34 @@
                 android:textSize="12sp"
                 android:layout_marginTop="5dp"/>
         </LinearLayout>
-        <TextView
-            android:id="@+id/txtStatus"
+        <LinearLayout
+            android:id="@+id/llStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="no balence"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:textStyle="italic"
-            />
+            android:gravity="right"
+            >
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="no balence"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:textStyle="italic"
+                />
+            <TextView
+                android:id="@+id/txtAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹100.00"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
