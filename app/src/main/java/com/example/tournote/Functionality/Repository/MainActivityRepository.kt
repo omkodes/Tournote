@@ -5,6 +5,8 @@ import com.example.tournote.GlobalClass
 import com.example.tournote.GroupData_Detailed_Model
 import com.example.tournote.UserModel
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.google.firebase.database.database
 import kotlinx.coroutines.tasks.await
 
@@ -92,10 +94,10 @@ class MainActivityRepository {
 
     // NEW: Fetches all groups the current user is a member of
     suspend fun getAllMyDetailedGroups(): Result<List<GroupData_Detailed_Model>> {
-        val myUid = GlobalClass.Me?.uid
+        var myUid = GlobalClass.Me?.uid
         if (myUid == null) {
             Log.e("MainActivityRepository", "GlobalClass.Me.uid is null. Cannot fetch user's groups.")
-            return Result.failure(Exception("User not logged in or UID not set."))
+            myUid = FirebaseAuth.getInstance().currentUser?.uid!!
         }
 
         return try {

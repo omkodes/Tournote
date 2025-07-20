@@ -38,6 +38,15 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    packagingOptions {
+        exclude ("META-INF/DEPENDENCIES")
+        exclude ("META-INF/LICENSE")
+        exclude ("META-INF/LICENSE.txt")
+        exclude ("META-INF/NOTICE")
+        exclude ("META-INF/NOTICE.txt")
+    }
+
 }
 
 // Add the googleServices block here to explicitly handle multiple google-services.json files
@@ -117,5 +126,13 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     implementation("com.kizitonwose.calendar:view:2.7.0")
+
+// Google API client and Drive
+    implementation ("com.google.api-client:google-api-client-android:1.34.0")
+    implementation ("com.google.http-client:google-http-client-gson:1.42.3")
+    implementation ("com.google.http-client:google-http-client-android:1.42.3")
+    implementation ("com.google.apis:google-api-services-drive:v3-rev197-1.25.0")
+
+    implementation ("androidx.exifinterface:exifinterface:1.3.6")
 // Check MavenCentral for the latest stable version
 }
