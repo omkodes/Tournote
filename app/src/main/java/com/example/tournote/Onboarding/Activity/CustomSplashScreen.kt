@@ -87,11 +87,9 @@ class CustomSplashScreen : AppCompatActivity() {
             Log.d("CustomSplashScreen", "Attempting to fetch all user's detailed groups...")
             val groupsResult = repo.getAllMyDetailedGroups()
             groupsResult.onSuccess { groups ->
-                GlobalClass.GroupDetails_Everything = groups
-                Log.d("CustomSplashScreen", "Successfully loaded ${groups.size} detailed groups into GlobalClass.GroupDetails_Everything.")
+                Log.d("CustomSplashScreen", "Successfully loaded ${groups.size} detailed groups.")
             }.onFailure { e ->
                 Log.e("CustomSplashScreen", "Failed to load all user's detailed groups: ${e.message}")
-                GlobalClass.GroupDetails_Everything = emptyList()
             }
 
             dataLoadingComplete = true

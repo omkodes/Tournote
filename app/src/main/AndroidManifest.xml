@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- Indicate that camera is optional -->
+
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" /> <!-- Indicate that telephony (SMS) is optional -->
@@ -31,7 +33,7 @@
         tools:targetApi="31">
         <activity
             android:name=".Functionality.Segments.Expenses.AutoExpenseDetection.SmsGroupSelectionActivity"
-            android:exported="false"
+            android:exported="true"
             android:launchMode="singleTop" />
         <!-- Onboarding & Launch -->
         <activity
@@ -122,7 +124,8 @@
 
         <receiver
             android:name=".Functionality.Segments.Expenses.AutoExpenseDetection.SmsReceiver"
-            android:exported="true">
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
@@ -130,6 +133,7 @@
         <receiver
             android:name=".Functionality.Segments.Expenses.AutoExpenseDetection.ReplyReceiver"
             android:exported="true" />
+
     </application>
 
 </manifest>

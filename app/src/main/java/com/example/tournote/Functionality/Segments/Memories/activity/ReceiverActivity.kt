@@ -156,16 +156,19 @@ class ReceiverActivity : AppCompatActivity() {
         // on group selected:
 
         lifecycleScope.launch {
-            val groups = mainRepo.getAllMyDetailedGroups()
+            val groupsResponse = mainRepo.getAllMyDetailedGroups()
 
-            if (groups.isSuccess){
+            if (groupsResponse.isSuccess) {
                 bar.visibility = View.GONE
-                if (groups.getOrNull().isNullOrEmpty()) {
-                    Toast.makeText(this@ReceiverActivity, "No groups available", Toast.LENGTH_SHORT).show()
+
+                val validGroups = groupsResponse.getOrNull()?.filter { it.isGroupValid == true }
+
+                if (validGroups.isNullOrEmpty()) {
+                    Toast.makeText(this@ReceiverActivity, "No valid groups available. Please create a valid group first.", Toast.LENGTH_SHORT).show()
                     return@launch
                 }
 
-                val groupNames = groups.getOrNull()?.map { it.name ?: "Unnamed Group" }!!.toTypedArray()
+                val groupNames = validGroups.map { it.name ?: "Unnamed Group" }.toTypedArray()
 
                 AlertDialog.Builder(this@ReceiverActivity)
                     .setTitle("Select Group")
@@ -176,7 +179,7 @@ class ReceiverActivity : AppCompatActivity() {
                     }
                     .setCancelable(false)
                     .show()
-            }else{
+            } else {
                 Toast.makeText(this@ReceiverActivity, "Error fetching groups", Toast.LENGTH_SHORT).show()
                 bar.visibility = View.GONE
             }

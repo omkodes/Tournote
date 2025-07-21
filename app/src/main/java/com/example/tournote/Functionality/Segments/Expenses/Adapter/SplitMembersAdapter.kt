@@ -33,9 +33,9 @@ class SplitMembersAdapter(private val members: List<SplitMemberDisplayData>) :
 
             // As per image, it's always "X owes Y" or "You owe Y"
             txtShareAmount.text = if (member.isCurrentUser) {
-                "You owe ${member.shareAmount}" // Use formatted amount
+                "You owe ₹${"%.2f".format(member.shareAmount)}" // Use formatted amount
             } else {
-                "${member.memberName} owes ₹${member.shareAmount}" // Use formatted amount
+                "${member.memberName} owes ₹${"%.2f".format(member.shareAmount)}" // Use formatted amount${"%.2f".format(owesItem.amount)}
             }
 
             // Load profile picture

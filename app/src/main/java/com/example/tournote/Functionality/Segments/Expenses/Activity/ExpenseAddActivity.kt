@@ -1,4 +1,3 @@
-// File: com.example.tournote.Functionality.Segments.Expenses.Activity.AddExpenseActivity.kt
 package com.example.tournote.Functionality.Segments.Expenses.Activity
 
 import android.Manifest
@@ -60,6 +59,9 @@ class ExpenseAddActivity : AppCompatActivity() {
     // New properties to store split information received from ExpenseSplitterActivity
     private var splitMemberShares: ArrayList<MemberShare>? = null
     private var selectedSplitType: SplitType = SplitType.SELF // Initialize with SELF as default
+
+    // Flag to check if the expense is auto-detected
+    private var isAutoDetectedExpense: Boolean = false
 
     // ActivityResultLauncher for ExpenseSplitterActivity
     private val expenseSplitterLauncher = registerForActivityResult(
@@ -131,6 +133,11 @@ class ExpenseAddActivity : AppCompatActivity() {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
         private const val CAMERA_PERMISSION_REQUEST_CODE = 2
         const val RESULT_OK_EXPENSE_ADDED = AppCompatActivity.RESULT_OK + 1
+
+        // Constants for intent extras
+        const val EXTRA_AMOUNT = "extra_amount"
+        const val EXTRA_DESCRIPTION = "extra_description"
+        const val EXTRA_IS_AUTO_DETECTED = "extra_is_auto_detected"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -151,6 +158,21 @@ class ExpenseAddActivity : AppCompatActivity() {
 
         // Initialize location client
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        // Check if launched for auto-detected expense
+        isAutoDetectedExpense = intent.getBooleanExtra(EXTRA_IS_AUTO_DETECTED, false)
+        if (isAutoDetectedExpense) {
+            val amount = intent.getStringExtra(EXTRA_AMOUNT)
+            val description = intent.getStringExtra(EXTRA_DESCRIPTION)
+
+            binding.txtAmount.setText(amount)
+            binding.txtDescription.setText(description)
+
+            // Optional: Disable editing for amount and description if auto-detected
+            binding.txtAmount.isEnabled = false
+            binding.txtDescription.isEnabled = false
+            Toast.makeText(this, "Expense details pre-filled from SMS.", Toast.LENGTH_LONG).show()
+        }
 
         setupWebView()
         checkLocationPermission()
@@ -179,7 +201,11 @@ class ExpenseAddActivity : AppCompatActivity() {
             }else{
                 val intent = Intent(this, ExpenseSplitterActivity::class.java)
                 intent.putExtra("totalAmount", binding.txtAmount.text.toString())
-                // Use the new launcher to start ExpenseSplitterActivity
+                // Pass current split data if available for re-editing
+                splitMemberShares?.let {
+                    intent.putParcelableArrayListExtra(ExpenseSplitterActivity.EXTRA_MEMBER_SHARES, it)
+                    intent.putExtra(ExpenseSplitterActivity.EXTRA_SPLIT_TYPE, selectedSplitType.name)
+                }
                 expenseSplitterLauncher.launch(intent)
             }
         }
@@ -225,50 +251,60 @@ class ExpenseAddActivity : AppCompatActivity() {
                             try {
                                 imageUrl = repo.uploadImageToCloudinary(uri, this@ExpenseAddActivity)
                             } catch (e: Exception) {
-                                Toast.makeText(this@ExpenseAddActivity, "Image upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                                // Log the actual exception and its stack trace
+                                Log.e("AddExpenseActivity", "Image upload failed: ${e.message}", e)
+                                Toast.makeText(this@ExpenseAddActivity, "Image upload failed: ${e.message ?: "Unknown error"}", Toast.LENGTH_SHORT).show()
                                 // Continue without image if upload fails
                             }
                         }
 
                         // Convert SplitType enum to string, guaranteed to be non-null
-                        val splitType = when (selectedSplitType) {
-                            SplitType.EQUAL -> "Equally"
-                            SplitType.EXACT_AMOUNT -> "ExactAmounts"
-                            SplitType.PERCENTAGE -> "Percentages"
-                            SplitType.SELF -> "Self"
-                        }
+                        // This logic is slightly different from pushExpenseToFirebase, which infers from splitMembers
+                        // We should pass the actual selectedSplitType name
+                        val splitTypeString = selectedSplitType.name
 
                         // Ensure we have split member shares, create default if somehow null
                         val finalSplitMemberShares = splitMemberShares ?: createDefaultSelfSplit()
 
                         // Create expense details, including the split information
                         val expense = ExpensesDataClass(
-                            "null", // Expense ID will be generated by Firebase
+                            null, // Expense ID will be generated by Firebase
                             binding.txtDescription.text.toString(),
                             binding.txtAmount.text.toString(),
-                            (GlobalClass.Me?.uid)!!,
-                            (if (selectedDate == null) System.currentTimeMillis()
-                                .toString() else selectedDate.toString()),
+                            (GlobalClass.Me?.uid)!!, // Ensure GlobalClass.Me.uid is not null here
+                            (if (selectedDate == null) System.currentTimeMillis().toString() else selectedDate.toString()),
                             imageUrl,
                             savedLatitude,
                             savedLongitude,
                             note,
-                            splitType, // This will always be "Self" if btnSplit was never clicked
+                            splitTypeString, // Use the selectedSplitType name directly
                             finalSplitMemberShares // Pass the split shares
                         )
 
+                        // Add logging before pushing to Firebase
+                        Log.d("AddExpenseActivity", "Attempting to push expense to Firebase: $expense")
                         repo.pushExpenseToFirebase(expense)
 
                         // Clean up camera-captured image after saving
                         cleanupCameraImage()
 
                         Toast.makeText(this@ExpenseAddActivity, "Expense saved successfully!", Toast.LENGTH_SHORT).show()
-                        // Set result and finish to go back to previous activity (e.g., Home or Segment Details)
-                        setResult(RESULT_OK_EXPENSE_ADDED)
-                        finish()
+
+                        // --- START OF MODIFICATION ---
+                        if (isAutoDetectedExpense) {
+                            // Close the entire application if the expense was auto-detected
+                            finishAffinity()
+                        } else {
+                            // Otherwise, just finish this activity and return to the previous one
+                            setResult(RESULT_OK_EXPENSE_ADDED)
+                            finish()
+                        }
+                        // --- END OF MODIFICATION ---
 
                     } catch (e: Exception) {
-                        Toast.makeText(this@ExpenseAddActivity, "Failed to save expense: ${e.message}", Toast.LENGTH_SHORT).show()
+                        // Log the actual exception and its stack trace here
+                        Log.e("AddExpenseActivity", "Failed to save expense: ${e.message}", e)
+                        Toast.makeText(this@ExpenseAddActivity, "Failed to save expense: ${e.message ?: "Unknown error occurred"}", Toast.LENGTH_LONG).show()
                     } finally {
                         // Reset button state regardless of success or failure
                         binding.btnSave.isEnabled = true
@@ -290,9 +326,6 @@ class ExpenseAddActivity : AppCompatActivity() {
         val totalAmountString = binding.txtAmount.text.toString()
         val totalAmount = totalAmountString.toDoubleOrNull() ?: 0.0
 
-        val myUid = GlobalClass.Me?.uid ?: ""
-        val myName = GlobalClass.Me?.name ?: "You"
-
         selectedSplitType = SplitType.SELF
         splitMemberShares = createDefaultSelfSplit(totalAmount)
     }
@@ -311,7 +344,9 @@ class ExpenseAddActivity : AppCompatActivity() {
                     memberName = myName,
                     shareAmount = totalAmount,
                     shareType = SplitType.SELF,
-                    originalInputValue = totalAmount
+                    originalInputValue = totalAmount,
+                    paid = false, // Default to false
+                    partialPayment = 0.0 // Default to 0.0
                 )
             )
         }

@@ -120,6 +120,11 @@ class MainActivityRepository {
                 }
             }
             Log.d("MainActivityRepository", "Successfully fetched ${detailedGroups.size} detailed groups.")
+
+            // Update GlobalClass.GroupDetails_Everything here within the repo function
+            GlobalClass.GroupDetails_Everything = detailedGroups
+            Log.d("MainActivityRepository", "Successfully loaded ${detailedGroups.size} detailed groups into GlobalClass.GroupDetails_Everything.")
+
             Result.success(detailedGroups)
         } catch (e: Exception) {
             Log.e("MainActivityRepository", "Error fetching all detailed groups for user $myUid: ${e.message}")

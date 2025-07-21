@@ -50,11 +50,12 @@ class SmsReceiver : BroadcastReceiver() {
 
     private fun containsExpenseKeyword(body: String): Boolean {
         val lower = body.lowercase()
-        return listOf("debited", "deducted", "txn", "payment alert").any { lower.contains(it) }
+        return listOf("debited", "deducted", "txn", "payment alert", "spent", "purchased").any { lower.contains(it) }
     }
 
     private fun extractAmount(body: String): String? {
-        val regex = Regex("""(?:INR|Rs\.?|₹)\s?[\d,]+(?:\.\d{1,2})?""", RegexOption.IGNORE_CASE)
-        return regex.find(body)?.value
+        val regex = Regex("""(?:INR|Rs\.?|₹|USD|\$|£|€)\s*([\d,]+(?:\.\d{1,2})?)""", RegexOption.IGNORE_CASE)
+        val match = regex.find(body)
+        return match?.groupValues?.get(1)
     }
 }
