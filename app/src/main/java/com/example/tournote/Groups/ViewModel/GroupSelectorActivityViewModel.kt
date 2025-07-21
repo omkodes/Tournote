@@ -151,27 +151,27 @@ class GroupSelectorActivityViewModel : ViewModel() {
     }
 
 
-    fun fetchGroupDetails(){
-        /*if(GlobalClass.GroupDetails_Everything.isEmpty()) {
-            viewModelScope.launch {
-                isLoading.value=true
-
-                val groupsResult = repo1.getAllMyDetailedGroups()
-                groupsResult.onSuccess { groups ->
-                    GlobalClass.GroupDetails_Everything = groups
-                    Log.d("CustomSplashScreen", "Successfully loaded ${groups.size} detailed groups into GlobalClass.GroupDetails_Everything.")
-                }.onFailure { e ->
-                    Log.e("CustomSplashScreen", "Failed to load all user's detailed groups: ${e.message}")
-                    GlobalClass.GroupDetails_Everything = emptyList()
+    fun fetchGroupDetails() {
+        viewModelScope.launch {
+            isLoading.value = true
+            try {
+                if (GlobalClass.GroupDetails_Everything.isEmpty()) {
+                    val groupsResult = repo1.getAllMyDetailedGroups()
+                    groupsResult.onSuccess { groups ->
+                        //GlobalClass.GroupDetails_Everything = groups
+                        Log.d("CustomSplashScreen", "Successfully loaded ${groups.size} detailed groups.")
+                    }.onFailure { e ->
+                        Log.e("CustomSplashScreen", "Failed to load groups: ${e.message}")
+                        GlobalClass.GroupDetails_Everything = emptyList()
+                    }
                 }
-
+                _groups.value = GlobalClass.GroupDetails_Everything
+            } finally {
+                isLoading.value = false
             }
-        }*/
-
-        isLoading.value=false
-
-        _groups.value= GlobalClass.GroupDetails_Everything
+        }
     }
+
 
 
 
