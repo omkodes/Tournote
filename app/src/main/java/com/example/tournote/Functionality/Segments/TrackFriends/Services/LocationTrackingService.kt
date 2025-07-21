@@ -1,22 +1,28 @@
-package com.example.tournote.Services
+package com.example.tournote.Functionality.Segments.TrackFriends.Services
+
+import android.Manifest
+import android.R
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.os.Build
-import android.os.IBinder
 import android.os.Handler
+import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.example.tournote.ApplicationClass
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import java.util.*
+import java.util.Calendar
 
 /**
  * LocationTrackingService - A foreground service that tracks user location
@@ -166,7 +172,7 @@ class LocationTrackingService : Service() {
         val notification = createLocationTrackingNotification()
 
         // Start foreground service
-        startForeground(ApplicationClass.LOCATION_NOTIFICATION_ID, notification.build())
+        startForeground(ApplicationClass.Companion.LOCATION_NOTIFICATION_ID, notification.build())
 
         Log.d(TAG, "Foreground service started")
     }
@@ -179,6 +185,7 @@ class LocationTrackingService : Service() {
         val openAppIntent = Intent(this, ApplicationClass::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
+
         val openAppPendingIntent = PendingIntent.getActivity(
             this, 0, openAppIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -194,12 +201,12 @@ class LocationTrackingService : Service() {
         )
 
         // Get base notification from ApplicationClass
-        val baseNotification = ApplicationClass.instance.createLocationTrackingNotification()
+        val baseNotification = ApplicationClass.Companion.instance.createLocationTrackingNotification()
 
         return baseNotification
             .setContentIntent(openAppPendingIntent)
             .addAction(
-                android.R.drawable.ic_menu_close_clear_cancel, // Using system icon
+                R.drawable.ic_menu_close_clear_cancel, // Using system icon
                 "Stop Tracking",
                 stopPendingIntent
             )
@@ -212,18 +219,18 @@ class LocationTrackingService : Service() {
         val notification = createLocationTrackingNotification()
             .setContentText("Uploaded $uploadCount locations • Last: ${getCurrentTime()}")
 
-        ApplicationClass.instance.getNotificationManager()
-            .notify(ApplicationClass.LOCATION_NOTIFICATION_ID, notification.build())
+        ApplicationClass.Companion.instance.getNotificationManager()
+            .notify(ApplicationClass.Companion.LOCATION_NOTIFICATION_ID, notification.build())
     }
 
     /**
      * Show error notification
      */
     private fun showErrorNotification(errorMessage: String) {
-        val errorNotification = ApplicationClass.instance.createLocationErrorNotification(errorMessage)
+        val errorNotification = ApplicationClass.Companion.instance.createLocationErrorNotification(errorMessage)
 
-        ApplicationClass.instance.getNotificationManager()
-            .notify(ApplicationClass.LOCATION_NOTIFICATION_ID + 1, errorNotification.build())
+        ApplicationClass.Companion.instance.getNotificationManager()
+            .notify(ApplicationClass.Companion.LOCATION_NOTIFICATION_ID + 1, errorNotification.build())
     }
 
     /**
@@ -246,11 +253,11 @@ class LocationTrackingService : Service() {
         // Check for location permissions
         if (ActivityCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             Log.e(TAG, "Location permissions not granted")
@@ -296,11 +303,11 @@ class LocationTrackingService : Service() {
         // Check permissions again
         if (ActivityCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             Log.e(TAG, "Location permissions not granted")

@@ -135,4 +135,6 @@ dependencies {
 
     implementation ("androidx.exifinterface:exifinterface:1.3.6")
 // Check MavenCentral for the latest stable version
+
+    implementation("androidx.work:work-runtime:2.10.2")
 }

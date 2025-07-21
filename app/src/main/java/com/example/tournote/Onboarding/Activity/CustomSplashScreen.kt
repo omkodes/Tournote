@@ -29,6 +29,7 @@ class CustomSplashScreen : AppCompatActivity() {
 
     // Add this constant for SharedPreferences key
     private val PREF_LOCATION_TRACKING_ENABLED = "location_tracking_enabled"
+    private val PREF_SMS_READER_ENAMBELD = "sms_enabled"
 
     private var splashStartTime = 0L
     private var dataLoadingComplete = false
@@ -47,6 +48,7 @@ class CustomSplashScreen : AppCompatActivity() {
         window.navigationBarColor = ContextCompat.getColor(this, R.color.blue)
 
         GlobalClass.isTracking=loadLocationTrackingPreference()
+        GlobalClass.isSmsWatched=loadSmsWatcherPreference()
 
         splashStartTime = System.currentTimeMillis()
 
@@ -135,5 +137,10 @@ class CustomSplashScreen : AppCompatActivity() {
     private fun loadLocationTrackingPreference(): Boolean {
         val editor = getSharedPreferences("MY_SETTING", MODE_PRIVATE)
         return editor.getBoolean(PREF_LOCATION_TRACKING_ENABLED, false)
+    }
+
+    private fun loadSmsWatcherPreference(): Boolean{
+        val editor = getSharedPreferences("MY_SETTING", MODE_PRIVATE)
+        return editor.getBoolean(PREF_SMS_READER_ENAMBELD, false)
     }
 }

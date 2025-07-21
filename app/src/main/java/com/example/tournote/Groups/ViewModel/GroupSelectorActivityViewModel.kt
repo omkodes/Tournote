@@ -2,14 +2,17 @@ package com.example.tournote.Groups.ViewModel
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.*
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
+import com.example.tournote.Functionality.Repository.MainActivityRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.GroupData_Detailed_Model
 import com.example.tournote.Groups.DataClass.GroupInfoModel
 import com.example.tournote.Groups.Repository.CreateGroupRepository
+import com.example.tournote.Onboarding.Repository.authRepository
 import com.example.tournote.UserModel
 import kotlinx.coroutines.launch
 import java.io.File
@@ -17,6 +20,7 @@ import java.io.File
 class GroupSelectorActivityViewModel : ViewModel() {
 
     val repo = CreateGroupRepository()
+    val repo1 = MainActivityRepository()
     val isLoading = MutableLiveData<Boolean>()
 
     private val _resetUI =  MutableLiveData(false)
@@ -146,12 +150,32 @@ class GroupSelectorActivityViewModel : ViewModel() {
         }
     }
 
-    fun fetchGroupDetails(){
-        viewModelScope.launch {
-            _groups.value= GlobalClass.GroupDetails_Everything
 
-        }
+    fun fetchGroupDetails(){
+        /*if(GlobalClass.GroupDetails_Everything.isEmpty()) {
+            viewModelScope.launch {
+                isLoading.value=true
+
+                val groupsResult = repo1.getAllMyDetailedGroups()
+                groupsResult.onSuccess { groups ->
+                    GlobalClass.GroupDetails_Everything = groups
+                    Log.d("CustomSplashScreen", "Successfully loaded ${groups.size} detailed groups into GlobalClass.GroupDetails_Everything.")
+                }.onFailure { e ->
+                    Log.e("CustomSplashScreen", "Failed to load all user's detailed groups: ${e.message}")
+                    GlobalClass.GroupDetails_Everything = emptyList()
+                }
+
+            }
+        }*/
+
+        isLoading.value=false
+
+        _groups.value= GlobalClass.GroupDetails_Everything
     }
+
+
+
+
 
     fun uploadImageToCloudinary(uri: Uri, context: Context) {
         viewModelScope.launch {

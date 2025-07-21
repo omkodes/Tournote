@@ -30,7 +30,7 @@ import java.util.Locale
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tournote.Functionality.Segments.Expenses.Activity.ExpenseSettleUpActivity
-import com.yourpackage.app.models.DistributionItem
+import com.example.tournote.Functionality.Segments.Expenses.SealedClass.DistributionItem
 
 class ExpensesFragment : Fragment() {
 

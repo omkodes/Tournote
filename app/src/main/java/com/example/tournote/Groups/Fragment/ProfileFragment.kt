@@ -1,6 +1,7 @@
 package com.example.tournote.Groups.Fragment
 
 import android.Manifest
+import android.content.ComponentName
 import android.content.Context // Import Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
@@ -16,12 +17,14 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.ReplyReceiver
+import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.SmsReceiver
 import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.Activity.GroupSelectorActivity
 import com.example.tournote.Onboarding.Activity.LogInActivity
 import com.example.tournote.Onboarding.ViewModel.authViewModel
 import com.example.tournote.R
-import com.example.tournote.Services.LocationTrackingService
+import com.example.tournote.Functionality.Segments.TrackFriends.Services.LocationTrackingService
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -31,6 +34,11 @@ class ProfileFragment : Fragment() {
 
     // Add this constant for SharedPreferences key
     private val PREF_LOCATION_TRACKING_ENABLED = "location_tracking_enabled"
+    private val PREF_SMS_READER_ENAMBELD = "sms_enabled"
+
+    private val SMS_PERMISSION_CODE = 101
+
+
     var toggled = false
 
     // Location permission launcher
@@ -73,6 +81,8 @@ class ProfileFragment : Fragment() {
 
         // Setup location tracking switch
         setupLocationTrackingSwitch(view)
+        setupSmsWatcherSwitch(view)
+
 
         return view
     }
@@ -128,6 +138,72 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun setupSmsWatcherSwitch(view: View){
+        val smsWatcherSwitch = view.findViewById<Switch>(R.id.switch2)
+        smsWatcherSwitch.isChecked = GlobalClass.isSmsWatched
+
+        smsWatcherSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                // Ask for permission if not granted
+                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+
+                    requestPermissions(
+                        arrayOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS),
+                        SMS_PERMISSION_CODE
+                    )
+                } else {
+                    enableSmsWatcher()
+                }
+            } else {
+                disableSmsWatcher()
+            }
+        }
+    }
+    private fun enableSmsWatcher() {
+        GlobalClass.isSmsWatched = true
+        saveSMSWatcherPreferences(true)
+
+        // Enable receiver
+        val componentName1 = ComponentName(requireContext(), SmsReceiver::class.java)
+        requireContext().packageManager.setComponentEnabledSetting(
+            componentName1,
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            PackageManager.DONT_KILL_APP
+        )
+        val componentName2 = ComponentName(requireContext(), ReplyReceiver::class.java)
+        requireContext().packageManager.setComponentEnabledSetting(
+            componentName2,
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            PackageManager.DONT_KILL_APP
+        )
+
+        Toast.makeText(requireContext(), "Expense detection enabled", Toast.LENGTH_SHORT).show()
+    }
+
+
+    private fun disableSmsWatcher() {
+        GlobalClass.isSmsWatched = false
+        saveSMSWatcherPreferences(false)
+
+        // Disable receiver
+        val componentName1 = ComponentName(requireContext(), SmsReceiver::class.java)
+        requireContext().packageManager.setComponentEnabledSetting(
+            componentName1,
+            PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+            PackageManager.DONT_KILL_APP
+        )
+        val componentName2 = ComponentName(requireContext(), ReplyReceiver::class.java)
+        requireContext().packageManager.setComponentEnabledSetting(
+            componentName2,
+            PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+            PackageManager.DONT_KILL_APP
+        )
+
+        Toast.makeText(requireContext(), "Expense detection disabled", Toast.LENGTH_SHORT).show()
+    }
+
+
 
     private fun set_itIsRefreshing_toTrue(){
         val currentUser = GlobalClass.Me?.uid
@@ -143,6 +219,12 @@ class ProfileFragment : Fragment() {
     private fun saveLocationTrackingPreference(isEnabled: Boolean) {
         val editor=requireContext().getSharedPreferences("MY_SETTING", MODE_PRIVATE).edit()
         editor.putBoolean(PREF_LOCATION_TRACKING_ENABLED,isEnabled)
+        editor.apply()
+    }
+
+    private fun saveSMSWatcherPreferences(isEnabled: Boolean){
+        val editor=requireContext().getSharedPreferences("MY_SETTING", MODE_PRIVATE).edit()
+        editor.putBoolean(PREF_SMS_READER_ENAMBELD,isEnabled)
         editor.apply()
     }
 
@@ -274,4 +356,19 @@ class ProfileFragment : Fragment() {
         // Uncomment the line below if you want to stop tracking when leaving this fragment
         // stopLocationService()
     }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == SMS_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                enableSmsWatcher()
+                view?.findViewById<Switch>(R.id.switch2)?.isChecked = true
+            } else {
+                Toast.makeText(requireContext(), "SMS permissions required for auto expense detection", Toast.LENGTH_SHORT).show()
+                view?.findViewById<Switch>(R.id.switch2)?.isChecked = false
+            }
+        }
+    }
+
 }

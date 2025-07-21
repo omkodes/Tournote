@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tournote.R // Ensure this points to your R file
-import com.yourpackage.app.models.DistributionItem
+import com.example.tournote.Functionality.Segments.Expenses.SealedClass.DistributionItem
 
 class FinalDistributionAdapter(private var items: List<DistributionItem>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

@@ -26,8 +26,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.tournote.Functionality.Segments.Expenses.DataClass.ExpensesDataClass
-import com.example.tournote.Functionality.Segments.Expenses.DataClass.MemberShare // Import MemberShare
-import com.example.tournote.Functionality.Segments.Expenses.DataClass.SplitType // Import SplitType
+import com.example.tournote.Functionality.Segments.Expenses.DataClass.MemberShare
+import com.example.tournote.Functionality.Segments.Expenses.DataClass.SplitType
 import com.example.tournote.Functionality.Segments.Expenses.Repository.ExpensesRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.R
@@ -247,7 +247,8 @@ class ExpenseAddActivity : AppCompatActivity() {
                             binding.txtDescription.text.toString(),
                             binding.txtAmount.text.toString(),
                             (GlobalClass.Me?.uid)!!,
-                            (if (selectedDate == null) System.currentTimeMillis().toString() else selectedDate.toString()),
+                            (if (selectedDate == null) System.currentTimeMillis()
+                                .toString() else selectedDate.toString()),
                             imageUrl,
                             savedLatitude,
                             savedLongitude,
