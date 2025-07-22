@@ -48,6 +48,17 @@
             android:textColor="#E0E0E0"
             android:textSize="22sp"
             />
+        <ImageButton
+            android:id="@+id/down_all"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/baseline_download_24"
+            android:visibility="visible"
+            app:tint="@color/text_primary" />
 
         <ImageButton
             android:id="@+id/more_options"

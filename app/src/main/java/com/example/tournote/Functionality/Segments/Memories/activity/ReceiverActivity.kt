@@ -105,7 +105,7 @@ class ReceiverActivity : AppCompatActivity() {
             }
             REQUEST_AUTHORIZATION -> {
                 if (resultCode == RESULT_OK) {
-                    viewModel.uploadImages(sharedImageUris, this, selectedGroup)
+                    viewModel.uploadMedia(sharedImageUris, this@ReceiverActivity, selectedGroup)
                 } else {
                     Toast.makeText(this, "Authorization required to upload images", Toast.LENGTH_SHORT).show()
                     finish()
@@ -173,9 +173,9 @@ class ReceiverActivity : AppCompatActivity() {
                 AlertDialog.Builder(this@ReceiverActivity)
                     .setTitle("Select Group")
                     .setItems(groupNames) { _, which ->
-                        selectedGroup = groupNames[which]
+                        selectedGroup = validGroups.getOrNull(which)?.groupID ?: ""
                         bar.visibility = View.VISIBLE
-                        viewModel.uploadImages(sharedImageUris, this@ReceiverActivity, selectedGroup)
+                        viewModel.uploadMedia(sharedImageUris, this@ReceiverActivity, selectedGroup)
                     }
                     .setCancelable(false)
                     .show()

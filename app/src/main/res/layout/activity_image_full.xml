@@ -7,6 +7,19 @@
     android:layout_height="match_parent"
     android:background="@color/green_theme_Light"
     tools:context=".Functionality.Segments.Memories.activity.ImageFullActivity">
+    <ProgressBar
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/progressBar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:elevation="10dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@android:color/holo_blue_dark" />
 
     <LinearLayout
         android:id="@+id/toolbar"
@@ -16,18 +29,17 @@
         android:paddingEnd="24dp"
         android:elevation="4dp"
         android:orientation="horizontal"
-        android:background="@color/green_theme_Light_taskbar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/green_theme_Light_taskbar"
         android:gravity="center_vertical"
         android:visibility="visible"
         >
 
-
         <ImageView
-            android:layout_width="40dp"
             android:id="@+id/buttonBack"
+            android:layout_width="40dp"
             android:layout_height="40dp"
             android:padding="6dp"
             android:layout_marginEnd="10dp"
@@ -36,8 +48,26 @@
             android:layout_marginVertical="4dp"
             app:tint="@color/white" />
 
+        <!-- Spacer -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/btn_delete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="6dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:layout_marginEnd="0dp"
+            android:src="@drawable/baseline_delete_24"
+            android:layout_gravity="center_vertical"
+            android:layout_marginVertical="4dp"
+            app:tint="@color/white" />
 
     </LinearLayout>
+
 
     <ImageView
         android:id="@+id/fullImageView"
@@ -48,4 +78,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_height="match_parent"
         android:scaleType="fitCenter"/>
+
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/playerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:background="#000000"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

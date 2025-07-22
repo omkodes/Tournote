@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,7 +17,7 @@ import com.example.tournote.Functionality.Segments.Memories.activity.ImageFullAc
 import com.example.tournote.Functionality.Segments.Memories.data.PhotosData
 import com.example.tournote.R
 
-class ImageAdapter(val imageList:List<PhotosData>, val context: Context):RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
+class ImageAdapter(val imageList:List<PhotosData>, val context: Context,val launcher: ActivityResultLauncher<Intent>):RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -43,10 +44,17 @@ class ImageAdapter(val imageList:List<PhotosData>, val context: Context):Recycle
             height = imageSize
         }
 
+        if (image.mimeType == "video/mp4") {
+            holder.badge.visibility = View.VISIBLE
+        }else{
+            holder.badge.visibility = View.GONE
+        }
+
         // Tint and load image with Glide
         val placeholderDrawable = ContextCompat.getDrawable(holder.itemView.context, R.drawable.placeholder_photos)?.mutate()
         placeholderDrawable?.setTint(Color.WHITE)
         placeholderDrawable?.setTintMode(PorterDuff.Mode.SRC_IN)
+
 
         Glide.with(holder.itemView.context)
             .load("https://drive.google.com/uc?export=view&id=${image.fileId}")
@@ -55,11 +63,13 @@ class ImageAdapter(val imageList:List<PhotosData>, val context: Context):Recycle
             .into(holder.imageView)
     }
 
-    fun setOnClick(data: PhotosData){
+    fun setOnClick(data: PhotosData) {
         val intent = Intent(context, ImageFullActivity::class.java)
-        intent.putExtra("imagePath", data.fileId)
-        context.startActivity(intent)
+        intent.putExtra("imagePath", data)
+        intent.putExtra("itemPosition", imageList.indexOf(data))
+        launcher.launch(intent)  // Instead of context.startActivity()
     }
+
 
     override fun getItemCount(): Int {
         return imageList.size
@@ -67,5 +77,6 @@ class ImageAdapter(val imageList:List<PhotosData>, val context: Context):Recycle
 
     class ImageViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
         val imageView = itemView.findViewById<ImageView>(R.id.image)
+        val badge  = itemView.findViewById<ImageView>(R.id.videoBadge)
     }
 }

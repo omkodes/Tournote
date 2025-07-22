@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"> <!-- This creates spacing between items -->
+    android:layout_margin="2dp">
 
     <ImageView
         android:id="@+id/image"
@@ -10,5 +11,16 @@
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
-        android:clipToOutline="true"/>
+        android:clipToOutline="true" />
+
+    <ImageView
+        android:id="@+id/videoBadge"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="6dp"
+        android:visibility="gone"
+        android:src="@drawable/play"
+        app:tint="@color/white" />
+
 </FrameLayout>
