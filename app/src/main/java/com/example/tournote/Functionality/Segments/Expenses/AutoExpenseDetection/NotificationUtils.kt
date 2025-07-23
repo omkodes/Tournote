@@ -76,7 +76,7 @@ object NotificationUtils {
             .setContentTitle("Action Required: Register Expense!")
             .setContentText("Tap to finalize the expense of $amount for '$description' by assigning it to a group.")
             .setStyle(NotificationCompat.BigTextStyle()
-                .bigText("An expense of $amount for '$description' has been detected. To ensure accurate financial tracking, please tap this notification to categorize and register it to one of your groups. Your prompt action is appreciated."))
+                .bigText("An expense of $amount for '$description' has been detected."))
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .setPriority(NotificationCompat.PRIORITY_HIGH) // Highest priority
             // .setFullScreenIntent(pendingIntent, true) // Optional: Highly intrusive, use with extreme caution!

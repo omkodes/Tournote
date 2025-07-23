@@ -6,19 +6,66 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:paddingHorizontal="20dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Groups.Fragment.ProfileFragment">
+    tools:context=".Groups.Fragment.ProfileFragment"
+    android:background="@color/green_theme_Light">
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign Out"
-        android:id="@+id/sign_out_button"
+        android:text="Account"
+        android:textColor="@color/white"
+        android:layout_gravity="left"
+        android:textSize="18sp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="2dp"
+        />
+    <RelativeLayout
+        android:id="@+id/btnEnhanceProfile"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="40dp"
-        />
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/greenbutton"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profile"
+            android:textColor="@color/black"
+            android:layout_centerInParent="true"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/sign_out_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/whitebutton"
+        android:layout_marginTop="20dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Out"
+            android:textColor="@color/textRed"
+            android:layout_centerInParent="true"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            />
+    </RelativeLayout>
 
     <Switch
         android:id="@+id/switch1"

@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
@@ -19,7 +18,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import java.io.File
 
 class authViewModel: ViewModel() {
@@ -80,7 +78,7 @@ class authViewModel: ViewModel() {
             }
         }
     }
-     fun cus_login(email:String,pass: String){
+    fun cus_login(email:String,pass: String){
         viewModelScope.launch {
             isLoading.value = true
             val result = repo.custom_login(email, pass)
@@ -106,6 +104,14 @@ class authViewModel: ViewModel() {
         }
     }
 
+    fun update_profile(name:String, profilePicUrl: String){
+        viewModelScope.launch {
+            isLoading.value = true
+            user_dataTO_firebase((GlobalClass.Me?.uid)!!, name, (GlobalClass.Me?.email)!!, (GlobalClass.Me?.phoneNumber)!!, profilePicUrl)
+            isLoading.value = false
+        }
+    }
+
     fun cus_signup (email:String,pass: String,name: String, phone: String, profilePicUrl: String){
         viewModelScope.launch {
             isLoading.value = true
@@ -122,40 +128,73 @@ class authViewModel: ViewModel() {
     }
 
     fun user_dataTO_firebase(userId: String, name: String, email: String, phone: String,profilePicUrl:String) {
-        viewModelScope.launch {
-            try {
-                val userMap = hashMapOf(
-                    "name" to name,
-                    "email" to email,
-                    "phone" to phone,
-                    "profilePic" to profilePicUrl,
-                    "createdAt" to System.currentTimeMillis()
-                )
-                val result = repo.userDetailsToFirestore(userId, userMap)
-                if (result.isSuccess) {
-                    isLoading.value = false
-                    GlobalClass.Me = UserModel(
-                        uid = userId,
-                        email = email,
-                        name = name,
-                        phoneNumber = phone,
-                        profilePic = profilePicUrl
+        if(GlobalClass.Me!=null){
+            viewModelScope.launch {
+                try {
+                    val userMap = hashMapOf(
+                        "name" to name,
+                        "email" to email,
+                        "phone" to phone,
+                        "profilePic" to profilePicUrl,
+                        "createdAt" to System.currentTimeMillis()
                     )
-                    _toastmsg.value = "sign up successful"
-                    _navigateToMain.value = true
-                } else {
-                    _toastmsg.value = "Error saving user data: ${result.exceptionOrNull()?.message}"
-                    Log.d("Firebase", "Error saving user data: ${result.exceptionOrNull()?.message}")
+                    val result = repo.userDetailsToFirebaseRealtimeDatabase(userId, userMap)
+                    if (result.isSuccess) {
+                        isLoading.value = false
+                        GlobalClass.Me = UserModel(
+                            uid = userId,
+                            email = email,
+                            name = name,
+                            phoneNumber = phone,
+                            profilePic = profilePicUrl
+                        )
+                        _toastmsg.value = "sign up successful"
+                        _navigateToMain.value = true
+                    } else {
+                        _toastmsg.value = "Error saving user data: ${result.exceptionOrNull()?.message}"
+                        Log.d("Firebase", "Error saving user data: ${result.exceptionOrNull()?.message}")
+                        isLoading.value = false
+
+                    }
+
+                } catch (e: Exception) {
                     isLoading.value = false
-
+                    _toastmsg.value = "Error: ${e.message}"
+                    Log.e("Firebase", "Error in user_dataTO_firebase", e)
                 }
-
-            } catch (e: Exception) {
-                isLoading.value = false
-                _toastmsg.value = "Error: ${e.message}"
-                Log.e("Firebase", "Error in user_dataTO_firebase", e)
             }
+        }else{
+            viewModelScope.launch {
+                    try {
+                        val updateMap = mapOf(
+                            "name" to name,
+                            "profilePic" to profilePicUrl
+                        )
+                        val result = repo.userDetailsToFirebaseRealtimeDatabase(userId, updateMap)
+                        if (result.isSuccess) {
+                            isLoading.value = false
+                            GlobalClass.Me = UserModel(
+                                uid = userId,
+                                email = email,
+                                name = name,
+                                phoneNumber = phone,
+                                profilePic = profilePicUrl
+                            )
+                            _toastmsg.value = "Profile updated successfully"
+                            _navigateToMain.value = true
+                        } else {
+                            isLoading.value = false
+                            _toastmsg.value = "Error updating profile: ${result.exceptionOrNull()?.message}"
+                            Log.d("Firebase", "Error updating profile: ${result.exceptionOrNull()?.message}")
+                        }
+                    } catch (e: Exception) {
+                        isLoading.value = false
+                        _toastmsg.value = "Error: ${e.message}"
+                        Log.e("Firebase", "Error in updating profile", e)
+                    }
+                }
         }
+
     }
 
     fun forgot (email:String) {

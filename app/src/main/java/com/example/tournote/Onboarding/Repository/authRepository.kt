@@ -100,15 +100,23 @@ class authRepository {
         }
     }
 
-    suspend fun userDetailsToFirestore(userId: String, userMap: Map<String, Any>):Result<Any> {
+    suspend fun userDetailsToFirebaseRealtimeDatabase(
+        userId: String,
+        userMap: Map<String, Any>
+    ): Result<Any> {
         return try {
-            val result= realDB.getReference("users").child(userId).child("PersonalDetails").setValue(userMap).await()
+            val result = realDB.getReference("users")
+                .child(userId)
+                .child("PersonalDetails")
+                .updateChildren(userMap)
+                .await()
             Result.success(result)
         } catch (e: Exception) {
             Log.e("authRepository", "Error saving user details: ${e.message}")
             Result.failure(e)
         }
     }
+
 
     suspend fun userDetailGetLogin(userId: String): DataSnapshot? {
         return try {

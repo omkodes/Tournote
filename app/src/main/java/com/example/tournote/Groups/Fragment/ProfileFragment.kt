@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RelativeLayout
 import android.widget.Switch
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,6 +26,7 @@ import com.example.tournote.Onboarding.Activity.LogInActivity
 import com.example.tournote.Onboarding.ViewModel.authViewModel
 import com.example.tournote.R
 import com.example.tournote.Functionality.Segments.TrackFriends.Services.LocationTrackingService
+import com.example.tournote.Profile.UpdateProfileActivity
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -72,11 +74,16 @@ class ProfileFragment : Fragment() {
 
         databaseRef = FirebaseDatabase.getInstance().getReference("locations")
 
-        val btn = view.findViewById<Button>(R.id.sign_out_button)
 
-        btn.setOnClickListener {
+        view.findViewById<RelativeLayout>(R.id.sign_out_button).setOnClickListener {
             viewModel.signOut()
         }
+
+        view.findViewById<RelativeLayout>(R.id.btnEnhanceProfile).setOnClickListener {
+            val intent = Intent(requireContext(), UpdateProfileActivity::class.java)
+            startActivity(intent)
+        }
+
         observeModel()
 
         // Setup location tracking switch
