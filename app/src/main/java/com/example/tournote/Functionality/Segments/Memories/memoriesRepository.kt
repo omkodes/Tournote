@@ -313,8 +313,10 @@ class memoriesRepository {
 
 
     private fun downloadDriveFile(context: Context, fileId: String, fileName: String): LocalFile {
+        // temp folder need for grouping the data
         val outputDir = LocalFile(context.cacheDir, "media_zip")
         outputDir.mkdirs()
+        // create file with name
         val file = LocalFile(outputDir, fileName)
         FileOutputStream(file).use { output ->
             driveService.files().get(fileId)
@@ -328,7 +330,7 @@ class memoriesRepository {
                 FileInputStream(file).use { input ->
                     val entry = ZipEntry(file.name)
                     out.putNextEntry(entry)
-                    input.copyTo(out, 1024)
+                    input.copyTo(out, 8192)
                     out.closeEntry()
                 }
             }

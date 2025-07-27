@@ -63,10 +63,10 @@ class ImageAdapter(val imageList:List<PhotosData>, val context: Context,val laun
             .into(holder.imageView)
     }
 
-    fun setOnClick(data: PhotosData) {
+    fun setOnClick(data: PhotosData,items: List<PhotosData> = imageList) {
         val intent = Intent(context, ImageFullActivity::class.java)
-        intent.putExtra("imagePath", data)
-        intent.putExtra("itemPosition", imageList.indexOf(data))
+        intent.putParcelableArrayListExtra("imageList", items as ArrayList<PhotosData>)
+        intent.putExtra("startIndex", imageList.indexOf(data))
         launcher.launch(intent)  // Instead of context.startActivity()
     }
 

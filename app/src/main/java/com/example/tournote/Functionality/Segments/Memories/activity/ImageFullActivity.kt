@@ -20,11 +20,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.example.tournote.Functionality.Segments.Memories.adapter.FullScreenAdapter
 import com.example.tournote.Functionality.Segments.Memories.data.PhotosData
 import com.example.tournote.Functionality.Segments.Memories.memoriesRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.R
+import com.github.chrisbanes.photoview.PhotoView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
@@ -48,10 +51,14 @@ class ImageFullActivity : AppCompatActivity() {
         }
 
 
-        val data = intent.getParcelableExtra<PhotosData>("imagePath") ?: PhotosData("", "", 0, "","", "")
-        val imgPos = intent.getIntExtra("itemPosition",-1)
-        val imageView: ImageView = findViewById(R.id.fullImageView)
-        val playerView: PlayerView = findViewById(R.id.playerView)
+        val imageList = intent.getParcelableArrayListExtra<PhotosData>("imageList") ?: listOf()
+        val startIndex = intent.getIntExtra("startIndex", 0)
+
+        val viewPager = findViewById<ViewPager2>(R.id.viewPager)
+
+        val adapter = FullScreenAdapter(imageList, lifecycle)
+        viewPager.adapter = adapter
+        viewPager.setCurrentItem(startIndex, false)
         val delete_btn = findViewById<ImageView>(R.id.btn_delete)
         val btnBack = findViewById<ImageView>(R.id.buttonBack)
         val bar = findViewById<ProgressBar>(R.id.progressBar)
@@ -70,13 +77,13 @@ class ImageFullActivity : AppCompatActivity() {
                 dialog.dismiss()
                 bar.visibility = android.view.View.VISIBLE
                 lifecycleScope.launch {
-                    val result = repository.deleteMediaByFileId(data.fileId, GlobalClass.selected_groupId!!)
+                    val result = repository.deleteMediaByFileId(imageList[startIndex].fileId, GlobalClass.selected_groupId!!)
                     if (result.isSuccess) {
                         bar.visibility = android.view.View.GONE
                         Toast.makeText(this@ImageFullActivity, "Deleted successfully", Toast.LENGTH_SHORT).show()
 
                         val intent = Intent().apply {
-                            putExtra("deleted_position", imgPos)
+                            putExtra("deleted_position", startIndex)
                         }
                         setResult(Activity.RESULT_OK, intent)
                         finish()
@@ -97,35 +104,6 @@ class ImageFullActivity : AppCompatActivity() {
             val dialog = builder.create()
             dialog.show()
 
-        }
-
-        // Tint and load image with Glide
-        val placeholderDrawable = ContextCompat.getDrawable(this, R.drawable.placeholder_photos)?.mutate()
-        placeholderDrawable?.setTint(Color.WHITE)
-        placeholderDrawable?.setTintMode(PorterDuff.Mode.SRC_IN)
-
-        if (data.mimeType == "video/mp4"){
-            playerView.visibility = android.view.View.VISIBLE
-            imageView.visibility = android.view.View.GONE
-
-            val videoUrl = "https://drive.google.com/uc?export=download&id=${data.fileId}"
-
-            // Setup ExoPlayer
-            exoPlayer = ExoPlayer.Builder(this).build().also { player ->
-                playerView.player = player
-                val mediaItem = MediaItem.fromUri(Uri.parse(videoUrl))
-                player.setMediaItem(mediaItem)
-                player.prepare()
-                player.playWhenReady = true
-            }
-        }else{
-            imageView.visibility = android.view.View.VISIBLE
-            playerView.visibility = android.view.View.GONE
-            Glide.with(this)
-                .load("https://drive.google.com/uc?export=view&id=${data.fileId}")
-                .placeholder(placeholderDrawable)
-                .error(R.drawable.mark)
-                .into(imageView)
         }
 
     }

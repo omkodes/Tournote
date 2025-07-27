@@ -25,27 +25,26 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/green_theme_Light_taskbar"
+        android:elevation="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
-        android:elevation="4dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/green_theme_Light_taskbar"
-        android:gravity="center_vertical"
         android:visibility="visible"
-        >
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/buttonBack"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:padding="6dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/quantum_ic_arrow_back_grey600_24"
             android:layout_gravity="center_vertical"
             android:layout_marginVertical="4dp"
+            android:layout_marginEnd="10dp"
+            android:padding="6dp"
+            android:src="@drawable/quantum_ic_arrow_back_grey600_24"
             app:tint="@color/white" />
 
         <!-- Spacer -->
@@ -58,33 +57,27 @@
             android:id="@+id/btn_delete"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:padding="6dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:layout_marginEnd="0dp"
-            android:src="@drawable/baseline_delete_24"
             android:layout_gravity="center_vertical"
             android:layout_marginVertical="4dp"
+            android:layout_marginEnd="0dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="6dp"
+            android:src="@drawable/baseline_delete_24"
             app:tint="@color/white" />
 
     </LinearLayout>
 
-
-    <ImageView
-        android:id="@+id/fullImageView"
+    <androidx.viewpager2.widget.ViewPager2
         android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_margin="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter"/>
-
-    <androidx.media3.ui.PlayerView
-        android:id="@+id/playerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        android:layout_gravity="center"
-        android:background="#000000"/>
+        android:id="@+id/viewPager"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
