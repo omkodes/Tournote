@@ -204,6 +204,7 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
                 setFlipperAnimations(currentSplitIndex, 0)
                 binding.viewFlipperRecyclerViews.displayedChild = 0 // Index for Self View
                 binding.viewFlipperBottomNav.displayedChild = 0 // Index for Self Bottom Nav
+                binding.viewFlipperTopNav.displayedChild=0
                 currentSplitIndex = 0
                 updateSplitUI(0)
                 updateSelfSplitUI()
@@ -215,6 +216,7 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
                 setFlipperAnimations(currentSplitIndex, 1)
                 binding.viewFlipperRecyclerViews.displayedChild = 1 // Index for Equal RV
                 binding.viewFlipperBottomNav.displayedChild = 1 // Index for Equal Bottom Nav
+                binding.viewFlipperTopNav.displayedChild=1
                 currentSplitIndex = 1
                 updateSplitUI(1)
                 updateEqualSplitUI()
@@ -227,6 +229,7 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
                 setFlipperAnimations(currentSplitIndex, 2)
                 binding.viewFlipperRecyclerViews.displayedChild = 2 // Index for Exact RV
                 binding.viewFlipperBottomNav.displayedChild = 2 // Index for Exact Bottom Nav
+                binding.viewFlipperTopNav.displayedChild=2
                 currentSplitIndex = 2
                 updateSplitUI(2)
                 updateExactSplitUI()
@@ -239,6 +242,7 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
                 setFlipperAnimations(currentSplitIndex, 3)
                 binding.viewFlipperRecyclerViews.displayedChild = 3 // Index for Percentage RV
                 binding.viewFlipperBottomNav.displayedChild = 3 // Index for Percentage Bottom Nav
+                binding.viewFlipperTopNav.displayedChild=3
                 currentSplitIndex = 3
                 updateSplitUI(3)
                 updatePercentageSplitUI()

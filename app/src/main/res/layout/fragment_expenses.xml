@@ -73,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_margin="25dp">
+                android:layout_margin="20dp">
 
                 <TextView
                     android:id="@+id/txtMyFinalResult"
@@ -99,116 +99,67 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:nestedScrollingEnabled="false"
                     tools:listitem="@layout/item_expensefragment_finalresult_borrowed" />
+
+                <TextView
+                    android:id="@+id/txtTotalGroupExpenditure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    tools:text="Total group expenditure ₹4000.00"
+                    android:textColor="@color/bluetext"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
-            <HorizontalScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none">
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <RelativeLayout
-                        android:id="@+id/btnAddExpense"
+                <RelativeLayout
+                    android:id="@+id/btnAddExpense"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="40dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/greenbutton">
+                    <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_marginHorizontal="5dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="@drawable/greenbutton">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="30dp"
-                            android:text="Add Expense"
-                            android:textColor="@color/black"
-                            android:layout_centerInParent="true"
-                            android:textStyle="bold"
-                            android:textSize="16sp" />
-                    </RelativeLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="30dp"
+                        android:text="Add Expense"
+                        android:textColor="@color/black"
+                        android:layout_centerInParent="true"
+                        android:textStyle="bold"
+                        android:textSize="16sp" />
+                </RelativeLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/btnSettleUp"
+                <RelativeLayout
+                    android:id="@+id/btnSettleUp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="40dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/greenbutton">
+                    <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_marginHorizontal="5dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="@drawable/greenbutton">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="30dp"
-                            android:text="Settle Up"
-                            android:textColor="@color/black"
-                            android:layout_centerInParent="true"
-                            android:textStyle="bold"
-                            android:textSize="16sp" />
-                    </RelativeLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="30dp"
+                        android:text="Settle Up"
+                        android:textColor="@color/black"
+                        android:layout_centerInParent="true"
+                        android:textStyle="bold"
+                        android:textSize="16sp" />
+                </RelativeLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/btnCharts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_marginHorizontal="5dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="@drawable/greenbutton">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Charts"
-                            android:layout_marginHorizontal="30dp"
-                            android:textColor="@color/black"
-                            android:layout_centerInParent="true"
-                            android:textStyle="bold"
-                            android:textSize="16sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/btnBalances"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_marginHorizontal="5dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="@drawable/greenbutton">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Balances"
-                            android:layout_marginHorizontal="30dp"
-                            android:textColor="@color/black"
-                            android:layout_centerInParent="true"
-                            android:textStyle="bold"
-                            android:textSize="16sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/btnTotals"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_marginHorizontal="5dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="@drawable/greenbutton">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Totals"
-                            android:layout_marginHorizontal="30dp"
-                            android:textColor="@color/black"
-                            android:layout_centerInParent="true"
-                            android:textStyle="bold"
-                            android:textSize="16sp" />
-                    </RelativeLayout>
-                </LinearLayout>
-            </HorizontalScrollView>
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview"

@@ -45,7 +45,7 @@ class CustomSplashScreen : AppCompatActivity() {
             insets
         }
 
-        window.navigationBarColor = ContextCompat.getColor(this, R.color.blue)
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.customSplashScreenBackground)
 
         GlobalClass.isTracking=loadLocationTrackingPreference()
         GlobalClass.isSmsWatched=loadSmsWatcherPreference()

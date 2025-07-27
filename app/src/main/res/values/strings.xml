@@ -2,9 +2,11 @@
     <string name="app_name">Tournote</string>
 
     <string name="onboardingHeading1">Plan smarter, travel better</string>
-    <string name="onboardingHeading2">Find places worth stopping for</string>
-    <string name="onboardingHeading3">Group trips made fun and effortless</string>
-    <string name="onboardingHeading4">Relive memories, Manage expenses</string>
+    <string name="onboardingHeading2">Relive memories in the order they were made</string>
+    <string name="onboardingHeading3">Turn expense tracking into the easiest part of your trip</string>
+    <string name="onboardingHeading4">Travel together, talk together—stay linked throughout the journey</string>
+    <string name="onboardingHeading5">Real-time tracking to keep everyone safe and connected</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="client_id">502575591425-gc6ifuadgladmg8rn8lqe1fb1r1o1rql.apps.googleusercontent.com</string>

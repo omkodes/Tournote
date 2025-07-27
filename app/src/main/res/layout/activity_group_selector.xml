@@ -40,7 +40,7 @@
         android:layout_height="70dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="@color/green_theme_Light"
+        android:background="@color/green_theme_Light_taskbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

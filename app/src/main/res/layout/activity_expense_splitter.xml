@@ -72,11 +72,115 @@
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ViewFlipper
+        android:id="@+id/viewFlipperTopNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/llSplitSelector"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:id="@+id/llSelf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No split"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You will owe the entire share without any split."
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llEqual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Split equally"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select which people owe an equal share."
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llExact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Split by exact amounts"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Specify exactly how much each person owes"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llPercentage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Split by percentages"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter the percentage split that's fair for your situation."
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                />
+        </LinearLayout>
+    </ViewFlipper>
+
     <LinearLayout
         android:id="@+id/llSplitSelector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/viewFlipperTopNav"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="horizontal"
@@ -113,15 +217,13 @@
             android:focusable="true"
             android:background="@drawable/whitebutton_sharpedge">
 
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="25dp"
-                android:text="Equal"
-                android:textColor="@color/black"
+                android:src="@drawable/equal"
                 android:layout_centerInParent="true"
-                android:textStyle="bold"
-                android:textSize="14sp" />
+                />
         </RelativeLayout>
 
         <RelativeLayout
@@ -138,7 +240,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="25dp"
-                android:text="Exact Amt"
+                android:text="1.23"
                 android:textColor="@color/black"
                 android:layout_centerInParent="true"
                 android:textStyle="bold"
@@ -155,15 +257,13 @@
             android:focusable="true"
             android:background="@drawable/whitebutton_sharpedge">
 
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="25dp"
-                android:text="Percentage"
-                android:textColor="@color/black"
+                android:src="@drawable/percentage"
                 android:layout_centerInParent="true"
-                android:textStyle="bold"
-                android:textSize="14sp" />
+                />
         </RelativeLayout>
     </LinearLayout>
 

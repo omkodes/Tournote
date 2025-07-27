@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,27 +7,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Onboarding.Activity.CustomSplashScreen"
-    android:background="@color/lightBlue">
+    android:background="#D0D3C6">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/img1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="bottom|center_horizontal"
-        >
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/appnamewordart"
-            />
+        android:layout_height="wrap_content"
+        android:src="@drawable/css3"
+        android:background="#D0D3C6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/css1"
-            android:background="#0FA3B1"
-            />
-    </LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/appnamewordart"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img1"
+        app:layout_constraintBottom_toTopOf="@id/img2"
+        />
 
-  </RelativeLayout>
+    <ImageView
+        android:id="@+id/img2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/css2"
+        android:background="#D0D3C6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>

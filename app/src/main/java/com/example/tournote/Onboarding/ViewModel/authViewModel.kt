@@ -128,7 +128,7 @@ class authViewModel: ViewModel() {
     }
 
     fun user_dataTO_firebase(userId: String, name: String, email: String, phone: String,profilePicUrl:String) {
-        if(GlobalClass.Me!=null){
+        if(GlobalClass.Me==null){
             viewModelScope.launch {
                 try {
                     val userMap = hashMapOf(
@@ -168,6 +168,8 @@ class authViewModel: ViewModel() {
                     try {
                         val updateMap = mapOf(
                             "name" to name,
+                            "email" to email,
+                            "phone" to phone,
                             "profilePic" to profilePicUrl
                         )
                         val result = repo.userDetailsToFirebaseRealtimeDatabase(userId, updateMap)

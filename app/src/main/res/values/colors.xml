@@ -20,6 +20,8 @@
 
     <color name="blue">#0FA3B1</color>
 
+    <color name="customSplashScreenBackground">#D0D3C6</color>
+
     <color name="textRed">#F44336</color>
     <color name="textGreen">#4CAF50</color>
     <color name="textBlue">#0FA3B1</color>

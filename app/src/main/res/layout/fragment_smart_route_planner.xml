@@ -333,20 +333,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         >
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1"
+
+        <RelativeLayout
+            android:id="@+id/btnSmartRoute"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/greenbutton"
+            android:visibility="gone"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginBottom="10dp"
+            android:elevation="8dp"
             >
-            <Button
-                android:id="@+id/btnSmartRoute"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Smart Route"
-                android:visibility="gone"
+                android:textColor="@color/black"
+                android:layout_centerInParent="true"
+                android:textStyle="bold"
+                android:textSize="16sp"
                 />
-        </LinearLayout>
+        </RelativeLayout>
+
 
         <LinearLayout
             android:layout_width="0dp"
@@ -446,7 +456,29 @@
             android:orientation="vertical"
             >
 
-            <Button
+            <RelativeLayout
+                android:id="@+id/btnCurrent"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/greenbutton"
+                android:visibility="gone"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginBottom="10dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Set Current Location"
+                    android:textColor="@color/black"
+                    android:layout_centerInParent="true"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    />
+            </RelativeLayout>
+
+            <!--<Button
                 android:id="@+id/btnCurrent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -454,7 +486,7 @@
                 android:visibility="gone"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="10dp"
-                />
+                />-->
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSearchResults"

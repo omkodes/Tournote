@@ -108,10 +108,10 @@ class ExpensesFragment : Fragment() {
             startActivity(intent)
         }
 
+
         // Handle other buttons (Settle Up, Charts, Balances, Totals)
-        binding.btnCharts.setOnClickListener { /* Implement Charts logic */ }
-        binding.btnBalances.setOnClickListener { /* Implement Balances logic */ }
-        binding.btnTotals.setOnClickListener { /* Implement Totals logic */ }
+        //binding.btnCharts.setOnClickListener { /* Implement Charts logic */ }
+        //binding.btnTotals.setOnClickListener { /* Implement Totals logic */ }
 
         return binding.root
     }
@@ -142,6 +142,10 @@ class ExpensesFragment : Fragment() {
                     // Handle error, e.g., show a Toast message
                 }
             }
+            //total group expenditure calculator
+            val total = GlobalClass.expenses.sumOf { it.amount.toDouble() }
+            binding.txtTotalGroupExpenditure.text="Total group expenditure ₹$total"
+
             // After fetching (or if already populated), process and display both lists
             updateMainExpensesList()
             calculateAndDisplayFinalDistribution()

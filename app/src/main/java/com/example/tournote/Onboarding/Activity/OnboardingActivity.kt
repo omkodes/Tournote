@@ -53,6 +53,11 @@ class OnboardingActivity : AppCompatActivity() {
                     }
                     3->{
                         binding.imgStatus.setImageResource(R.drawable.screen4active)
+                        binding.btnChangePage.visibility=View.VISIBLE
+                        binding.btnGoToSignup.visibility=View.GONE
+                    }
+                    4->{
+                        binding.imgStatus.setImageResource(R.drawable.screen5active)
                         binding.btnChangePage.visibility=View.GONE
                         binding.btnGoToSignup.visibility=View.VISIBLE
                     }
@@ -72,7 +77,7 @@ class OnboardingActivity : AppCompatActivity() {
 
 
         binding.btnChangePage.setOnClickListener {
-            if(viewPager.currentItem<3){
+            if(viewPager.currentItem<4){
                 viewPager.currentItem++
             }
         }

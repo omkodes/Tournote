@@ -8,13 +8,14 @@
     android:paddingTop="12dp"
     android:paddingEnd="16dp"
     android:paddingBottom="12dp"
-    android:background="?attr/selectableItemBackground">
+    android:background="@color/bluetext"
+    android:layout_marginVertical="5dp">
 
     <TextView
         android:id="@+id/textViewResultName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#ffffff"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
         tools:text="Location Name" />
