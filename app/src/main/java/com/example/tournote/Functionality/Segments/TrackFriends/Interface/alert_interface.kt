@@ -9,5 +9,5 @@ import retrofit2.http.POST
 interface alert_interface {
 
     @POST("showAlert")
-    suspend fun saveToken(@Body request: showAlert): Response<FcmResponse>
+    suspend fun showAlertLocation(@Body request: showAlert): Response<FcmResponse>
 }

@@ -10,9 +10,9 @@ class AlertRepository {
     suspend fun showAlertAPI(user_name: String, user_id: String,group_id: String, group_name: String): Result<FcmResponse> {
         return try {
 
-            val request = showAlert(user_name = user_name, user_id = user_id,group_id = group_id, group_name = group_name)
+            val request = showAlert( user_name, user_id, group_name,group_id)
 
-            val res = APIClient.alert.saveToken(request)
+            val res = APIClient.alert.showAlertLocation(request)
             if (res.isSuccessful) {
                 val body = res.body()
                 if (body?.success == true) {
