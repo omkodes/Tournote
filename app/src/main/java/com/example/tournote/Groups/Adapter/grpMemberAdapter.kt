@@ -12,7 +12,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.tournote.Functionality.Repository.MainActivityRepository
+import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.Activity.activityProfileInfo
 import com.example.tournote.R
@@ -29,7 +29,7 @@ class grpMemberAdapter(val grpList: MutableList<UserModel>, val context: Context
         return ViewHolder(view)
     }
 
-    val repo = MainActivityRepository()
+    val repo = FirebaseRTDBRepository()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user = grpList[position]

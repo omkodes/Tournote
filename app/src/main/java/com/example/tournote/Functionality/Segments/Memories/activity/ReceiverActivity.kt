@@ -1,6 +1,5 @@
 package com.example.tournote.Functionality.Segments.Memories.activity
 
-import android.app.ProgressDialog // Unused import
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -16,10 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer // Import Observer
-import androidx.lifecycle.lifecycleScope
-import com.example.tournote.Functionality.Repository.MainActivityRepository // Keep if still used directly elsewhere, but not for group list
 import com.example.tournote.Functionality.Segments.Memories.memoriesViewModel
-import com.example.tournote.GlobalClass
 import com.example.tournote.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -27,20 +23,8 @@ import com.google.android.gms.common.api.Scope
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
-import com.google.api.client.http.InputStreamContent // Unused import
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.DriveScopes
-import com.google.api.services.drive.model.File // Unused import
-import com.google.firebase.Firebase // Unused import
-import com.google.firebase.auth.FirebaseAuth // Unused import
-import com.google.firebase.database.FirebaseDatabase // Unused import
-import com.google.firebase.database.ServerValue // Unused import
-import com.google.firebase.database.database // Unused import
-import kotlinx.coroutines.launch
-import okhttp3.internal.notifyAll // Unused import
-import java.text.SimpleDateFormat // Unused import
-import java.util.Date // Unused import
-import java.util.Locale // Unused import
 
 import com.example.tournote.Groups.ViewModel.GroupSelectorActivityViewModel2 // Import your GroupSelectorActivityViewModel2
 import com.example.tournote.GroupData_Detailed_Model // Import your GroupData_Detailed_Model

@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert // Import the new Upsert annotation
-import com.example.tournote.DatabaseCatching.UserEntity
+import com.example.tournote.Database.LocalDatabase.UserEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

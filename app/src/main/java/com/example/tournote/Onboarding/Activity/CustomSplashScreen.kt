@@ -1,5 +1,6 @@
 package com.example.tournote.Onboarding.Activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -12,16 +13,18 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.tournote.Functionality.Repository.MainActivityRepository
+import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.Activity.GroupSelectorActivity
 import com.example.tournote.Onboarding.ViewModel.authViewModel
 import com.example.tournote.R
+import com.example.tournote.UserModel
+import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.launch
 
 class CustomSplashScreen : AppCompatActivity() {
     private val authViewModel: authViewModel by viewModels()
-    private val repo = MainActivityRepository()
+    private val repo = FirebaseRTDBRepository()
 
     private val fixedSplashDurationForGettingStarted = 5000L
     private val PREF_LOCATION_TRACKING_ENABLED = "location_tracking_enabled"

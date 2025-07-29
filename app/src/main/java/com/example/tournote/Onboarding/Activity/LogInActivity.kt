@@ -1,6 +1,8 @@
 package com.example.tournote.Onboarding.Activity
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -19,7 +21,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
+import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.Activity.GroupSelectorActivity
+import com.example.tournote.Groups.Fragment.ProfileFragment
 import com.example.tournote.R
 import com.example.tournote.Onboarding.ViewModel.authViewModel
 import com.example.tournote.databinding.ActivityLogInBinding

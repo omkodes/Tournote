@@ -2,17 +2,14 @@ package com.example.tournote.Groups.ViewModel
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.*
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
-import com.example.tournote.Functionality.Repository.MainActivityRepository
+import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.GroupData_Detailed_Model
-import com.example.tournote.Groups.DataClass.GroupInfoModel
 import com.example.tournote.Groups.Repository.CreateGroupRepository
-import com.example.tournote.Onboarding.Repository.authRepository
 import com.example.tournote.UserModel
 import kotlinx.coroutines.launch
 import java.io.File
@@ -20,7 +17,7 @@ import java.io.File
 class GroupSelectorActivityViewModel : ViewModel() {
 
     val repo = CreateGroupRepository()
-    val repo1 = MainActivityRepository()
+    val repo1 = FirebaseRTDBRepository()
     val isLoading = MutableLiveData<Boolean>()
 
     private val _resetUI =  MutableLiveData(false)

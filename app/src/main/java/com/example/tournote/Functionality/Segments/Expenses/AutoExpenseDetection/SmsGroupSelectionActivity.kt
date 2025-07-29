@@ -1,5 +1,6 @@
 package com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -14,7 +15,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer // Import Observer
 import androidx.lifecycle.lifecycleScope
-import com.example.tournote.Functionality.Repository.MainActivityRepository
+import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.Functionality.Segments.Expenses.Activity.ExpenseAddActivity
 import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.ViewModel.GroupSelectorActivityViewModel2 // Import your ViewModel
@@ -31,7 +32,7 @@ class SmsGroupSelectionActivity : AppCompatActivity() {
     // You have two MainActivityRepository instances here. It's generally better
     // to have them injected or managed by ViewModels. For minimalistic changes,
     // we'll primarily stop using `mainRepo` for group fetching.
-    val repo = MainActivityRepository() // Used for getUserByMailId
+    val repo = FirebaseRTDBRepository() // Used for getUserByMailId
     // private val mainRepo = MainActivityRepository() // This instance won't be used for group fetching anymore.
 
     // Declare your GroupSelectorActivityViewModel2

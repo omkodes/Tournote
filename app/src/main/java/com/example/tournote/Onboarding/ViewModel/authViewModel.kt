@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
-import com.example.tournote.Functionality.Repository.MainActivityRepository
+import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.Onboarding.Repository.authRepository
 import com.example.tournote.UserModel
@@ -26,7 +26,7 @@ class authViewModel: ViewModel() {
     val loginError = MutableLiveData<String?>()
     val isLoading = MutableLiveData<Boolean>()
 
-    val repo1 = MainActivityRepository()
+    val repo1 = FirebaseRTDBRepository()
 
     private val _toastmsg = MutableLiveData<String?>(null)
     val toastmsg : LiveData<String?> get() = _toastmsg

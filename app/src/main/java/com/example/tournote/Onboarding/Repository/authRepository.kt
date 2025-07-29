@@ -1,7 +1,8 @@
 package com.example.tournote.Onboarding.Repository
 
+import android.content.SharedPreferences
 import android.util.Log
-import com.example.tournote.Functionality.Repository.MainActivityRepository
+import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.Functionality.Segments.ChatRoom.DataClass.FcmResponse
 import com.example.tournote.Functionality.Segments.ChatRoom.DataClass.fcmSave
 import com.example.tournote.Functionality.Segments.ChatRoom.Object.APIClient
@@ -26,7 +27,7 @@ class authRepository {
     val firebaseAuth = FirebaseAuth.getInstance()
     val db = Firebase.firestore
     val realDB = Firebase.database
-    val repo1 = MainActivityRepository()
+    val repo1 = FirebaseRTDBRepository()
 
 
     suspend fun custom_login(email: String, pass: String): Result<AuthResult> {

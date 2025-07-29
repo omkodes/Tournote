@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.tournote.Functionality.Repository.LocationRepository
-import com.example.tournote.Functionality.Repository.MainActivityRepository
+import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.Functionality.Segments.TrackFriends.Repository.AlertRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.Onboarding.Repository.authRepository
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class TrackFriendsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val mainRepo = MainActivityRepository()
+    private val mainRepo = FirebaseRTDBRepository()
     private val authRepo = authRepository()
     private val repo = AlertRepository()
     private val locationRepo = LocationRepository() // Initialize LocationRepository

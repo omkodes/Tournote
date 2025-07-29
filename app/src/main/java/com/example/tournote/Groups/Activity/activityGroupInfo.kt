@@ -1,11 +1,11 @@
 package com.example.tournote.Groups.Activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log // Added for logging
 import android.view.View
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.tournote.Functionality.Repository.MainActivityRepository
+import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.Groups.Adapter.grpAdminsAdapter
 import com.example.tournote.Groups.Adapter.grpMemberAdapter
 import com.example.tournote.Groups.Adapter.grpOwnerAdapter
@@ -41,7 +41,7 @@ class activityGroupInfo : AppCompatActivity() {
     private var MemberList = listOf<String>() // Consider if this is still needed or can be derived directly
     private val viewModel: groupViewModel by viewModels()
 
-    private val mainRepo = MainActivityRepository()
+    private val mainRepo = FirebaseRTDBRepository()
     private lateinit var adapter: AddUsersToGroup_GroupInfoRecyclerViewAdapter
 
     private var usersIn: List<UserModel> = listOf()

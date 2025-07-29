@@ -1,4 +1,4 @@
-package com.example.tournote.DatabaseCatching
+package com.example.tournote.Database.LocalDatabase
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

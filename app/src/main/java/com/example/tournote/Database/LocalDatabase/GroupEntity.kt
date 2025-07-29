@@ -2,7 +2,6 @@ package com.example.tournote.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.tournote.GroupData_Detailed_Model
 
 @Entity(tableName = "groups")
 data class GroupEntity(

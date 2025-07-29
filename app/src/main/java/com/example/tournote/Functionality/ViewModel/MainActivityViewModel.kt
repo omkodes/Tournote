@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tournote.Functionality.Segments.ChatRoom.Repository.ChatRepository
 import com.example.tournote.Functionality.Segments.ChatRoom.ViewModel.ChatViewModel
-import com.example.tournote.Functionality.Repository.MainActivityRepository
+import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.GroupData_Detailed_Model
 import kotlinx.coroutines.launch
@@ -15,7 +15,7 @@ import android.util.Log // Added for logging potential issues
 class MainActivityViewModel : ViewModel() {
 
 
-    private val repo = MainActivityRepository()
+    private val repo = FirebaseRTDBRepository()
     val chatRepo = ChatRepository()
     val chatView = ChatViewModel() // Consider if ChatViewModel should be initialized here or passed from UI
 

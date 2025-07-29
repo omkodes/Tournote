@@ -1,19 +1,16 @@
-package com.example.tournote.Functionality.Repository
+package com.example.tournote.Database.RemoteDatabase
 
 import android.util.Log
-import com.example.tournote.DatabaseCatching.GroupRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.GroupData_Detailed_Model
 import com.example.tournote.UserModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import com.google.firebase.database.database
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.tasks.await
+import kotlin.collections.get
 
-class MainActivityRepository (){
+class FirebaseRTDBRepository (){
 
     val db = Firebase.database
 
@@ -64,7 +61,8 @@ class MainActivityRepository (){
                         email = email,
                         name = personalDetails.child("name").getValue(String::class.java),
                         phoneNumber = personalDetails.child("phone").getValue(String::class.java),
-                        profilePic = personalDetails.child("profilePic").getValue(String::class.java)
+                        profilePic = personalDetails.child("profilePic")
+                            .getValue(String::class.java)
                     )
 
                     if (email in memberEmails) membersList.add(user)
@@ -151,7 +149,8 @@ class MainActivityRepository (){
                         email = email,
                         name = personalDetails.child("name").getValue(String::class.java),
                         phoneNumber = personalDetails.child("phone").getValue(String::class.java),
-                        profilePic = personalDetails.child("profilePic").getValue(String::class.java)
+                        profilePic = personalDetails.child("profilePic")
+                            .getValue(String::class.java)
                     )
                     return Result.success(user)
                 }

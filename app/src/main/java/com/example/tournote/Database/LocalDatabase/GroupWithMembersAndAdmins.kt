@@ -3,10 +3,9 @@ package com.example.tournote.database
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import com.example.tournote.DatabaseCatching.UserEntity
-import com.example.tournote.DatabaseCatching.toUserModel
+import com.example.tournote.Database.LocalDatabase.UserEntity
+import com.example.tournote.Database.LocalDatabase.toUserModel
 import com.example.tournote.GroupData_Detailed_Model
-import com.example.tournote.UserModel
 
 data class GroupWithMembersAndAdmins(
     @Embedded
