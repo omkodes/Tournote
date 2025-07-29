@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
@@ -34,6 +35,7 @@ class GroupSelectorActivity : AppCompatActivity() {
         binding = ActivityGroupSelectorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
 
         viewPager=binding.viewPager
         viewPager.adapter= GroupSelectorActivityPagerAdapter(this)
@@ -101,7 +103,7 @@ class GroupSelectorActivity : AppCompatActivity() {
             if (status) {
                 binding.bottomButtons.visibility = View.VISIBLE
                 viewPager.currentItem = 0
-                viewModel2.fetchGroupDetails() // 🛠 Force refresh when returning to HomeFragment
+                //viewModel2.fetchGroupDetails() // 🛠 Force refresh when returning to HomeFragment
             }
         }
 

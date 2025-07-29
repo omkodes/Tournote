@@ -8,20 +8,18 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.tournote.Functionality.Activity.MainActivity
 import com.example.tournote.GlobalClass
 import com.example.tournote.GroupData_Detailed_Model
 import com.example.tournote.R
-// Removed CoroutineScope and MainActivityRepository as they are no longer needed for direct data fetching here
 
 class FetchIncludedGroupDetailsRecyclerViewAdapter(
     private val context: Context
-    // Removed viewModel and coroutineScope as they are not used for direct data fetching anymore
-) : RecyclerView.Adapter<FetchIncludedGroupDetailsRecyclerViewAdapter.ViewHolder>() {
-
-    private var groupList: List<GroupData_Detailed_Model> = emptyList()
+) : ListAdapter<GroupData_Detailed_Model, FetchIncludedGroupDetailsRecyclerViewAdapter.ViewHolder>(GroupDiffCallback()) {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profilePhoto: ImageView = itemView.findViewById(R.id.imgProfilePic)
@@ -36,7 +34,7 @@ class FetchIncludedGroupDetailsRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val group = groupList[position]
+        val group = getItem(position) // Use getItem() from ListAdapter
         holder.name.text = group.name ?: "Unknown Group"
 
         // Handle profile picture loading
@@ -51,20 +49,26 @@ class FetchIncludedGroupDetailsRecyclerViewAdapter(
         }
 
         holder.clickable.setOnClickListener {
-            // 🔥 MODIFICATION: Just set selected_groupId and start MainActivity
-            // The actual detailed group data is already pre-loaded in GlobalClass.GroupDetails_Everything
-            GlobalClass.selected_groupId = group.groupID ?: "" // Set the selected group ID
+            // Set the selected group ID
+            GlobalClass.selected_groupId = group.groupID ?: ""
             val intent = Intent(context, MainActivity::class.java)
-            // No need to put "GROUP_ID" extra as MainActivity will now get it from GlobalClass.selected_groupId
             context.startActivity(intent)
         }
     }
 
-    override fun getItemCount(): Int = groupList.size
+    // We don't need getItemCount() or updateGroupList() with this approach.
+    // ListAdapter handles getItemCount() automatically.
+    // The submitList() method from ListAdapter will replace updateGroupList().
+}
 
-    // Function to update the adapter data
-    fun updateGroupList(newGroupList: List<GroupData_Detailed_Model>) {
-        groupList = newGroupList
-        notifyDataSetChanged()
+// DiffUtil.ItemCallback to calculate differences between two lists
+class GroupDiffCallback : DiffUtil.ItemCallback<GroupData_Detailed_Model>() {
+    override fun areItemsTheSame(oldItem: GroupData_Detailed_Model, newItem: GroupData_Detailed_Model): Boolean {
+        return oldItem.groupID == newItem.groupID
+    }
+
+    override fun areContentsTheSame(oldItem: GroupData_Detailed_Model, newItem: GroupData_Detailed_Model): Boolean {
+        // Data classes automatically generate a content-based equals() method, which is perfect here.
+        return oldItem == newItem
     }
 }

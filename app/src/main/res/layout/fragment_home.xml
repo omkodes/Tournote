@@ -7,6 +7,19 @@
     tools:context=".Groups.Fragment.HomeFragment"
     android:background="@color/green_theme_Light">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="10dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@android:color/holo_blue_dark" />
+
     <RelativeLayout
         android:id="@+id/brandname"
         android:layout_width="match_parent"

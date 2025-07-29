@@ -104,7 +104,7 @@ class TrackFriendsViewModel(application: Application) : AndroidViewModel(applica
             // User is not tracked in the group
             viewModelScope.launch {
                 // If current user is the owner of the SELECTED group AND not yet tracked, enable tracking
-                if (GlobalClass.Me?.uid == selectedGroup.owner.uid && !isCurrentUserTracked) { // 🔥 MODIFIED LINE
+                if (GlobalClass.Me?.uid == selectedGroup.owner?.uid && !isCurrentUserTracked) { // 🔥 MODIFIED LINE
                     Log.d("TrackFriendsVM", "Current user is owner and not tracked. Enabling tracking.")
                     enableTrackingForCurrentUser() // This will also update GlobalClass
                     showMapAndRequestLocation()

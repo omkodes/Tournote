@@ -1,6 +1,7 @@
 package com.example.tournote.Functionality.Repository
 
 import android.util.Log
+import com.example.tournote.DatabaseCatching.GroupRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.GroupData_Detailed_Model
 import com.example.tournote.UserModel
@@ -8,9 +9,11 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.database.database
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.tasks.await
 
-class MainActivityRepository {
+class MainActivityRepository (){
 
     val db = Firebase.database
 
@@ -131,6 +134,7 @@ class MainActivityRepository {
             Result.failure(e)
         }
     }
+
 
 
     suspend fun getUserByMailId(emailId: String): Result<UserModel> {
@@ -267,7 +271,7 @@ class MainActivityRepository {
             val groupData = groupDetailsResult.getOrThrow()
 
             val allGroupMembers = mutableSetOf<String>()
-            groupData.owner.uid?.let { allGroupMembers.add(it) }
+            groupData.owner?.uid?.let { allGroupMembers.add(it) }
             groupData.members.forEach { it.uid?.let { uid -> allGroupMembers.add(uid) } }
             groupData.admins.forEach { it.uid?.let { uid -> allGroupMembers.add(uid) } }
 

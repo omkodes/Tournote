@@ -151,7 +151,7 @@ class GroupSelectorActivityViewModel : ViewModel() {
     }
 
 
-    fun fetchGroupDetails() {
+    /*fun fetchGroupDetails() {
         viewModelScope.launch {
             isLoading.value = true
             try {
@@ -170,7 +170,7 @@ class GroupSelectorActivityViewModel : ViewModel() {
                 isLoading.value = false
             }
         }
-    }
+    }*/
 
 
 

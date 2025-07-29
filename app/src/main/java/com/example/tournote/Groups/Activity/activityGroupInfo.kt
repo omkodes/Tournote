@@ -88,7 +88,8 @@ class activityGroupInfo : AppCompatActivity() {
         val grpData = currentDetailedGroup!! // Non-null after checks
         val currentUser = GlobalClass.Me // Local immutable copy for smart cast
 
-        if ((grpData.owner == currentUser) || (grpData.admins.contains(currentUser))) { // Direct comparison for owner/admin
+        // 🔥 MODIFIED: Added a null check for grpData.owner
+        if ((grpData.owner?.uid == currentUser?.uid) || (grpData.admins.contains(currentUser))) {
             binding.btnAddMembers.visibility = View.VISIBLE
         } else {
             binding.btnAddMembers.visibility = View.GONE
@@ -96,7 +97,8 @@ class activityGroupInfo : AppCompatActivity() {
 
         val userId = viewModel.authrepo.getUid() // Ensure this is still needed or remove if unused
 
-        if (grpData.owner.uid == currentUser?.uid) {
+        // 🔥 MODIFIED: Added a null check for grpData.owner
+        if (grpData.owner?.uid == currentUser?.uid) {
             binding.btnDeleteGroup.visibility = View.VISIBLE
             binding.btnLeaveGroup.visibility = View.GONE
             if (grpData.isGroupValid == true) { // Use grpData
@@ -179,7 +181,8 @@ class activityGroupInfo : AppCompatActivity() {
         }
 
         // 🔥 MODIFICATION: Check for tracking based on 'grpData'
-        if (isTracked && currentUser?.uid != grpData.owner.uid) {
+        // 🔥 Also added a null check for owner
+        if (isTracked && currentUser?.uid != grpData.owner?.uid) {
             binding.btnDisableTracking.visibility = View.VISIBLE
 
             binding.btnDisableTracking.setOnClickListener {
@@ -330,9 +333,9 @@ class activityGroupInfo : AppCompatActivity() {
     private fun setupMembersList(grpData: GroupData_Detailed_Model){ // Parameter is now a single GroupData_Detailed_Model
         val memberList = grpData.members
         val adminList = grpData.admins
+        // 🔥 MODIFIED: owner is now nullable, so handle it
         val owner = grpData.owner
-
-        val ownerList = listOf(owner) // assuming owner is UserModel
+        val ownerList = if (owner != null) listOf(owner) else emptyList() // Safe null check
         val allExcludedIds = (ownerList + adminList).map { it.uid }.toSet()
         val filteredMemberList = memberList.filterNot { it.uid in allExcludedIds }
 

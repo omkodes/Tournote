@@ -1,6 +1,6 @@
 package com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection
 
-import android.content.Intent // Import Intent
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,32 +12,45 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Observer // Import Observer
 import androidx.lifecycle.lifecycleScope
 import com.example.tournote.Functionality.Repository.MainActivityRepository
-import com.example.tournote.Functionality.Segments.Expenses.Activity.ExpenseAddActivity // Import ExpenseAddActivity
+import com.example.tournote.Functionality.Segments.Expenses.Activity.ExpenseAddActivity
 import com.example.tournote.GlobalClass
+import com.example.tournote.Groups.ViewModel.GroupSelectorActivityViewModel2 // Import your ViewModel
 import com.example.tournote.Onboarding.Activity.GettingStartedActivity
-import com.example.tournote.Onboarding.Repository.authRepository
 import com.example.tournote.Onboarding.ViewModel.authViewModel
 import com.example.tournote.R
+import com.example.tournote.GroupData_Detailed_Model // Import your data model if not already
 import kotlinx.coroutines.launch
-import kotlin.getValue
+// import kotlin.getValue // This import is usually not needed for `by viewModels()`
 
 class SmsGroupSelectionActivity : AppCompatActivity() {
 
     private val authViewModel: authViewModel by viewModels()
-    val repo = MainActivityRepository()
+    // You have two MainActivityRepository instances here. It's generally better
+    // to have them injected or managed by ViewModels. For minimalistic changes,
+    // we'll primarily stop using `mainRepo` for group fetching.
+    val repo = MainActivityRepository() // Used for getUserByMailId
+    // private val mainRepo = MainActivityRepository() // This instance won't be used for group fetching anymore.
 
-    private val mainRepo = MainActivityRepository()
+    // Declare your GroupSelectorActivityViewModel2
+    private val groupSelectionViewModel: GroupSelectorActivityViewModel2 by viewModels() // Renamed for clarity from `viewModel`
+
     private lateinit var bar: ProgressBar
-    private var selectedGroup: String = "" // Keep this if still used for other purposes
+    private var selectedGroup: String = ""
+
+    // Flags to manage dialog display to ensure it shows only once when data is ready
+    private var isUserDataLoaded = false
+    private var isGroupsDataReady = false
+    private var isDialogShowing = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_sms_group_selection)
 
-        // Retrieve amount and description passed from the launching intent (now from confirmation notification tap)
         val amount = intent.getStringExtra("amount")
         val description = intent.getStringExtra("description")
 
@@ -48,86 +61,128 @@ class SmsGroupSelectionActivity : AppCompatActivity() {
         }
 
         bar = findViewById(R.id.progressBar)
-
-        // Show a temporary toast to confirm details received
         Toast.makeText(this, "Expense Details: Amount = $amount, Description = $description", Toast.LENGTH_LONG).show()
+
+        // --- Start of changes to observe ViewModel data ---
+
+        // Observe ViewModel's loading state
+        groupSelectionViewModel.isLoading.observe(this, Observer { isLoading ->
+            bar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        })
+
+        // Observe ViewModel's error messages
+        groupSelectionViewModel.error.observe(this, Observer { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                if (!isDialogShowing) finish() // Optionally finish if there's a critical error preventing group selection
+            }
+        })
+
+        // Observe ViewModel's toast messages (if you want to use this mechanism)
+        groupSelectionViewModel.toastmsg.observe(this, Observer { message ->
+            message?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
+        })
+
+
+        // Observe the groups LiveData from the ViewModel
+        groupSelectionViewModel.groups.observe(this, Observer { groups ->
+            Log.d("SmsGroupSelectionActivity", "Groups LiveData updated: ${groups?.size} groups. User data loaded: $isUserDataLoaded. Dialog showing: $isDialogShowing")
+            isGroupsDataReady = !groups.isNullOrEmpty() // Set flag if groups are available
+
+            // Attempt to show dialog only if user data is loaded, groups are ready, and dialog is not already showing
+            tryShowGroupSelectionDialog(amount, description)
+        })
+
+        // --- End of changes to observe ViewModel data ---
 
 
         if (authViewModel.repo.getuser() != null) {
             val email = authViewModel.repo.getuser()
             if (email != null) {
-                // Logged-in user: Start fetching user and group data
-                // Wait indefinitely until all data is loaded
                 lifecycleScope.launch {
-                    val userResult = repo.getUserByMailId(email)
+                    // Assuming 'repo' (MainActivityRepository) can be instantiated or is already set up correctly
+                    // for fetching user data. If its constructor changed, you might need to pass `application`.
+                    // val userResult = MainActivityRepository(application).getUserByMailId(email) // Example if constructor changed
+                    val userResult = repo.getUserByMailId(email) // Using existing `repo` instance
+
                     userResult.onSuccess { user ->
                         GlobalClass.Me = user
+                        isUserDataLoaded = true // Set flag that user data is loaded
                         Log.d("SmsGroupSelectionActivity", "Current user (GlobalClass.Me) set: ${user.name}")
-                        showGroupSelectionDialog(amount, description) // Pass amount and description to the dialog
+                        // Attempt to show dialog now that user data is ready
+                        tryShowGroupSelectionDialog(amount, description)
+
                     }.onFailure { e ->
                         Log.e("SmsGroupSelectionActivity", "Failed to fetch current user data: ${e.message}")
-                        showGroupSelectionDialog(amount, description) // Pass amount and description to the dialog
+                        Toast.makeText(this@SmsGroupSelectionActivity, "Failed to load user data. Please try again.", Toast.LENGTH_LONG).show()
+                        finish() // Critical failure, finish activity
                     }
                 }
-
-                // No fallback timer - wait until data loading is complete
                 Log.d("SmsGroupSelectionActivity", "Waiting for all group data to load completely...")
 
             } else {
                 Log.d("SmsGroupSelectionActivity", "User email is null, redirecting to GettingStartedActivity.")
+                startActivity(Intent(this, GettingStartedActivity::class.java))
+                finish()
             }
         } else {
             Log.d("SmsGroupSelectionActivity", "No user found, redirecting to GettingStartedActivity.")
+            startActivity(Intent(this, GettingStartedActivity::class.java))
+            finish()
         }
-
     }
 
-    private fun showGroupSelectionDialog(amount: String?, description: String?) {
-        lifecycleScope.launch {
-            bar.visibility = View.VISIBLE
-            val response = mainRepo.getAllMyDetailedGroups()
-            bar.visibility = View.GONE
+    // Helper function to centralize dialog showing logic based on flags
+    private fun tryShowGroupSelectionDialog(amount: String?, description: String?) {
+        if (!isDialogShowing && isUserDataLoaded && isGroupsDataReady) {
+            val groups = groupSelectionViewModel.groups.value // Get the current value from LiveData
+            val validGroups = groups?.filter { it.isGroupValid == true } // Filter for valid groups
 
-            val groups = response.getOrNull()
-
-            if (response.isSuccess && !groups.isNullOrEmpty()) {
-                // ✅ Filter groups where isGroupValid == true
-                val validGroups = groups.filter { it.isGroupValid == true }
-
-                if (validGroups.isEmpty()) {
-                    Toast.makeText(this@SmsGroupSelectionActivity, "No valid groups available. Please create a valid group first.", Toast.LENGTH_LONG).show()
-                    finish()
-                }
-
-                val groupNames = validGroups.map { it.name ?: "Unnamed Group" }.toTypedArray()
-                val groupIds = validGroups.map { it.groupID ?: "Unknown ID" }.toTypedArray()
-
-                AlertDialog.Builder(this@SmsGroupSelectionActivity)
-                    .setTitle("Select Group")
-                    .setItems(groupNames) { _, which ->
-                        selectedGroup = groupNames[which]
-                        val selectedGroupId = groupIds[which]
-
-                        Toast.makeText(this@SmsGroupSelectionActivity, "Selected Group: ${groupNames[which]}, Group ID: $selectedGroupId", Toast.LENGTH_SHORT).show()
-
-                        GlobalClass.selected_groupId = selectedGroupId
-
-                        val intent = Intent(this@SmsGroupSelectionActivity, ExpenseAddActivity::class.java).apply {
-                            putExtra(ExpenseAddActivity.EXTRA_AMOUNT, amount)
-                            putExtra(ExpenseAddActivity.EXTRA_DESCRIPTION, description)
-                            putExtra(ExpenseAddActivity.EXTRA_IS_AUTO_DETECTED, true)
-                        }
-                        startActivity(intent)
-                        finish()
-                    }
-                    .setCancelable(false)
-                    .show()
-
+            if (!validGroups.isNullOrEmpty()) {
+                showGroupSelectionDialogInternal(validGroups, amount, description)
+                isDialogShowing = true // Set flag to prevent re-showing
             } else {
-                Toast.makeText(this@SmsGroupSelectionActivity, "No groups available or error fetching. Please create a group first.", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@SmsGroupSelectionActivity, "No valid groups available. Please create a valid group first.", Toast.LENGTH_LONG).show()
                 finish()
             }
-
         }
+    }
+
+
+    // Renamed this method to avoid conflict with the original structure if you call it directly elsewhere
+    private fun showGroupSelectionDialogInternal(groups: List<GroupData_Detailed_Model>, amount: String?, description: String?) {
+        // No need for lifecycleScope.launch here, as data is already provided by observer
+        // No need to set bar visibility here, as ViewModel handles it via `isLoading`
+
+        val groupNames = groups.map { it.name ?: "Unnamed Group" }.toTypedArray()
+        val groupIds = groups.map { it.groupID ?: "Unknown ID" }.toTypedArray()
+
+        AlertDialog.Builder(this@SmsGroupSelectionActivity)
+            .setTitle("Select Group")
+            .setItems(groupNames) { dialog, which ->
+                selectedGroup = groupNames[which]
+                val selectedGroupId = groupIds[which]
+
+                Toast.makeText(this@SmsGroupSelectionActivity, "Selected Group: ${groupNames[which]}, Group ID: $selectedGroupId", Toast.LENGTH_SHORT).show()
+
+                GlobalClass.selected_groupId = selectedGroupId
+
+                val intent = Intent(this@SmsGroupSelectionActivity, ExpenseAddActivity::class.java).apply {
+                    putExtra(ExpenseAddActivity.EXTRA_AMOUNT, amount)
+                    putExtra(ExpenseAddActivity.EXTRA_DESCRIPTION, description)
+                    putExtra(ExpenseAddActivity.EXTRA_IS_AUTO_DETECTED, true)
+                }
+                startActivity(intent)
+                finish() // Finish this activity after launching ExpenseAddActivity
+                dialog.dismiss() // Dismiss the dialog
+            }
+            .setCancelable(false) // User must select a group or exit the activity
+            .setOnDismissListener {
+                // If the dialog is dismissed (e.g., by back button if cancelable was true, or after selection)
+                isDialogShowing = false // Reset the flag
+            }
+            .show()
     }
 }

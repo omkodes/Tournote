@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
     id("kotlin-parcelize")
+    id("kotlin-kapt") // Explicitly apply the kapt plugin for annotation processing
 }
 
 android {
@@ -68,6 +69,8 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.database.ktx)
     implementation(libs.firebase.messaging)
+    implementation(libs.androidx.room.common.jvm)
+    implementation(libs.androidx.room.runtime.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -143,5 +146,11 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.7.1")
 
     implementation ("com.github.chrisbanes:PhotoView:2.3.0")
+
+    // Room
+    val room_version = "2.7.0" // Use the latest stable version
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
 
 }

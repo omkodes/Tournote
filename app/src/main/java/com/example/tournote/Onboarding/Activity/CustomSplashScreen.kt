@@ -1,6 +1,5 @@
 package com.example.tournote.Onboarding.Activity
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -16,29 +15,25 @@ import androidx.lifecycle.lifecycleScope
 import com.example.tournote.Functionality.Repository.MainActivityRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.Activity.GroupSelectorActivity
-import com.example.tournote.R
 import com.example.tournote.Onboarding.ViewModel.authViewModel
+import com.example.tournote.R
 import kotlinx.coroutines.launch
 
 class CustomSplashScreen : AppCompatActivity() {
     private val authViewModel: authViewModel by viewModels()
-    val repo = MainActivityRepository()
+    private val repo = MainActivityRepository()
 
     private val fixedSplashDurationForGettingStarted = 5000L
-    // Removed maxSplashDurationFallback - no time limit for logged-in users
-
-    // Add this constant for SharedPreferences key
     private val PREF_LOCATION_TRACKING_ENABLED = "location_tracking_enabled"
     private val PREF_SMS_READER_ENAMBELD = "sms_enabled"
 
-    private var splashStartTime = 0L
-    private var dataLoadingComplete = false
-    private var hasRedirected = false // Flag to prevent multiple redirections
+    private var hasRedirected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_custom_splash_screen)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -47,31 +42,23 @@ class CustomSplashScreen : AppCompatActivity() {
 
         window.navigationBarColor = ContextCompat.getColor(this, R.color.customSplashScreenBackground)
 
-        GlobalClass.isTracking=loadLocationTrackingPreference()
-        GlobalClass.isSmsWatched=loadSmsWatcherPreference()
-
-        splashStartTime = System.currentTimeMillis()
+        GlobalClass.isTracking = loadLocationTrackingPreference()
+        GlobalClass.isSmsWatched = loadSmsWatcherPreference()
 
         if (authViewModel.repo.getuser() != null) {
             val email = authViewModel.repo.getuser()
             if (email != null) {
-                // Logged-in user: Start fetching user and group data
-                // Wait indefinitely until all data is loaded
                 lifecycleScope.launch {
                     val userResult = repo.getUserByMailId(email)
                     userResult.onSuccess { user ->
                         GlobalClass.Me = user
                         Log.d("CustomSplashScreen", "Current user (GlobalClass.Me) set: ${user.name}")
-                        fetchAllUserGroups()
                     }.onFailure { e ->
                         Log.e("CustomSplashScreen", "Failed to fetch current user data: ${e.message}")
-                        fetchAllUserGroups()
                     }
+
+                    redirectToActivity(GroupSelectorActivity::class.java)
                 }
-
-                // No fallback timer - wait until data loading is complete
-                Log.d("CustomSplashScreen", "Waiting for all group data to load completely...")
-
             } else {
                 Log.d("CustomSplashScreen", "User email is null, redirecting to GettingStartedActivity.")
                 redirectToActivityWithDelay(GettingStartedActivity::class.java, fixedSplashDurationForGettingStarted)
@@ -82,40 +69,11 @@ class CustomSplashScreen : AppCompatActivity() {
         }
     }
 
-    private fun fetchAllUserGroups() {
-        lifecycleScope.launch {
-            Log.d("CustomSplashScreen", "Attempting to fetch all user's detailed groups...")
-            val groupsResult = repo.getAllMyDetailedGroups()
-            groupsResult.onSuccess { groups ->
-                Log.d("CustomSplashScreen", "Successfully loaded ${groups.size} detailed groups.")
-            }.onFailure { e ->
-                Log.e("CustomSplashScreen", "Failed to load all user's detailed groups: ${e.message}")
-            }
-
-            dataLoadingComplete = true
-            Log.d("CustomSplashScreen", "All data loading processes completed, preparing to redirect...")
-
-            // Only redirect if we haven't already redirected
-            if (!hasRedirected) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    checkAndRedirect()
-                }, 100)
-            }
-        }
-    }
-
-    private fun checkAndRedirect() {
-        if (!dataLoadingComplete || hasRedirected) return // CHECK hasRedirected flag
-
-        redirectToActivity(GroupSelectorActivity::class.java)
-    }
-
     private fun redirectToActivity(activityClass: Class<*>) {
-        if (hasRedirected) return // PREVENT multiple redirections
+        if (hasRedirected) return
+        hasRedirected = true
 
-        hasRedirected = true // SET flag before redirecting
         Log.d("CustomSplashScreen", "Redirecting to ${activityClass.simpleName}")
-
         val intent = Intent(this, activityClass)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
@@ -129,16 +87,13 @@ class CustomSplashScreen : AppCompatActivity() {
         }, delay)
     }
 
-    /**
-     * Load the location tracking preference from SharedPreferences
-     */
     private fun loadLocationTrackingPreference(): Boolean {
-        val editor = getSharedPreferences("MY_SETTING", MODE_PRIVATE)
-        return editor.getBoolean(PREF_LOCATION_TRACKING_ENABLED, false)
+        val prefs = getSharedPreferences("MY_SETTING", MODE_PRIVATE)
+        return prefs.getBoolean(PREF_LOCATION_TRACKING_ENABLED, false)
     }
 
-    private fun loadSmsWatcherPreference(): Boolean{
-        val editor = getSharedPreferences("MY_SETTING", MODE_PRIVATE)
-        return editor.getBoolean(PREF_SMS_READER_ENAMBELD, false)
+    private fun loadSmsWatcherPreference(): Boolean {
+        val prefs = getSharedPreferences("MY_SETTING", MODE_PRIVATE)
+        return prefs.getBoolean(PREF_SMS_READER_ENAMBELD, false)
     }
 }
