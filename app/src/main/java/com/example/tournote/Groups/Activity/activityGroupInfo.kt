@@ -75,7 +75,7 @@ class activityGroupInfo : AppCompatActivity() {
             return
         }
 
-        currentDetailedGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == selectedGroupId }
+        currentDetailedGroup = GlobalClass.GroupDetails_Everything
 
         if (currentDetailedGroup == null) {
             Log.e("ActivityGroupInfo", "No detailed group found for ID: $selectedGroupId. Navigating back.")
@@ -153,7 +153,7 @@ class activityGroupInfo : AppCompatActivity() {
 
                         // Re-fetch the current group's details to reflect added members
                         // This ensures 'grpData' reflects the latest state after adding members
-                        val updatedGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == selectedGroupId }
+                        val updatedGroup = GlobalClass.GroupDetails_Everything
                         if (updatedGroup != null) {
                             setupMembersList(updatedGroup) // Use the updated group data
                         } else {
@@ -191,22 +191,29 @@ class activityGroupInfo : AppCompatActivity() {
                     binding.btnDisableTracking.visibility = View.GONE
 
                     // 🔥 MODIFICATION: Update GlobalClass.GroupDetails_Everything locally
-                    // Find the current group in the list and update its trackFriends
-                    val currentGroupsList = GlobalClass.GroupDetails_Everything.toMutableList()
-                    val groupToUpdateIndex = currentGroupsList.indexOfFirst { it.groupID == grpData.groupID }
+                    val currentUserEmail = currentUser?.email // Ensure currentUserEmail is accessible here
 
-                    if (groupToUpdateIndex != -1 && currentUserEmail != null) {
-                        val groupToUpdate = currentGroupsList[groupToUpdateIndex]
-                        val currentTrackFriends = groupToUpdate.trackFriends.toMutableList()
-                        val userToRemove = currentTrackFriends.find { it.email == currentUserEmail }
+                    // Directly access the single GroupData_Detailed_Model from GlobalClass
+                    GlobalClass.GroupDetails_Everything?.let { currentGroup ->
+                        // Check if this is the correct group we're trying to update
+                        if (currentGroup.groupID == grpData.groupID && currentUserEmail != null) {
+                            val currentTrackFriends = currentGroup.trackFriends.toMutableList()
+                            val userToRemove = currentTrackFriends.find { it.email == currentUserEmail }
 
-                        if (userToRemove != null) {
-                            if (currentTrackFriends.remove(userToRemove)) {
-                                val updatedGroup = groupToUpdate.copy(trackFriends = currentTrackFriends)
-                                currentGroupsList[groupToUpdateIndex] = updatedGroup
-                                GlobalClass.GroupDetails_Everything = currentGroupsList // Update the global list
+                            if (userToRemove != null) {
+                                if (currentTrackFriends.remove(userToRemove)) {
+                                    val updatedGroup = currentGroup.copy(trackFriends = currentTrackFriends)
+                                    GlobalClass.GroupDetails_Everything = updatedGroup // Update the single global object
+                                    Log.d("DisableTracking", "Successfully removed ${currentUserEmail} from trackFriends in GlobalClass for group ${currentGroup.groupID}.")
+                                }
+                            } else {
+                                Log.d("DisableTracking", "User ${currentUserEmail} not found in trackFriends for group ${currentGroup.groupID} locally.")
                             }
+                        } else {
+                            Log.w("DisableTracking", "GlobalClass.GroupDetails_Everything is null or holds a different group (${currentGroup.groupID}) than the one being updated (${grpData.groupID}). Local state might be inconsistent.")
                         }
+                    } ?: run {
+                        Log.w("DisableTracking", "GlobalClass.GroupDetails_Everything is null. Cannot update local tracking state.")
                     }
                 }
             }
@@ -238,19 +245,27 @@ class activityGroupInfo : AppCompatActivity() {
                         binding.btnEndTrip.visibility = View.GONE
                         mainRepo.EndTour() // This repo function already uses GlobalClass.selected_groupId
                         viewModel2.turnOffGroupValidity() // This affects the ViewModel's LiveData
-                        // 🔥 Consider updating the local GlobalClass.GroupDetails_Everything's
-                        // isGroupValid and trackFriends after EndTour if the UI needs to reflect it immediately
-                        val updatedGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == selectedGroupId }
-                        if (updatedGroup != null) {
-                            val currentGroupsList = GlobalClass.GroupDetails_Everything.toMutableList()
-                            val groupIndex = currentGroupsList.indexOfFirst { it.groupID == selectedGroupId }
-                            if (groupIndex != -1) {
-                                currentGroupsList[groupIndex] = updatedGroup.copy(
+
+                        // 🔥 Update the local GlobalClass.GroupDetails_Everything's
+                        // isGroupValid and trackFriends after EndTour to reflect it immediately
+
+                        // Directly access the single GroupData_Detailed_Model from GlobalClass
+                        GlobalClass.GroupDetails_Everything?.let { currentGroup ->
+                            // Ensure the currently loaded group in GlobalClass matches the one being ended
+                            if (currentGroup.groupID == GlobalClass.selected_groupId) {
+                                // Create an updated copy of the group with the new validity and empty trackFriends
+                                val updatedGroup = currentGroup.copy(
                                     isGroupValid = false,
                                     trackFriends = emptyList() // Assuming EndTour clears this
                                 )
-                                GlobalClass.GroupDetails_Everything = currentGroupsList
+                                // Assign the updated group back to the global object
+                                GlobalClass.GroupDetails_Everything = updatedGroup
+                                Log.d("EndTrip", "Successfully updated GlobalClass.GroupDetails_Everything for group ${currentGroup.groupID}: isGroupValid=false, trackFriends cleared.")
+                            } else {
+                                Log.w("EndTrip", "GlobalClass.GroupDetails_Everything holds a different group (${currentGroup.groupID}) than the selected one (${GlobalClass.selected_groupId}). Local state might be inconsistent.")
                             }
+                        } ?: run {
+                            Log.w("EndTrip", "GlobalClass.GroupDetails_Everything is null. Cannot update local state after trip end.")
                         }
                     }
                 }

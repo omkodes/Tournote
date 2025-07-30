@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.tournote.Groups.Adapter.GroupSelectorActivityPagerAdapter
 import com.example.tournote.Groups.ViewModel.GroupSelectorActivityViewModel
+import com.example.tournote.Groups.ViewModel.GroupSelectorActivityViewModel2
 import com.example.tournote.Onboarding.Activity.LogInActivity
 import com.example.tournote.Onboarding.ViewModel.authViewModel
 import com.example.tournote.R
@@ -27,6 +28,7 @@ class GroupSelectorActivity : AppCompatActivity() {
     private lateinit var viewPager : ViewPager2
 
     private val viewModel2 : GroupSelectorActivityViewModel by viewModels()
+    private val viewModel3 : GroupSelectorActivityViewModel2 by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,6 +103,8 @@ class GroupSelectorActivity : AppCompatActivity() {
     private fun observeModel(){
         viewModel2.navigateToHome.observe(this) { status ->
             if (status) {
+                viewModel3.refreshGroupData()
+
                 binding.bottomButtons.visibility = View.VISIBLE
                 viewPager.currentItem = 0
                 //viewModel2.fetchGroupDetails() // 🛠 Force refresh when returning to HomeFragment
@@ -115,6 +119,11 @@ class GroupSelectorActivity : AppCompatActivity() {
             }
         }
 
+        viewModel3.isLoading.observe(this)
+        { loading ->
+            // Show/hide progress bar based on `loading`
+            binding.progressBar.visibility = if (loading == true) View.VISIBLE else View.GONE
+        }
         viewModel.isLoading.observe(this)
         { loading ->
             // Show/hide progress bar based on `loading`

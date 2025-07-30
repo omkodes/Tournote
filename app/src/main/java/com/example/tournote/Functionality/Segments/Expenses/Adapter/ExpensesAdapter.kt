@@ -89,7 +89,7 @@ class ExpensesAdapter : ListAdapter<ExpenseListItem, RecyclerView.ViewHolder>(Ex
             txtDescription.text = expense.details
 
             val paidByUid = expense.paidBy
-            val currentGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }
+            val currentGroup = GlobalClass.GroupDetails_Everything
 
             if (GlobalClass.Me?.uid == paidByUid) {
                 txtWhoPaidToWhom.text = "You paid ₹${expense.amount}"

@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.loadGroupValidity(GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.isGroupValid ?: true)
+        viewModel.loadGroupValidity(GlobalClass.GroupDetails_Everything?.isGroupValid ?: true)
 
         //val groupId = intent.getStringExtra("GROUP_ID")
         viewModel.isGroupValid.observe(this){valid->

@@ -56,7 +56,7 @@ class ExpenseInfoActivity : AppCompatActivity() {
 
         val expenseId = intent.getStringExtra("expenseId")
         val currentExpense = GlobalClass.expenses.find { it.expenseId == expenseId }
-        val currentGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }
+        val currentGroup = GlobalClass.GroupDetails_Everything
 
         binding.txtDescription.text = currentExpense?.details
         binding.txtAmount.text = currentExpense?.amount

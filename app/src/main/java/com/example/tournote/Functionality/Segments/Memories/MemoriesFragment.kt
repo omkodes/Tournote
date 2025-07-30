@@ -84,19 +84,19 @@ class MemoriesFragment : Fragment() {
         }
 
 
-        group_name.text = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.name
-        if (GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.profilePic == "null" || GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.profilePic.isNullOrBlank()) {
+        group_name.text = GlobalClass.GroupDetails_Everything?.name
+        if (GlobalClass.GroupDetails_Everything?.profilePic == "null" || GlobalClass.GroupDetails_Everything?.profilePic.isNullOrBlank()) {
             group_logo.setImageResource(R.drawable.defaultgroupimage)
         } else {
             // Load the image using Glide or any other image loading library
             com.bumptech.glide.Glide.with(this)
-                .load(GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.profilePic)
+                .load(GlobalClass.GroupDetails_Everything?.profilePic)
                 .placeholder(R.drawable.defaultgroupimage)
                 .error(R.drawable.defaultgroupimage)
                 .into(group_logo)
         }
         val recyclerView = view.findViewById<RecyclerView>(R.id.folder_recycler_view)
-        val selectedGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }
+        val selectedGroup = GlobalClass.GroupDetails_Everything
         // RecyclerView setup
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 

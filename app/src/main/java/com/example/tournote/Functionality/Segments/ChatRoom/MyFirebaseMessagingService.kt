@@ -33,14 +33,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Log.d("grpadapater", "Title: $title")
         Log.d("grpadapater", "Body: $body")
 
-        for (grp in GlobalClass.GroupDetails_Everything){
+        /*for (grp in GlobalClass.GroupDetails_Everything){
             if (grp.groupID == groupId){
                 Log.d("grpadapater", "Group ID: ${grp.groupID}")
                 Log.d("grpadapater", "Group Name: ${grp.name}")
                 grpName = grp.name ?: "Anonymous"
                 break
             }
-        }
+        }*/
 
         showNotification(title, body,grpName)
     }

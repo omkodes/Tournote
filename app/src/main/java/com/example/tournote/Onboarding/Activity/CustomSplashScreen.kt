@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.Activity.GroupSelectorActivity
+import com.example.tournote.Groups.ViewModel.GroupSelectorActivityViewModel2
 import com.example.tournote.Onboarding.ViewModel.authViewModel
 import com.example.tournote.R
 import com.example.tournote.UserModel
@@ -24,6 +25,7 @@ import kotlinx.coroutines.launch
 
 class CustomSplashScreen : AppCompatActivity() {
     private val authViewModel: authViewModel by viewModels()
+    private val viewModel: GroupSelectorActivityViewModel2 by viewModels()
     private val repo = FirebaseRTDBRepository()
 
     private val fixedSplashDurationForGettingStarted = 5000L
@@ -36,6 +38,8 @@ class CustomSplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_custom_splash_screen)
+
+        viewModel.refreshGroupData()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

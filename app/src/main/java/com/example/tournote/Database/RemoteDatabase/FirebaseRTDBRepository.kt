@@ -123,7 +123,7 @@ class FirebaseRTDBRepository (){
             Log.d("MainActivityRepository", "Successfully fetched ${detailedGroups.size} detailed groups.")
 
             // Update GlobalClass.GroupDetails_Everything here within the repo function
-            GlobalClass.GroupDetails_Everything = detailedGroups
+            //GlobalClass.GroupDetails_Everything = detailedGroups
             Log.d("MainActivityRepository", "Successfully loaded ${detailedGroups.size} detailed groups into GlobalClass.GroupDetails_Everything.")
 
             Result.success(detailedGroups)
@@ -234,7 +234,7 @@ class FirebaseRTDBRepository (){
 
             // Update GlobalClass.GroupDetails_Everything locally
             // Find the group that was left and remove it from the list
-            val updatedGroupList = GlobalClass.GroupDetails_Everything.filter { it.groupID != grpId }
+            val updatedGroupList = GlobalClass.GroupDetails_Everything
             GlobalClass.GroupDetails_Everything = updatedGroupList
             Log.d("LeaveCurrentGroup", "Updated GlobalClass.GroupDetails_Everything after leaving group $grpId.")
 
@@ -288,7 +288,7 @@ class FirebaseRTDBRepository (){
             Log.d("DeleteCurrentGroupFromRoot", "Deleted group $groupIdToDelete from /groups root.")
 
             // Update GlobalClass.GroupDetails_Everything by removing the deleted group
-            val updatedGroupList = GlobalClass.GroupDetails_Everything.filter { it.groupID != groupIdToDelete }
+            val updatedGroupList = GlobalClass.GroupDetails_Everything
             GlobalClass.GroupDetails_Everything = updatedGroupList
             Log.d("DeleteCurrentGroupFromRoot", "GlobalClass.GroupDetails_Everything updated after deleting group $groupIdToDelete.")
 
@@ -345,28 +345,26 @@ class FirebaseRTDBRepository (){
             userGroupsRef.setValue(true).await()
 
             // --- Update GlobalClass.GroupDetails_Everything locally ---
-            // Find the specific group in the list and update its members
-            val currentGroups = GlobalClass.GroupDetails_Everything.toMutableList()
-            val groupToUpdateIndex = currentGroups.indexOfFirst { it.groupID == grpId }
+            // Check if GroupDetails_Everything is not null and matches the current group ID
+            GlobalClass.GroupDetails_Everything?.let { currentGroup ->
+                if (currentGroup.groupID == grpId) {
+                    val currentMembers = currentGroup.members.toMutableList()
+                    val isAlreadyMember = currentMembers.any { it.email == userEmail }
 
-            if (groupToUpdateIndex != -1) {
-                val groupToUpdate = currentGroups[groupToUpdateIndex]
-                val currentMembers = groupToUpdate.members.toMutableList()
-                val isAlreadyMember = currentMembers.any { it.email == userEmail }
-
-                if (!isAlreadyMember) {
-                    currentMembers.add(UserInfo)
-                    val updatedGroup = groupToUpdate.copy(members = currentMembers)
-                    currentGroups[groupToUpdateIndex] = updatedGroup
-                    GlobalClass.GroupDetails_Everything = currentGroups
-                    Log.d("AddMemberToGroup", "Successfully added ${UserInfo.name} to group $grpId in GlobalClass.")
+                    if (!isAlreadyMember) {
+                        currentMembers.add(UserInfo)
+                        val updatedGroup = currentGroup.copy(members = currentMembers)
+                        GlobalClass.GroupDetails_Everything = updatedGroup
+                        Log.d("AddMemberToGroup", "Successfully added ${UserInfo.name} to group $grpId in GlobalClass.")
+                    } else {
+                        Log.d("AddMemberToGroup", "User ${UserInfo.email} is already a member of group $grpId locally.")
+                    }
                 } else {
-                    Log.d("AddMemberToGroup", "User ${UserInfo.email} is already a member of group $grpId locally.")
+                    Log.w("AddMemberToGroup", "GlobalClass.GroupDetails_Everything holds a different group ($currentGroup.groupID) than the one being updated ($grpId). Local state might be inconsistent.")
                 }
-            } else {
-                Log.w("AddMemberToGroup", "Group $grpId not found in GlobalClass.GroupDetails_Everything. Local state might be inconsistent.")
+            } ?: run {
+                Log.w("AddMemberToGroup", "GlobalClass.GroupDetails_Everything is null. Cannot update local state.")
             }
-
 
         } catch (e: Exception) {
             Log.e("AddMemberToGroup", "Error adding member to group: ${e.message}")
@@ -418,22 +416,8 @@ class FirebaseRTDBRepository (){
             groupRef.child("TrackFriends").removeValue().await()
 
             // --- Update GlobalClass.GroupDetails_Everything locally ---
-            val currentGroups = GlobalClass.GroupDetails_Everything.toMutableList()
-            val groupToUpdateIndex = currentGroups.indexOfFirst { it.groupID == grpId }
-
-            if (groupToUpdateIndex != -1) {
-                val groupToUpdate = currentGroups[groupToUpdateIndex]
-                val updatedGroup = groupToUpdate.copy(
-                    isGroupValid = false,
-                    trackFriends = emptyList() // Clear track friends locally
-                )
-                currentGroups[groupToUpdateIndex] = updatedGroup
-                GlobalClass.GroupDetails_Everything = currentGroups
-                Log.d("EndTour", "Group $grpId marked as invalid and track friends cleared in GlobalClass.")
-            } else {
-                Log.w("EndTour", "Group $grpId not found in GlobalClass.GroupDetails_Everything. Local state might be inconsistent.")
-            }
-
+            GlobalClass.GroupDetails_Everything?.isGroupValid = false
+            GlobalClass.GroupDetails_Everything?.trackFriends = emptyList()
 
             Log.d("EndTour", "Successfully ended tour for group $grpId.")
 

@@ -71,7 +71,7 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
         myUid = GlobalClass.Me?.uid ?: "" // Get current user's UID
         val myName = GlobalClass.Me?.name ?: "You" // Get current user's name
 
-        val currentGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }
+        val currentGroup = GlobalClass.GroupDetails_Everything
         val groupMembers: MutableList<UserModelForSplitter> =
             currentGroup?.members?.map {
                 UserModelForSplitter(

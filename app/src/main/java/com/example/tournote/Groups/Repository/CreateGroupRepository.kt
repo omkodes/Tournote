@@ -175,7 +175,6 @@ class CreateGroupRepository {
                 trackFriends = emptyList()
             )
 
-            GlobalClass.GroupDetails_Everything = GlobalClass.GroupDetails_Everything + newGroupData
 
             Result.success(groupId)
         } catch (e: Exception) {

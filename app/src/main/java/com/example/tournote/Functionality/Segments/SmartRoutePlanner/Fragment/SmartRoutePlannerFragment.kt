@@ -650,7 +650,7 @@ class SmartRoutePlannerFragment: Fragment() {
         }
 
         val share = dialog.findViewById<RelativeLayout>(R.id.btnShareRoute)
-        val google = dialog.findViewById<RelativeLayout>(R.id.btnGoogle)
+        val google = dialog.findViewById<RelativeLayout>(R.id.btnRedirectToGoogleMaps)
         val oldRouteSetter = dialog.findViewById<RelativeLayout>(R.id.btnOldRoute)
 
         share?.setOnClickListener {

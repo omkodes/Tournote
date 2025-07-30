@@ -45,9 +45,12 @@ class GroupSelectorActivityViewModel2(application: Application) : AndroidViewMod
         val database = TourNoteDatabase.getDatabase(application)
         val dao = database.tourNoteDao()
         val firebaseDatabase = FirebaseDatabase.getInstance()
-        repository = RoomDBRepository(firebaseDatabase, dao, this)
+        // Pass viewModelScope to the repository
+        repository = RoomDBRepository(firebaseDatabase, dao, this, viewModelScope)
 
         initializeGroups()
+        // Start listening for Firebase changes as soon as the ViewModel is created
+        repository.startListeningForGroupChanges()
     }
 
     private fun initializeGroups() {
@@ -59,7 +62,7 @@ class GroupSelectorActivityViewModel2(application: Application) : AndroidViewMod
                 // Start observing the groups flow
                 observeGroupsFlow(groupsFlow)
 
-                // Trigger initial sync
+                // Trigger initial sync if needed (this will also be triggered by the listener now)
                 triggerInitialOrBackgroundSync(groupsFlow)
 
             } catch (e: Exception) {
@@ -79,7 +82,7 @@ class GroupSelectorActivityViewModel2(application: Application) : AndroidViewMod
                 // Only update GlobalClass after initial sync is attempted
                 // This prevents clearing valid data due to initial empty state
                 if (initialSyncCompleted || detailedGroups.isNotEmpty()) {
-                    GlobalClass.GroupDetails_Everything = detailedGroups
+                    //GlobalClass.GroupDetails_Everything = detailedGroups
                     Log.d("GroupSelectorVM2", "GlobalClass.GroupDetails_Everything updated with ${detailedGroups.size} groups")
                 }
 
@@ -102,7 +105,8 @@ class GroupSelectorActivityViewModel2(application: Application) : AndroidViewMod
                     // We have local data, show it immediately and sync in background
                     _isLoading.value = false
                     Log.d("GroupSelectorVM2", "Performing background sync...")
-
+                    // The Firebase listener will trigger refreshGroupsFromNetwork when needed.
+                    // This initial call ensures we have the latest data even if no Firebase change occurs.
                     val result = repository.refreshGroupsFromNetwork()
                     initialSyncCompleted = true
 
@@ -184,6 +188,12 @@ class GroupSelectorActivityViewModel2(application: Application) : AndroidViewMod
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        // Stop listening for Firebase changes when the ViewModel is cleared
+        repository.stopListeningForGroupChanges()
+        Log.d("GroupSelectorVM2", "ViewModel onCleared: Firebase listener stopped.")
+    }
 
     fun showToast(message: String) {
         _toastmsg.value = message

@@ -11,7 +11,7 @@ data class UserEntity(
     val email: String?,
     var name: String?,
     val phoneNumber: String?,
-    var profilePic: String?
+    var profilePic: String? = "null"
 )
 
 fun UserEntity.toUserModel() = UserModel(

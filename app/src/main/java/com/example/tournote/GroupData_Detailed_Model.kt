@@ -10,5 +10,5 @@ data class GroupData_Detailed_Model(
     var isGroupValid: Boolean? = false,
     val members : List<UserModel>,//no need to pass id...this will be processed info
     val admins : List<UserModel>,//no need to pass id...this will be processed info
-    val trackFriends : List<UserModel>
+    var trackFriends : List<UserModel>
 )

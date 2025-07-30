@@ -69,9 +69,7 @@ class ExpenseSettleUpActivity : AppCompatActivity() {
 
     private fun loadSettleUpData() {
         val currentUserId = GlobalClass.Me?.uid
-        val groupMembers = GlobalClass.GroupDetails_Everything.find {
-            it.groupID == GlobalClass.selected_groupId
-        }?.members ?: emptyList()
+        val groupMembers = GlobalClass.GroupDetails_Everything?.members ?: emptyList()
 
         if (currentUserId == null) {
             // Handle case where current user is not logged in

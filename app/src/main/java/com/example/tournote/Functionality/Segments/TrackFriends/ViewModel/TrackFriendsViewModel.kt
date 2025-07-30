@@ -81,7 +81,7 @@ class TrackFriendsViewModel(application: Application) : AndroidViewModel(applica
 
     private fun handleUserTrackingPermissions() {
         val currentUser = GlobalClass.Me
-        val selectedGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId } // Find the selected group
+        val selectedGroup = GlobalClass.GroupDetails_Everything // Find the selected group
 
         if (selectedGroup == null) {
             Log.e("TrackFriendsVM", "No selected group found in GlobalClass.GroupDetails_Everything for tracking.")
@@ -136,25 +136,37 @@ class TrackFriendsViewModel(application: Application) : AndroidViewModel(applica
         try {
             mainRepo.EnableMyTrackingOnCurrentGroup() // This function should add currentUser to GroupDetails_Everything.trackFriends in Firebase
             val currentUser = GlobalClass.Me
-            // Find the selected group in GlobalClass.GroupDetails_Everything
-            val currentGroupList = GlobalClass.GroupDetails_Everything.toMutableList()
-            val selectedGroupIndex = currentGroupList.indexOfFirst { it.groupID == GlobalClass.selected_groupId }
 
-            if (currentUser != null && selectedGroupIndex != -1) {
-                val selectedGroup = currentGroupList[selectedGroupIndex]
-                val currentTrackFriends = selectedGroup.trackFriends.toMutableList() // 🔥 MODIFIED LINE (access trackFriends from selectedGroup)
-
-                if (!currentTrackFriends.any { it.email == currentUser.email }) {
-                    currentTrackFriends.add(currentUser) // Add the current user's UserModel object
-                    // Create an updated version of the selected group
-                    val updatedSelectedGroup = selectedGroup.copy(
-                        trackFriends = currentTrackFriends
-                    )
-                    // Replace the old selected group with the updated one in the global list
-                    currentGroupList[selectedGroupIndex] = updatedSelectedGroup
-                    GlobalClass.GroupDetails_Everything = currentGroupList // 🔥 MODIFIED LINE (update the entire list)
-                }
+            if (currentUser == null) {
+                Log.d("TrackFriendsVM", "Error: GlobalClass.Me is null. Cannot enable tracking.")
+                return
             }
+
+            // Directly access the single GroupData_Detailed_Model from GlobalClass
+            GlobalClass.GroupDetails_Everything?.let { currentGroup ->
+                // Check if this is the correct group we're trying to update
+                if (currentGroup.groupID == GlobalClass.selected_groupId) {
+                    val currentTrackFriends = currentGroup.trackFriends.toMutableList()
+
+                    if (!currentTrackFriends.any { it.email == currentUser.email }) {
+                        currentTrackFriends.add(currentUser) // Add the current user's UserModel object
+                        // Create an updated version of the group
+                        val updatedGroup = currentGroup.copy(
+                            trackFriends = currentTrackFriends
+                        )
+                        // Update the single GlobalClass.GroupDetails_Everything object
+                        GlobalClass.GroupDetails_Everything = updatedGroup
+                        Log.d("TrackFriendsVM", "Successfully added ${currentUser.name} to trackFriends in GlobalClass for group ${currentGroup.groupID}.")
+                    } else {
+                        Log.d("TrackFriendsVM", "User ${currentUser.email} is already in trackFriends for group ${currentGroup.groupID}.")
+                    }
+                } else {
+                    Log.w("TrackFriendsVM", "GlobalClass.GroupDetails_Everything holds a different group (${currentGroup.groupID}) than the selected one (${GlobalClass.selected_groupId}). Local state might be inconsistent.")
+                }
+            } ?: run {
+                Log.w("TrackFriendsVM", "GlobalClass.GroupDetails_Everything is null. Cannot update local tracking state.")
+            }
+
             _trackingEnabled.value = true
             Log.d("TrackFriendsVM", "Tracking enabled for current user.")
         } catch (e: Exception) {
@@ -265,7 +277,7 @@ class TrackFriendsViewModel(application: Application) : AndroidViewModel(applica
         _friendsOnMap.value = emptyList() // Clear friends from map UI initially
 
         Log.d("TrackFriendsVM", "Starting to track friends in group...")
-        val selectedGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId } // Find the selected group
+        val selectedGroup = GlobalClass.GroupDetails_Everything
 
         if (selectedGroup == null) {
             Log.e("TrackFriendsVM", "No selected group found to start tracking friends.")
@@ -385,7 +397,7 @@ class TrackFriendsViewModel(application: Application) : AndroidViewModel(applica
 
     fun showAlertAPI() {
         val currentUser = GlobalClass.Me
-        val selectedGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }
+        val selectedGroup = GlobalClass.GroupDetails_Everything
         viewModelScope.launch {
             val result =repo.showAlertAPI(
                 currentUser?.name!!,

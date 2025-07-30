@@ -31,7 +31,7 @@ class MainActivityViewModel : ViewModel() {
     fun loadGroup() {
         viewModelScope.launch {
             // 🔥 MODIFICATION: Find the currently selected group from the list
-            val selectedGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }
+            val selectedGroup = GlobalClass.GroupDetails_Everything
 
             if (selectedGroup != null) {
                 _groupId.value = selectedGroup.groupID // Use properties of the found group
@@ -65,7 +65,7 @@ class MainActivityViewModel : ViewModel() {
     fun loadChatRoom() {
         viewModelScope.launch {
             // 🔥 MODIFICATION: Find the currently selected group to get its ID for the chat room
-            val selectedGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }
+            val selectedGroup = GlobalClass.GroupDetails_Everything
 
             selectedGroup?.groupID?.let {
                 chatView.joinROOM(it)

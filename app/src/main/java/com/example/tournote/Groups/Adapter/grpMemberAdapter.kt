@@ -50,7 +50,7 @@ class grpMemberAdapter(val grpList: MutableList<UserModel>, val context: Context
 
             holder.body.setOnClickListener {
                 val selectedGroup = GlobalClass.GroupDetails_Everything
-                    .find { it.groupID == GlobalClass.selected_groupId }
+
 
                 if (selectedGroup != null &&
                     (GlobalClass.Me == selectedGroup.owner || selectedGroup.admins.contains(GlobalClass.Me))) {

@@ -72,7 +72,7 @@ class TrackFriendsFragment : Fragment() {
 
         if(GlobalClass.isTracking){
             binding.relTrackingReqManualOverride.visibility= View.GONE
-            if (GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.isGroupValid == false) {
+            if (GlobalClass.GroupDetails_Everything?.isGroupValid == false) {
                 binding.relGroupInvalid.visibility = View.VISIBLE
             } else {
                 binding.relGroupInvalid.visibility = View.GONE
@@ -508,7 +508,7 @@ class TrackFriendsFragment : Fragment() {
 
         // Only start tracking if we're in tracking mode and group is valid
         if (GlobalClass.isTracking &&
-            GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }?.isGroupValid != false) {
+            GlobalClass.GroupDetails_Everything?.isGroupValid != false) {
             viewModel.startTrackingFriendsInGroup()
         }
     }

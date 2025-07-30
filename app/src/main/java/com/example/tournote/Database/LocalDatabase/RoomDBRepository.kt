@@ -6,9 +6,14 @@ import com.example.tournote.GroupData_Detailed_Model
 import com.example.tournote.Groups.ViewModel.GroupSelectorActivityViewModel2
 import com.example.tournote.UserModel
 import com.example.tournote.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 // Add a sealed class for network operation results
@@ -20,8 +25,55 @@ sealed class NetworkResult {
 class RoomDBRepository(
     private val db: FirebaseDatabase,
     private val tourNoteDao: TourNoteDao,
-    private val sharedViewModel: GroupSelectorActivityViewModel2
+    private val sharedViewModel: GroupSelectorActivityViewModel2, // Keep this for showing toasts/errors
+    private val externalScope: CoroutineScope // Inject a CoroutineScope
 ) {
+
+    private var groupListListener: ValueEventListener? = null
+    private var myUid: String? = null
+
+    // Call this from ViewModel to start listening
+    fun startListeningForGroupChanges() {
+        myUid = GlobalClass.Me?.uid
+        if (myUid == null) {
+            val errorMsg = "User not logged in. Cannot start group listener."
+            sharedViewModel.showError(errorMsg)
+            Log.e("RoomDBRepository", errorMsg)
+            return
+        }
+
+        val userGroupsRef = db.getReference("users").child(myUid!!).child("Groups")
+
+        groupListListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // This block will be called initially and every time there's a change
+                // in the 'Groups' child of the user.
+                Log.d("RoomDBRepository", "Firebase 'Groups' node changed for user: $myUid. Initiating refresh.")
+                externalScope.launch {
+                    refreshGroupsFromNetwork()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("RoomDBRepository", "Firebase listener cancelled for user groups: ${error.message}", error.toException())
+                sharedViewModel.showError("Failed to listen for group changes: ${error.message}")
+            }
+        }
+        userGroupsRef.addValueEventListener(groupListListener!!)
+        Log.d("RoomDBRepository", "Firebase listener added for user groups: $myUid")
+    }
+
+    // Call this from ViewModel to stop listening (e.g., in onCleared)
+    fun stopListeningForGroupChanges() {
+        myUid?.let { uid ->
+            groupListListener?.let { listener ->
+                db.getReference("users").child(uid).child("Groups").removeEventListener(listener)
+                Log.d("RoomDBRepository", "Firebase listener removed for user groups: $uid")
+            }
+        }
+        groupListListener = null
+    }
+
     suspend fun getGroups(): Flow<List<GroupData_Detailed_Model>> {
         return tourNoteDao.getAllGroupsWithDetails().map { groupWithDetailsList ->
             groupWithDetailsList.map { it.toDetailedModel() }
@@ -31,16 +83,16 @@ class RoomDBRepository(
     // Return NetworkResult to indicate completion status
     suspend fun refreshGroupsFromNetwork(): NetworkResult {
         return try {
-            val myUid = GlobalClass.Me?.uid ?: run {
+            val currentUid = GlobalClass.Me?.uid ?: run {
                 val errorMsg = "User not logged in."
                 sharedViewModel.showError(errorMsg)
                 return NetworkResult.Error(errorMsg)
             }
 
-            Log.d("RoomDBRepository", "Starting network sync for user: $myUid")
+            Log.d("RoomDBRepository", "Starting network sync for user: $currentUid")
 
             val myGroupsIdList = db.getReference("users")
-                .child(myUid)
+                .child(currentUid)
                 .child("Groups")
                 .get()
                 .await()
@@ -59,7 +111,7 @@ class RoomDBRepository(
 
             if (myGroupsIdList.isEmpty()) {
                 Log.d("RoomDBRepository", "No groups found for user")
-                sharedViewModel.showToast("No groups found")
+                // No need to show toast here, as the UI will update to show empty state
                 return NetworkResult.Success
             }
 
@@ -93,7 +145,7 @@ class RoomDBRepository(
 
                     val name = groupDetails["name"] as? String
                     val isGroupValid = groupDetails["isGroupValid"] as? Boolean
-                    val description = groupDetails["description"] as? String // Fixed: was getting isGroupValid
+                    val description = groupDetails["description"] as? String
                     val profilePic = groupDetails["profilePic"] as? String
                     val ownerID = groupDetails["owner"] as? String
                     val createdAt = groupDetails["createdAt"] as? Long
@@ -161,7 +213,7 @@ class RoomDBRepository(
             }
 
             Log.d("RoomDBRepository", message)
-            sharedViewModel.showToast(message)
+            sharedViewModel.showToast(message) // Keep toast for user feedback on manual sync
             NetworkResult.Success
 
         } catch (e: Exception) {

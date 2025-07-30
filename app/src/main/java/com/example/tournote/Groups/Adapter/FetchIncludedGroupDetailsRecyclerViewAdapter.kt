@@ -51,6 +51,7 @@ class FetchIncludedGroupDetailsRecyclerViewAdapter(
         holder.clickable.setOnClickListener {
             // Set the selected group ID
             GlobalClass.selected_groupId = group.groupID ?: ""
+            GlobalClass.GroupDetails_Everything=group
             val intent = Intent(context, MainActivity::class.java)
             context.startActivity(intent)
         }

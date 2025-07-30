@@ -10,6 +10,56 @@
     tools:context=".Functionality.Segments.ChatRoom.Fragment.ChatsFragment"
     android:background="@color/green_theme_Light">
 
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:elevation="4dp"
+        android:orientation="horizontal"
+        android:background="@color/green_theme_Light_taskbar"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible"
+        >
+
+
+        <ImageView
+            android:layout_width="40dp"
+            android:id="@+id/grp_logo"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            android:padding="6dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/defaultgroupimage"
+            android:layout_gravity="center_vertical"
+            android:layout_marginVertical="4dp"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:id="@+id/grp_name"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_weight="1"
+            android:textColor="#E0E0E0"
+            android:textSize="22sp"
+            />
+
+        <ImageButton
+            android:id="@+id/more_options"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/baseline_more_vert_24"
+            android:visibility="gone"
+            app:tint="@color/text_primary" />
+    </LinearLayout>
     <!-- Toolbar -->
     <LinearLayout
         android:layout_width="0dp"
@@ -20,55 +70,6 @@
         app:layout_constraintBottom_toTopOf="@id/inputContainer"
         android:orientation="vertical"
         >
-        <LinearLayout
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp"
-            android:elevation="4dp"
-            android:orientation="horizontal"
-            android:background="@color/green_theme_Light_taskbar"
-            android:gravity="center_vertical"
-            android:visibility="visible"
-            >
-
-
-            <ImageView
-                android:layout_width="40dp"
-                android:id="@+id/grp_logo"
-                android:layout_height="40dp"
-                android:scaleType="fitXY"
-                android:padding="6dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/defaultgroupimage"
-                android:layout_gravity="center_vertical"
-                android:layout_marginVertical="4dp"
-                />
-
-            <TextView
-                android:layout_width="0dp"
-                android:id="@+id/grp_name"
-                android:layout_gravity="center_vertical"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:layout_weight="1"
-                android:textColor="#E0E0E0"
-                android:textSize="22sp"
-                />
-
-            <ImageButton
-                android:id="@+id/more_options"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="8dp"
-                android:src="@drawable/baseline_more_vert_24"
-                android:visibility="gone"
-                app:tint="@color/text_primary" />
-        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

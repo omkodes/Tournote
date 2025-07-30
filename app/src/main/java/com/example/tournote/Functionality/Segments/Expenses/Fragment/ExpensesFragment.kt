@@ -66,7 +66,7 @@ class ExpensesFragment : Fragment() {
             startActivity(intent)
         }
 
-        val selectedGroup = GlobalClass.GroupDetails_Everything.find { it.groupID == GlobalClass.selected_groupId }
+        val selectedGroup = GlobalClass.GroupDetails_Everything
         groupName.text = selectedGroup?.name
 
         // Using Glide correctly: check for null or "null" string before loading
@@ -170,7 +170,6 @@ class ExpensesFragment : Fragment() {
     private fun calculateAndDisplayFinalDistribution() {
         val myUid = GlobalClass.Me?.uid ?: return // Get current user's UID
         val groupMembers = GlobalClass.GroupDetails_Everything
-            .find { it.groupID == GlobalClass.selected_groupId }
             ?.members ?: emptyList()
 
         if (groupMembers.isEmpty() || GlobalClass.expenses.isEmpty()) {
@@ -313,7 +312,6 @@ class ExpensesFragment : Fragment() {
         val myUid = GlobalClass.Me?.uid ?: return
         val balances = mutableMapOf<String, Double>()
         val groupMembers = GlobalClass.GroupDetails_Everything
-            .find { it.groupID == GlobalClass.selected_groupId }
             ?.members ?: return
 
         // Initialize all group members with 0 balance
