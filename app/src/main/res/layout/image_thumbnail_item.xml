@@ -21,6 +21,6 @@
         android:layout_margin="6dp"
         android:visibility="gone"
         android:src="@drawable/play"
-        app:tint="@color/white" />
+        app:tint="@color/black" />
 
 </FrameLayout>

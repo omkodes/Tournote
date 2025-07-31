@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Name"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/white"
             android:textSize="14sp"
             android:layout_marginBottom="4dp"
             android:textStyle="bold"
@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Bot message text"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:lineSpacingMultiplier="1.2" />
 
@@ -84,7 +84,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:text="edited"
-                android:textColor="@color/text_primary"
+                android:textColor="@color/white"
                 android:textSize="12sp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -175,7 +175,7 @@ class ExpensesFragment : Fragment() {
         if (groupMembers.isEmpty() || GlobalClass.expenses.isEmpty()) {
             // No members or no expenses, show default or clear distribution
             txtMyFinalResult.text = "No expenses yet."
-            txtMyFinalResult.setTextColor(resources.getColor(R.color.white, null))
+            txtMyFinalResult.setTextColor(resources.getColor(R.color.black, null))
             finalDistributionAdapter.submitList(emptyList())
             return
         }
@@ -288,7 +288,7 @@ class ExpensesFragment : Fragment() {
             else -> {
                 // Settled (net balance is ~0)
                 txtMyFinalResult.text = "You are settled up"
-                txtMyFinalResult.setTextColor(resources.getColor(R.color.white, null))
+                txtMyFinalResult.setTextColor(resources.getColor(R.color.black, null))
             }
         }
     }

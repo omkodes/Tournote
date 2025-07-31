@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancel"
-                android:textColor="@color/bluetext"
+                android:textColor="@color/textButton"
                 android:layout_centerInParent="true"
                 android:textSize="18sp" />
         </RelativeLayout>
@@ -51,7 +51,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginRight="20dp"
             android:layout_weight="1"
-            android:textColor="#E0E0E0"
+            android:textColor="@color/black"
             android:textSize="22sp" />
 
         <RelativeLayout
@@ -66,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Done"
-                android:textColor="@color/bluetext"
+                android:textColor="@color/textButton"
                 android:layout_centerInParent="true"
                 android:textSize="18sp" />
         </RelativeLayout>
@@ -93,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="No split"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 />
@@ -101,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="You will owe the entire share without any split."
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="14sp"
                 />
         </LinearLayout>
@@ -116,7 +116,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Split equally"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 />
@@ -124,7 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Select which people owe an equal share."
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="14sp"
                 />
         </LinearLayout>
@@ -139,7 +139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Split by exact amounts"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 />
@@ -147,7 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Specify exactly how much each person owes"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="14sp"
                 />
         </LinearLayout>
@@ -162,7 +162,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Split by percentages"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 />
@@ -170,7 +170,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Enter the percentage split that's fair for your situation."
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="14sp"
                 />
         </LinearLayout>
@@ -201,7 +201,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="25dp"
                 android:text="Self"
-                android:textColor="@color/black"
+                android:textColor="@color/black1"
                 android:layout_centerInParent="true"
                 android:textStyle="bold"
                 android:textSize="14sp" />
@@ -241,7 +241,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="25dp"
                 android:text="1.23"
-                android:textColor="@color/black"
+                android:textColor="@color/black1"
                 android:layout_centerInParent="true"
                 android:textStyle="bold"
                 android:textSize="14sp" />
@@ -340,7 +340,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="18sp" />
                     <TextView
                         android:id="@+id/textView_self_message"
@@ -348,7 +348,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:text=""
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="14sp" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -374,7 +374,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="18sp" />
 
                     <TextView
@@ -383,7 +383,7 @@
                         android:layout_height="wrap_content"
                         android:text=""
                         android:layout_marginTop="5dp"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -400,7 +400,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:text="All"
                         android:textStyle="bold"
                         android:layout_marginRight="15dp" />
@@ -438,7 +438,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="₹3,000 of ₹4,000"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="18sp" />
 
                     <TextView
@@ -447,7 +447,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:text="₹1,000 left"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="14sp" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -473,7 +473,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="18sp" />
 
                     <TextView
@@ -482,7 +482,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:text=""
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="14sp" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

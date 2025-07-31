@@ -7,16 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tournote.Functionality.Segments.Expenses.Activity.ExpenseInfoActivity
 import com.example.tournote.Functionality.Segments.Expenses.SealedClass.ExpenseListItem
 import com.example.tournote.Functionality.Segments.Expenses.DataClass.ExpensesDataClass
-import com.example.tournote.Functionality.Segments.Expenses.DataClass.SplitType
 import com.example.tournote.GlobalClass
 import com.example.tournote.R
 import java.text.SimpleDateFormat
@@ -123,7 +120,7 @@ class ExpensesAdapter : ListAdapter<ExpenseListItem, RecyclerView.ViewHolder>(Ex
 
 
                     if((expense.splitType=="SELF")||(expense.splitType=="null")){
-                        holder.txtStatus.setTextColor(ContextCompat.getColor(context, R.color.white))
+                        holder.txtStatus.setTextColor(ContextCompat.getColor(context, R.color.black))
                         holder.txtAmount.visibility=View.GONE
                         holder.txtStatus.text="No balence"
                     }else{
@@ -138,7 +135,7 @@ class ExpensesAdapter : ListAdapter<ExpenseListItem, RecyclerView.ViewHolder>(Ex
 
                 }else{
                     if((expense.splitMembers?.find { it.memberUid == GlobalClass.Me?.uid } ==null)||(expense.splitMembers?.find { it.memberUid == GlobalClass.Me?.uid }?.paid ==true)){
-                        holder.txtStatus.setTextColor(ContextCompat.getColor(context, R.color.white))
+                        holder.txtStatus.setTextColor(ContextCompat.getColor(context, R.color.black))
                         holder.txtAmount.visibility=View.GONE
                         holder.txtStatus.text="No balence"
                     }

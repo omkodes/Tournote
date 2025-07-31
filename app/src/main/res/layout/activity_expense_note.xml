@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancel"
-                android:textColor="@color/bluetext"
+                android:textColor="@color/textButton"
                 android:layout_centerInParent="true"
                 android:textSize="18sp"
                 />
@@ -53,7 +53,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginRight="20dp"
             android:layout_weight="1"
-            android:textColor="#E0E0E0"
+            android:textColor="@color/black"
             android:textSize="22sp"
             />
 
@@ -69,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Done"
-                android:textColor="@color/bluetext"
+                android:textColor="@color/textButton"
                 android:layout_centerInParent="true"
                 android:textSize="18sp"
                 />
@@ -90,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Notes"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
@@ -110,8 +110,8 @@
                 android:paddingTop="15dp" android:gravity="top|start" android:inputType="textMultiLine" android:scrollbars="vertical" android:layout_marginHorizontal="10dp"
                 android:layout_marginBottom="20dp"
                 android:textSize="18sp"
-                android:textColorHint="@color/black"
-                android:textColor="@color/black"
+                android:textColorHint="@color/black1"
+                android:textColor="@color/black1"
                 />
 
         </RelativeLayout>

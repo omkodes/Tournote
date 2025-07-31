@@ -57,7 +57,7 @@
         android:lineSpacingExtra="2dp"
         android:maxLines="3"
         android:text="Notification description goes here with more detailed information"
-        android:textColor="@color/black"
+        android:textColor="@color/black1"
         android:textSize="14sp" />
 
 </LinearLayout>

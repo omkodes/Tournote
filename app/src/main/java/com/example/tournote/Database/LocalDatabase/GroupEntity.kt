@@ -33,3 +33,10 @@ data class GroupTrackFriendCrossRef(
     val groupId: String,
     val trackFriendId: String
 )
+
+
+@Entity(tableName = "group_expenses", primaryKeys = ["groupId", "expenseId"])
+data class GroupExpensesCrossRef(
+    val groupId: String,
+    val expenseId: String
+)

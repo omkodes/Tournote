@@ -56,7 +56,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Fuel up with a Log in "
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="31sp"
                     android:textStyle="bold"
                     android:textAlignment="center"
@@ -74,8 +74,8 @@
                         android:paddingLeft="60dp"
                         android:hint="Email"
                         android:textSize="18sp"
-                        android:textColorHint="@color/black"
-                        android:textColor="@color/black"/>
+                        android:textColorHint="@color/black1"
+                        android:textColor="@color/black1"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -100,8 +100,8 @@
                         android:hint="Password"
                         android:textSize="18sp"
                         android:inputType="textPassword"
-                        android:textColorHint="@color/black"
-                        android:textColor="@color/black"/>
+                        android:textColorHint="@color/black1"
+                        android:textColor="@color/black1"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Account does not exist."
-                    android:textColor="#EB7167"
+                    android:textColor="@color/mapEndPoint"
                     android:visibility="gone"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
@@ -141,7 +141,7 @@
                     android:focusable="true"
                     android:layout_gravity="right"
                     android:text="Forgot Password ?"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:layout_marginTop="10dp"
                     />
 
@@ -159,7 +159,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Log In"
-                        android:textColor="@color/black"
+                        android:textColor="@color/black1"
                         android:layout_centerInParent="true"
                         android:textStyle="bold"
                         android:textSize="18sp"
@@ -173,7 +173,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:text="OR"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -203,7 +203,7 @@
                             android:layout_marginLeft="10dp"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
+                            android:textColor="@color/black1"
                             />
                     </LinearLayout>
                 </RelativeLayout>
@@ -220,7 +220,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Don't have an account ? "
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         />
 
                     <TextView
@@ -230,7 +230,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:text="Sign Up"
-                        android:textColor="@color/bluetext" />
+                        android:textColor="@color/textBlue" />
                 </LinearLayout>
             </LinearLayout>
 

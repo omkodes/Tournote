@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/onboardingHeading1"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="26sp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"

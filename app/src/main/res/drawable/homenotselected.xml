@@ -5,6 +5,6 @@
     android:viewportHeight="50">
   <path
       android:pathData="M50,20.769L25,0L0,20.769L1.19,24.725H3.175V50H46.825V24.725H48.81L50,20.769ZM7.143,45.604V20.33L25,5.495L42.857,20.33V45.604H32.937V32.662L30.953,30.464H19.048L17.064,32.662V45.604H7.143ZM21.032,45.604H28.969V34.86H21.032V45.604Z"
-      android:fillColor="#0FA3B1"
+      android:fillColor="@color/unfocused_feature_button_colour"
       android:fillType="evenOdd"/>
 </vector>

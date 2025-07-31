@@ -65,7 +65,7 @@
                     android:layout_marginTop="5dp"
                     android:textSize="12sp"
                     android:layout_marginBottom="5dp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     />
             </LinearLayout>
 
@@ -101,7 +101,7 @@
                     android:layout_marginTop="5dp"
                     android:textSize="13sp"
                     android:layout_marginBottom="5dp"
-                    android:textColor="@color/darkBluetext"
+                    android:textColor="@color/unfocused_feature_text_colour"
                     />
             </LinearLayout>
         </RelativeLayout>
@@ -135,7 +135,7 @@
                     android:textStyle="bold"
                     android:textSize="13sp"
                     android:layout_marginBottom="5dp"
-                    android:textColor="@color/darkBluetext"
+                    android:textColor="@color/unfocused_feature_text_colour"
                     />
             </LinearLayout>
         </RelativeLayout>
@@ -171,7 +171,7 @@
                     android:layout_marginTop="5dp"
                     android:textSize="13sp"
                     android:layout_marginBottom="5dp"
-                    android:textColor="@color/darkBluetext"
+                    android:textColor="@color/unfocused_feature_text_colour"
                     />
             </LinearLayout>
         </RelativeLayout>
@@ -206,7 +206,7 @@
                     android:layout_marginTop="5dp"
                     android:textSize="13sp"
                     android:layout_marginBottom="5dp"
-                    android:textColor="@color/darkBluetext"
+                    android:textColor="@color/unfocused_feature_text_colour"
                     />
             </LinearLayout>
         </RelativeLayout>
@@ -240,7 +240,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:layout_gravity="center"
                     />
                 <TextView
@@ -248,7 +248,7 @@
                     android:layout_height="wrap_content"
                     android:text="Group has been permanantly deleted by the owner"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:layout_gravity="center"
                     />
             </LinearLayout>
@@ -269,7 +269,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Delete From My List"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black1"
                     android:layout_centerInParent="true"
                     android:textStyle="bold"
                     android:textSize="18sp"

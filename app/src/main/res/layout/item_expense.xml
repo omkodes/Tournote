@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Jan"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 />
             <TextView
@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="01"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="23sp"
                 />
         </LinearLayout>
@@ -75,14 +75,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Description"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="18sp"/>
             <TextView
                 android:id="@+id/txtWhoPaidToWhom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="You paid to yourself"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="12sp"
                 android:layout_marginTop="5dp"/>
         </LinearLayout>
@@ -101,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="no balence"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="13sp"
                 android:textStyle="italic"
                 />
@@ -110,7 +110,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="₹100.00"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 />
         </LinearLayout>

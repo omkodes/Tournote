@@ -11,7 +11,7 @@
         android:textStyle="bold"
         android:gravity="center"
         android:text="this is a date"
-        android:textColor="#898989"
+        android:textColor="@color/black"
         android:padding="6dp" />
 
 </LinearLayout>

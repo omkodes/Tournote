@@ -10,6 +10,6 @@
 
     <!-- Stroke (outline) -->
     <stroke
-        android:width="4dp"
+        android:width="2dp"
         android:color="#112E31" />
 </shape>

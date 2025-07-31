@@ -62,14 +62,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Name"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="18sp"/>
             <TextView
                 android:id="@+id/txtDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Expense description"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="12sp"
                 android:layout_marginTop="5dp"/>
         </LinearLayout>
@@ -90,13 +90,14 @@
                 android:text="owes you"
                 android:textColor="@color/textGreen"
                 android:textSize="13sp"
-                android:textStyle="italic"
+                android:textStyle="italic|bold"
                 />
             <TextView
                 android:id="@+id/txtAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="₹100.00"
+                android:textStyle="bold"
                 android:textColor="@color/textGreen"
                 android:textSize="16sp"
                 />

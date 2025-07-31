@@ -36,7 +36,7 @@
                 android:text="A"
                 android:visibility="visible"
                 android:textSize="16sp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:layout_centerInParent="true"
                 />
         </RelativeLayout>
@@ -62,8 +62,8 @@
                 android:paddingRight="10dp"
                 android:hint="Add Stop"
                 android:textSize="18sp"
-                android:textColorHint="@color/white"
-                android:textColor="@color/white"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black"
                 android:maxLines="1"
                 android:gravity="center_vertical"
                 />

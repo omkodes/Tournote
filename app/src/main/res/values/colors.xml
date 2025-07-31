@@ -1,28 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="black1">#000000</color>
+    <color name="black">#1A1A1A</color>
+    <color name="white">#FFFFFF</color>
 
-    <color name="lightBlue">#B5E2FA</color>
-    <color name="light">#F9F7F3</color>
-    <color name="green_theme_Light">#112E31</color>
-    <color name="bluetext">#B5E2FA</color>
+    <color name="lightBlue">#A9D6E5</color>
+    <color name="light">#F7F7F2</color>
+    <color name="green_theme_Light">#D0D3C6</color>
 
-    <color name="darkBluetext">#0FA3B1</color>
-    <color name="text_primary">#E0E0E0</color>
-    <color name="selected_bg">#245056</color>
+    <color name="text_primary">#2C2C2C</color>
+    <color name="selected_bg">#3F6654</color>
 
-    <color name="green_theme_Light_taskbar">#0F2729</color>
+    <color name="green_theme_Light_taskbar">#A0A69C</color>
 
-    <color name="mapEndPoint">#F44336</color>
-    <color name="mapWaypointsPoint">#FF9800</color>
+    <color name="mapEndPoint">#E45858</color>
+    <color name="mapWaypointsPoint">#F4A259</color>
     <color name="mapStartPoint">#4CAF50</color>
 
     <color name="blue">#0FA3B1</color>
 
     <color name="customSplashScreenBackground">#D0D3C6</color>
 
-    <color name="textRed">#F44336</color>
+    <color name="textRed">#E45858</color>
     <color name="textGreen">#4CAF50</color>
-    <color name="textBlue">#0FA3B1</color>
+    <color name="textBlue">#0E9EAB</color>
+
+    <color name="textButton">#4B6B50</color>
+
+    <color name="focused_feature_button_colour">#2C3E50</color>
+    <color name="unfocused_feature_button_colour">#D0D3C6</color>
+    <color name="unfocused_feature_text_colour">#5C5C5C</color>
+
+    <color name="basic_actionbuttons_colour">#1A1A1A</color>
+
+    <color name="green_button">#5C8D66</color>
+    <color name="red_button">#F0584D</color>
+
+    <color name="saperator">#A0A69C</color>
+
+    <color name="darkness">#21000000</color>
+
+    <color name="sender_hallout">#2C2C2C</color>
+    <color name="me_hallout">#5C8D66</color>
 </resources>

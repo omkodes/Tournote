@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#2C2C2C" />
+    <solid android:color="@color/sender_hallout" />
     <corners
         android:topLeftRadius="4dp"
         android:topRightRadius="18dp"

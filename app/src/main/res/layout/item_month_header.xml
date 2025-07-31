@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="June 2025"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:layout_marginVertical="8dp"
         android:textSize="16sp"
         android:textStyle="bold" />

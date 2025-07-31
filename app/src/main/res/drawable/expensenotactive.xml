@@ -8,60 +8,60 @@
         android:pathData="M0,0h50v50h-50z"/>
     <path
         android:pathData="M49.167,23.333H45.833V25H48.333V48.333H30.25C32.583,46.667 34.167,43.917 34.167,40.833V32.5C34.167,29.417 32.667,26.667 30.25,25H40.833V23.333H9.167V25H19.75C17.417,26.667 15.833,29.417 15.833,32.5V40.833C15.833,43.917 17.333,46.667 19.75,48.333H1.667V25H4.167V23.333H0.833C0.333,23.333 0,23.667 0,24.167V49.167C0,49.667 0.333,50 0.833,50H49.167C49.667,50 50,49.667 50,49.167V24.167C50,23.667 49.667,23.333 49.167,23.333ZM17.5,40.833V32.5C17.5,28.333 20.833,25 25,25C29.167,25 32.5,28.333 32.5,32.5V40.833C32.5,45 29.167,48.333 25,48.333C20.833,48.333 17.5,45 17.5,40.833Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M45,28.333C45,27.833 44.667,27.5 44.167,27.5H39.167V29.167H43.333V33.333H45V28.333Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M4.167,28.333V33.333H5.833V29.167H10V27.5H5C4.5,27.5 4.167,27.833 4.167,28.333Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M4.167,40V45C4.167,45.5 4.5,45.833 5,45.833H10V44.167H5.833V40H4.167Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M45,45V40H43.333V44.167H39.167V45.833H44.167C44.667,45.833 45,45.5 45,45Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M24.167,30.833H25.833C27.25,30.833 28.333,31.917 28.333,33.333H30C30,31 28.167,29.167 25.833,29.167V27.5H24.167V29.167C21.833,29.167 20,31 20,33.333C20,35.667 21.833,37.5 24.167,37.5H25.833C27.25,37.5 28.333,38.583 28.333,40C28.333,41.417 27.25,42.5 25.833,42.5H24.167C22.75,42.5 21.667,41.417 21.667,40H20C20,42.333 21.833,44.167 24.167,44.167V45.833H25.833V44.167C28.167,44.167 30,42.333 30,40C30,37.667 28.167,35.833 25.833,35.833H24.167C22.75,35.833 21.667,34.75 21.667,33.333C21.667,31.917 22.75,30.833 24.167,30.833Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M40,35.833H37.5V37.5H40V35.833Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M12.5,35.833H10V37.5H12.5V35.833Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M24.167,3.667V15H25.833V3.667L26.917,4.75L28.083,3.583L25.583,1.084C25.25,0.75 24.75,0.75 24.417,1.084L21.917,3.583L23.083,4.75L24.167,3.667Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M15.833,20.833C16.083,20.833 16.25,20.75 16.417,20.583L18.917,18.083L17.75,16.917L16.667,18V6.667H15V18L13.917,16.917L12.75,18.083L15.25,20.583C15.417,20.75 15.583,20.833 15.833,20.833Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M34.167,20.833C34.417,20.833 34.583,20.75 34.75,20.583L37.25,18.083L36.083,16.917L35,18V6.667H33.333V18L32.25,16.917L31.083,18.083L33.583,20.583C33.75,20.75 33.917,20.833 34.167,20.833Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M5.833,8.667V25H7.5V8.667L8.583,9.75L9.75,8.583L7.25,6.083C6.917,5.75 6.417,5.75 6.083,6.083L3.583,8.583L4.75,9.75L5.833,8.667Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M42.5,8.667V25H44.167V8.667L45.25,9.75L46.417,8.583L43.917,6.083C43.583,5.75 43.083,5.75 42.75,6.083L40.25,8.583L41.417,9.75L42.5,8.667Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M25.833,16.667H24.167V18.333H25.833V16.667Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M25.833,20H24.167V21.667H25.833V20Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M35,3.333H33.333V5H35V3.333Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M35,0H33.333V1.667H35V0Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M16.667,3.333H15V5H16.667V3.333Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
     <path
         android:pathData="M16.667,0H15V1.667H16.667V0Z"
-        android:fillColor="#0FA3B1"/>
+        android:fillColor="@color/unfocused_feature_button_colour"/>
   </group>
 </vector>

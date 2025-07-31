@@ -50,6 +50,7 @@ class ImageFullActivity : AppCompatActivity() {
             insets
         }
 
+        window.statusBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
 
         val imageList = intent.getParcelableArrayListExtra<PhotosData>("imageList") ?: listOf()
         val startIndex = intent.getIntExtra("startIndex", 0)

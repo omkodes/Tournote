@@ -4,7 +4,6 @@ package com.example.tournote.Functionality.Segments.Expenses.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.TextView
@@ -316,8 +315,8 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
             tvRemainingPercentage.setTextColor(ContextCompat.getColor(this, R.color.mapEndPoint))
             tvTotalPercentage.setTextColor(ContextCompat.getColor(this, R.color.mapEndPoint))
         } else {
-            tvRemainingPercentage.setTextColor(ContextCompat.getColor(this, R.color.white))
-            tvTotalPercentage.setTextColor(ContextCompat.getColor(this, R.color.white))
+            tvRemainingPercentage.setTextColor(ContextCompat.getColor(this, R.color.black))
+            tvTotalPercentage.setTextColor(ContextCompat.getColor(this, R.color.black))
         }
     }
 
@@ -351,8 +350,8 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
             tvRemainingAmount.setTextColor(ContextCompat.getColor(this, R.color.mapEndPoint))
             tvAllocatedAmount.setTextColor(ContextCompat.getColor(this, R.color.mapEndPoint))
         } else {
-            tvRemainingAmount.setTextColor(ContextCompat.getColor(this, R.color.white))
-            tvAllocatedAmount.setTextColor(ContextCompat.getColor(this, R.color.white))
+            tvRemainingAmount.setTextColor(ContextCompat.getColor(this, R.color.black))
+            tvAllocatedAmount.setTextColor(ContextCompat.getColor(this, R.color.black))
         }
     }
 

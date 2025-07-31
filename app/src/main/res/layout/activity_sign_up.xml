@@ -84,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Sign up and buckle up!"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="31sp"
                     android:textStyle="bold"
                     android:textAlignment="center"
@@ -124,8 +124,8 @@
                         android:paddingLeft="60dp"
                         android:hint="Full Name"
                         android:textSize="18sp"
-                        android:textColorHint="@color/black"
-                        android:textColor="@color/black"
+                        android:textColorHint="@color/black1"
+                        android:textColor="@color/black1"
                         android:maxLines="1"/>
 
                     <ImageView
@@ -150,8 +150,8 @@
                         android:paddingLeft="60dp"
                         android:hint="Email"
                         android:textSize="18sp"
-                        android:textColorHint="@color/black"
-                        android:textColor="@color/black"
+                        android:textColorHint="@color/black1"
+                        android:textColor="@color/black1"
                         android:maxLines="1"/>
 
                     <ImageView
@@ -168,7 +168,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="User Account Already Created"
-                    android:textColor="#EB7167"
+                    android:textColor="@color/mapEndPoint"
                     android:layout_marginTop="5dp"
                     android:visibility="gone"
                     android:layout_marginLeft="5dp"/>
@@ -184,7 +184,7 @@
                         android:layout_width="100dp"
                         android:layout_height="60dp"
                         android:background="@drawable/textbox"
-                        android:textColor="#9C9D9F"
+                        android:textColor="@color/black"
                         android:textSize="18sp"
                         android:entries="@array/country_codes"
                         android:gravity="right"
@@ -203,8 +203,8 @@
                             android:paddingLeft="60dp"
                             android:hint="Mobile No"
                             android:textSize="18sp"
-                            android:textColorHint="@color/black"
-                            android:textColor="@color/black"
+                            android:textColorHint="@color/black1"
+                            android:textColor="@color/black1"
                             android:maxLines="1"/>
                         <ImageView
                             android:layout_width="wrap_content"
@@ -221,7 +221,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Please enter valid phone number"
-                    android:textColor="#EB7167"
+                    android:textColor="@color/mapEndPoint"
                     android:layout_marginTop="5dp"
                     android:visibility="gone"
                     android:layout_marginLeft="5dp"/>
@@ -240,8 +240,8 @@
                         android:hint="Password"
                         android:textSize="18sp"
                         android:inputType="textPassword"
-                        android:textColorHint="@color/black"
-                        android:textColor="@color/black"
+                        android:textColorHint="@color/black1"
+                        android:textColor="@color/black1"
                         android:maxLines="1"/>
                     <ImageView
                         android:layout_width="wrap_content"
@@ -277,8 +277,8 @@
                         android:hint="Reenter Password"
                         android:textSize="18sp"
                         android:inputType="textPassword"
-                        android:textColorHint="@color/black"
-                        android:textColor="@color/black"
+                        android:textColorHint="@color/black1"
+                        android:textColor="@color/black1"
                         android:maxLines="1"/>
                     <ImageView
                         android:layout_width="wrap_content"
@@ -314,7 +314,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Sign Up"
-                        android:textColor="@color/black"
+                        android:textColor="@color/black1"
                         android:layout_centerInParent="true"
                         android:textStyle="bold"
                         android:textSize="18sp"
@@ -325,7 +325,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="OR"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:layout_gravity="center_horizontal"
                     android:textSize="20sp"
                     android:layout_marginTop="10dp"
@@ -357,7 +357,7 @@
                             android:textStyle="bold"
                             android:layout_marginLeft="10dp"
                             android:textSize="18sp"
-                            android:textColor="@color/black"
+                            android:textColor="@color/black1"
                             />
                     </LinearLayout>
                 </RelativeLayout>
@@ -374,7 +374,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Already a User ? "
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         />
 
@@ -385,7 +385,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:text="Log In"
-                        android:textColor="@color/bluetext"
+                        android:textColor="@color/textBlue"
                         android:textSize="16sp"/>
                 </LinearLayout>
 

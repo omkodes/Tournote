@@ -9,7 +9,7 @@
     <!-- Background Fill -->
     <path
         android:pathData="M0,0 L412,0 L412,82 L0,82 Z"
-        android:fillColor="#242626" />
+        android:fillColor="@color/green_theme_Light_taskbar" />
 
     <!-- Bottom-only stroke -->
 </vector>

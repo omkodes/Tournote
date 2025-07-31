@@ -55,7 +55,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/leftpointing_arrow_white"
+                        android:src="@drawable/leftpointing_arrow_black_2"
                         android:layout_centerInParent="true" />
                 </RelativeLayout>
 
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Group Info"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:layout_marginLeft="20dp" />
@@ -124,7 +124,7 @@
                 android:paddingRight="20dp"
                 android:text="Group Name"
                 android:textSize="18sp"
-                android:textColor="@color/black"
+                android:textColor="@color/black1"
                 android:layout_marginTop="20dp"
                 android:gravity="center_vertical"
                 android:maxLines="1" />
@@ -140,7 +140,7 @@
                 android:paddingVertical="20dp"
                 android:text="Group Description"
                 android:textSize="18sp"
-                android:textColor="@color/black"
+                android:textColor="@color/black1"
                 android:layout_marginTop="20dp"
                 android:minHeight="60dp"
                 android:gravity="top" />
@@ -155,7 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Created At"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:layout_weight="1"
                 android:textStyle="bold"
@@ -169,7 +169,7 @@
                 android:id="@+id/createdAt_date"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="10dp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -188,7 +188,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Members"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -198,14 +198,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="5"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" members"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -219,7 +219,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:cardCornerRadius="16dp"
-                    app:cardBackgroundColor="#242626"
+                    app:cardBackgroundColor="@color/green_theme_Light_taskbar"
                     android:layout_margin="2dp">
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -248,7 +248,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Active Users"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -276,8 +276,8 @@
                                 android:paddingLeft="40dp"
                                 android:hint="Search Name"
                                 android:textSize="15sp"
-                                android:textColorHint="@color/black"
-                                android:textColor="@color/black"
+                                android:textColorHint="@color/black1"
+                                android:textColor="@color/black1"
                                 android:scrollbars="vertical"
                                 android:layout_margin="8dp"
                                 />
@@ -294,7 +294,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             app:cardCornerRadius="16dp"
-                            app:cardBackgroundColor="#242626"
+                            app:cardBackgroundColor="@color/green_theme_Light_taskbar"
                             android:layout_margin="2dp"
                             >
 
@@ -327,7 +327,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Add Members"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black1"
                     android:layout_centerInParent="true"
                     android:textStyle="bold"
                     android:textSize="18sp" />
@@ -348,7 +348,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Leave Group"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:layout_centerInParent="true"
                     android:textStyle="bold"
                     android:textSize="18sp" />
@@ -368,7 +368,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Disable Tracking"
-                    android:textColor="#5EA075"
+                    android:textColor="@color/mapStartPoint"
                     android:layout_centerInParent="true"
                     android:textStyle="bold"
                     android:textSize="18sp" />
@@ -388,7 +388,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Delete Group"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:layout_centerInParent="true"
                     android:textStyle="bold"
                     android:textSize="18sp" />
@@ -407,7 +407,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="End Trip"
-                    android:textColor="#EB7167"
+                    android:textColor="@color/mapEndPoint"
                     android:layout_centerInParent="true"
                     android:textStyle="bold"
                     android:textSize="18sp" />

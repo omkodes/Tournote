@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:layout_weight="1"
-                android:textColor="#E0E0E0"
+                android:textColor="@color/black"
                 android:textSize="22sp" />
 
             <ImageButton
@@ -109,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     tools:text="Total group expenditure ₹4000.00"
-                    android:textColor="@color/bluetext"
+                    android:textColor="@color/textBlue"
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -133,7 +133,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="30dp"
                         android:text="Add Expense"
-                        android:textColor="@color/black"
+                        android:textColor="@color/black1"
                         android:layout_centerInParent="true"
                         android:textStyle="bold"
                         android:textSize="16sp" />
@@ -153,7 +153,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="30dp"
                         android:text="Settle Up"
-                        android:textColor="@color/black"
+                        android:textColor="@color/black1"
                         android:layout_centerInParent="true"
                         android:textStyle="bold"
                         android:textSize="16sp" />

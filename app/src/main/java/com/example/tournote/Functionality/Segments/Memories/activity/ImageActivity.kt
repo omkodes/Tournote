@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
@@ -54,6 +55,8 @@ class ImageActivity : AppCompatActivity() {
             Toast.makeText(this, "No data", Toast.LENGTH_SHORT).show()
             finish()
         }
+
+        window.statusBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
 
         binding.btnBack.setOnClickListener {
             finish()

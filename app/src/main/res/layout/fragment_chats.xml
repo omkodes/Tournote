@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:layout_weight="1"
-            android:textColor="#E0E0E0"
+            android:textColor="@color/black"
             android:textSize="22sp"
             />
 
@@ -103,12 +103,12 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            app:boxBackgroundColor="#0F2729 "
+            app:boxBackgroundColor="@color/green_theme_Light_taskbar"
             app:boxCornerRadiusBottomEnd="20dp"
             app:boxCornerRadiusBottomStart="20dp"
             app:boxCornerRadiusTopEnd="20dp"
-            android:textColorHint="#E0E0E0"
-            app:boxStrokeColor="#E0E0E0"
+            android:textColorHint="@color/black"
+            app:boxStrokeColor="@color/green_theme_Light_taskbar"
             app:boxCornerRadiusTopStart="20dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -117,7 +117,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Type your message..."
-                android:textColor="#E0E0E0"
+                android:textColor="@color/black"
                 android:imeOptions="actionSend"
                 android:inputType="textCapSentences|textMultiLine"
                 android:maxLines="4"
@@ -131,10 +131,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:src="@drawable/plane"
-            android:iconTint="@color/white"
+            android:iconTint="@color/black"
             app:tint="?attr/colorOnBackground"
             app:pressedTranslationZ="4dp"
-            app:backgroundTint="@color/darkBluetext"
+            app:backgroundTint="@color/green_button"
             app:fabSize="mini" />
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/buttonEdit"
@@ -142,11 +142,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:src="@drawable/baseline_edit_24"
-            android:iconTint="@color/white"
+            android:iconTint="@color/black"
             app:tint="?attr/colorOnBackground"
             android:visibility="gone"
             app:pressedTranslationZ="4dp"
-            app:backgroundTint="@color/darkBluetext"
+            app:backgroundTint="@color/unfocused_feature_text_colour"
             app:fabSize="mini" />
 
     </LinearLayout>

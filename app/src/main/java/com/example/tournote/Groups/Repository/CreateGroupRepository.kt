@@ -36,8 +36,8 @@ class CreateGroupRepository {
                         UserModel(
                             uid = uid,
                             email = email,
-                            name = name!!,
-                            phoneNumber = phoneNumber!!,
+                            name = name?:"",
+                            phoneNumber = phoneNumber?:"",
                             profilePic = profilePic
                         )
                     )

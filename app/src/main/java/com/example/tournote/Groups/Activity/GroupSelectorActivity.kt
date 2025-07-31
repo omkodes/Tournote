@@ -38,6 +38,7 @@ class GroupSelectorActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         window.navigationBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
 
         viewPager=binding.viewPager
         viewPager.adapter= GroupSelectorActivityPagerAdapter(this)

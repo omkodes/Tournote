@@ -3,7 +3,7 @@
     android:shape="rectangle">
 
     <!-- Background fill color -->
-    <solid android:color="#5EA075" />
+    <solid android:color="@color/green_button" />
 
     <!-- Rounded corners (14dp radius based on vector clip-path) -->
     <corners android:radius="14dp" />

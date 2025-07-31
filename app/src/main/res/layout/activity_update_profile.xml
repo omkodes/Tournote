@@ -63,7 +63,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginRight="20dp"
             android:layout_weight="1"
-            android:textColor="#E0E0E0"
+            android:textColor="@color/black"
             android:textSize="22sp"
             />
 
@@ -79,7 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Save"
-                android:textColor="@color/bluetext"
+                android:textColor="@color/textButton"
                 android:layout_centerInParent="true"
                 android:textSize="18sp"
                 />
@@ -135,8 +135,8 @@
                     android:paddingLeft="60dp"
                     android:hint="Full Name"
                     android:textSize="18sp"
-                    android:textColorHint="@color/black"
-                    android:textColor="@color/black"
+                    android:textColorHint="@color/black1"
+                    android:textColor="@color/black1"
                     android:maxLines="1"/>
 
                 <ImageView

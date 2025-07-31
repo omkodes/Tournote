@@ -50,7 +50,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginRight="20dp"
             android:layout_weight="1"
-            android:textColor="#E0E0E0"
+            android:textColor="@color/black"
             android:textSize="22sp"
             />
 
@@ -66,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Save"
-                android:textColor="@color/bluetext"
+                android:textColor="@color/textButton"
                 android:layout_centerInParent="true"
                 android:textSize="18sp"
                 />
@@ -152,14 +152,14 @@
                 android:layout_height="wrap_content"
                 android:text="Parth"
                 android:id="@+id/txtSender"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" paid to you"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 />
         </LinearLayout>
@@ -188,7 +188,7 @@
                     android:text="₹"
                     android:textSize="30sp"
                     android:textAlignment="center"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black1"
                     android:layout_centerInParent="true"
                     />
             </RelativeLayout>
@@ -201,8 +201,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:hint="0.00"
                 android:textSize="35sp"
                 android:inputType="number"
