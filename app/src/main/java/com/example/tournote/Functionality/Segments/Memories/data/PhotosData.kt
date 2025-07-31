@@ -10,5 +10,7 @@ data class PhotosData(
     val timestamp: Long,
     val group: String,
     val mimeType: String,
-    val userId: String
+    val userId: String,
+    var isLiked: Boolean= false,
+    var likeCount: Int = 0,
 ):Parcelable

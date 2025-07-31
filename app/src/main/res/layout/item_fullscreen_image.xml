@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.github.chrisbanes.photoview.PhotoView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<com.github.chrisbanes.photoview.PhotoView
     android:id="@+id/photoView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scaleType="fitCenter" />
+
+    <ImageView
+        android:id="@+id/heartIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/heart" />
+
+    <TextView
+        android:id="@+id/likeCountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="65dp"
+        android:textSize="20sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="22dp"
+        android:text="0 likes" />
+
+</FrameLayout>
