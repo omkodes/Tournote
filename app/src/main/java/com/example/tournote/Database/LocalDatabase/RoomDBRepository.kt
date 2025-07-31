@@ -80,6 +80,16 @@ class RoomDBRepository(
         }
     }
 
+    // Helper function to sanitize email for Firebase keys
+    private fun sanitizeEmail(email: String): String {
+        return email.replace(".", ",")
+    }
+
+    // Helper function to unsanitize email from Firebase keys
+    private fun unsanitizeEmail(sanitizedEmail: String): String {
+        return sanitizedEmail.replace(",", ".")
+    }
+
     // Return NetworkResult to indicate completion status
     suspend fun refreshGroupsFromNetwork(): NetworkResult {
         return try {
@@ -118,23 +128,36 @@ class RoomDBRepository(
             // Step 2: Fetch all users and upsert them
             val usersSnap = db.getReference("users").get().await()
             val allUsers = usersSnap.children.mapNotNull { userSnap ->
+                val uid = userSnap.key ?: return@mapNotNull null
                 val personalDetails = userSnap.child("PersonalDetails")
                 val email = personalDetails.child("email").getValue(String::class.java)
+                val name = personalDetails.child("name").getValue(String::class.java) ?: ""
+                val phoneNumber = personalDetails.child("phone").getValue(String::class.java) ?: ""
+                val profilePic = personalDetails.child("profilePic").getValue(String::class.java)
+
                 if (email != null) {
                     UserModel(
-                        uid = userSnap.key,
-                        email = email,
-                        name = personalDetails.child("name").getValue(String::class.java),
-                        phoneNumber = personalDetails.child("phone").getValue(String::class.java),
-                        profilePic = personalDetails.child("profilePic").getValue(String::class.java)
+                        uid = uid,
+                        email = email, // Store unsanitized email in UserModel
+                        name = name,
+                        phoneNumber = phoneNumber,
+                        profilePic = profilePic
                     ).toUserEntity()
-                } else null
+                } else {
+                    Log.w("RoomDBRepository", "User $uid has no email, skipping")
+                    null
+                }
             }
 
             Log.d("RoomDBRepository", "Upserting ${allUsers.size} users")
             tourNoteDao.upsertUsers(allUsers)
 
-            // Step 3: Fetch and upsert group details and cross-references for the user's groups
+            // Step 3: Create a mapping from sanitized email to uid for efficient lookups
+            val sanitizedEmailToUidMap = allUsers.associate { userEntity ->
+                sanitizeEmail(userEntity.email ?: "") to userEntity.uid
+            }
+
+            // Step 4: Fetch and upsert group details and cross-references for the user's groups
             var successCount = 0
             myGroupsIdList.forEach { groupId ->
                 try {
@@ -144,7 +167,7 @@ class RoomDBRepository(
                         ?: throw Exception("Invalid GroupDetails for group: $groupId")
 
                     val name = groupDetails["name"] as? String
-                    val isGroupValid = groupDetails["isGroupValid"] as? Boolean
+                    val isGroupValid = groupDetails["isGroupValid"] as? Boolean ?: true
                     val description = groupDetails["description"] as? String
                     val profilePic = groupDetails["profilePic"] as? String
                     val ownerID = groupDetails["owner"] as? String
@@ -162,30 +185,38 @@ class RoomDBRepository(
 
                     tourNoteDao.upsertGroup(groupEntity)
 
-                    // Get cross-reference data from Firebase
+                    // Get cross-reference data from Firebase (these are sanitized emails as keys)
                     val rawMemberKeys = groupRef.child("Members").get().await().children.mapNotNull { it.key }
                     val rawAdminKeys = groupRef.child("Admins").get().await().children.mapNotNull { it.key }
                     val rawTrackFriendKeys = groupRef.child("TrackFriends").get().await().children.mapNotNull { it.key }
 
-                    // Get all users from the database for mapping
-                    val allUsersMap = tourNoteDao.getAllUsersAsMap()
+                    Log.d("RoomDBRepository", "Group $groupId - Members: ${rawMemberKeys.size}, Admins: ${rawAdminKeys.size}, TrackFriends: ${rawTrackFriendKeys.size}")
 
-                    val memberCrossRefs = rawMemberKeys.mapNotNull { key ->
-                        val email = key.replace(",", ".")
-                        allUsersMap[email]?.let { userEntity ->
-                            GroupMemberCrossRef(groupId, userEntity.uid)
+                    // Map sanitized email keys to UIDs
+                    val memberCrossRefs = rawMemberKeys.mapNotNull { sanitizedEmail ->
+                        sanitizedEmailToUidMap[sanitizedEmail]?.let { uid ->
+                            GroupMemberCrossRef(groupId, uid)
+                        } ?: run {
+                            Log.w("RoomDBRepository", "Could not find UID for member email: $sanitizedEmail in group $groupId")
+                            null
                         }
                     }
-                    val adminCrossRefs = rawAdminKeys.mapNotNull { key ->
-                        val email = key.replace(",", ".")
-                        allUsersMap[email]?.let { userEntity ->
-                            GroupAdminCrossRef(groupId, userEntity.uid)
+
+                    val adminCrossRefs = rawAdminKeys.mapNotNull { sanitizedEmail ->
+                        sanitizedEmailToUidMap[sanitizedEmail]?.let { uid ->
+                            GroupAdminCrossRef(groupId, uid)
+                        } ?: run {
+                            Log.w("RoomDBRepository", "Could not find UID for admin email: $sanitizedEmail in group $groupId")
+                            null
                         }
                     }
-                    val trackFriendCrossRefs = rawTrackFriendKeys.mapNotNull { key ->
-                        val email = key.replace(",", ".")
-                        allUsersMap[email]?.let { userEntity ->
-                            GroupTrackFriendCrossRef(groupId, userEntity.uid)
+
+                    val trackFriendCrossRefs = rawTrackFriendKeys.mapNotNull { sanitizedEmail ->
+                        sanitizedEmailToUidMap[sanitizedEmail]?.let { uid ->
+                            GroupTrackFriendCrossRef(groupId, uid)
+                        } ?: run {
+                            Log.w("RoomDBRepository", "Could not find UID for trackfriend email: $sanitizedEmail in group $groupId")
+                            null
                         }
                     }
 
@@ -198,7 +229,7 @@ class RoomDBRepository(
                     tourNoteDao.insertGroupTrackFriends(trackFriendCrossRefs)
 
                     successCount++
-                    Log.d("RoomDBRepository", "Successfully synced group: $groupId")
+                    Log.d("RoomDBRepository", "Successfully synced group: $groupId with ${memberCrossRefs.size} members, ${adminCrossRefs.size} admins, ${trackFriendCrossRefs.size} trackfriends")
 
                 } catch (e: Exception) {
                     Log.e("RoomDBRepository", "Error syncing group $groupId: ${e.message}", e)

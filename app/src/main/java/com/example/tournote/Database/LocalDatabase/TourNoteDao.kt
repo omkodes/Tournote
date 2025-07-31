@@ -62,6 +62,7 @@ interface TourNoteDao {
     @Query("SELECT * FROM users")
     suspend fun getAllUsers(): List<UserEntity>
 
+
     // Helper function to get a Map for efficient lookups
     suspend fun getAllUsersAsMap(): Map<String, UserEntity> {
         return getAllUsers().associateBy { it.email?.replace(".", ",") ?: "" }
