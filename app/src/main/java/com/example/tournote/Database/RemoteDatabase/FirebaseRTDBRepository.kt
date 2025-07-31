@@ -57,10 +57,10 @@ class FirebaseRTDBRepository (){
 
                 if (email != null) {
                     val user = UserModel(
-                        uid = userSnap.key,
+                        uid = userSnap.key!!,
                         email = email,
-                        name = personalDetails.child("name").getValue(String::class.java),
-                        phoneNumber = personalDetails.child("phone").getValue(String::class.java),
+                        name = personalDetails.child("name").getValue(String::class.java)!!,
+                        phoneNumber = personalDetails.child("phone").getValue(String::class.java)!!,
                         profilePic = personalDetails.child("profilePic")
                             .getValue(String::class.java)
                     )
@@ -145,10 +145,10 @@ class FirebaseRTDBRepository (){
 
                 if (email == emailId) {
                     val user = UserModel(
-                        uid = userSnap.key,
+                        uid = userSnap.key!!,
                         email = email,
-                        name = personalDetails.child("name").getValue(String::class.java),
-                        phoneNumber = personalDetails.child("phone").getValue(String::class.java),
+                        name = personalDetails.child("name").getValue(String::class.java)!!,
+                        phoneNumber = personalDetails.child("phone").getValue(String::class.java)!!,
                         profilePic = personalDetails.child("profilePic")
                             .getValue(String::class.java)
                     )

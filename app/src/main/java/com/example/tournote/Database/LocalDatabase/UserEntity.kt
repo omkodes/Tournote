@@ -8,9 +8,9 @@ import com.example.tournote.UserModel
 data class UserEntity(
     @PrimaryKey
     val uid: String,
-    val email: String?,
-    var name: String?,
-    val phoneNumber: String?,
+    val email: String,
+    var name: String,
+    val phoneNumber: String,
     var profilePic: String? = "null"
 )
 

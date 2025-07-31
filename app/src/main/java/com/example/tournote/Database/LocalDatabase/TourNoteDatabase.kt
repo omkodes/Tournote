@@ -14,7 +14,7 @@ import com.example.tournote.Database.LocalDatabase.UserEntity
         GroupAdminCrossRef::class,
         GroupTrackFriendCrossRef::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class TourNoteDatabase : RoomDatabase() {

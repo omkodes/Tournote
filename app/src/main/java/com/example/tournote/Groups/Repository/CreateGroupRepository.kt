@@ -36,8 +36,8 @@ class CreateGroupRepository {
                         UserModel(
                             uid = uid,
                             email = email,
-                            name = name,
-                            phoneNumber = phoneNumber,
+                            name = name!!,
+                            phoneNumber = phoneNumber!!,
                             profilePic = profilePic
                         )
                     )
@@ -167,7 +167,7 @@ class CreateGroupRepository {
                 name = name,
                 description = description,
                 profilePic = groupProfileUrl,
-                owner = GlobalClass.Me ?: UserModel(), // Assuming owner is current user
+                owner = GlobalClass.Me, // Assuming owner is current user
                 createdAt = System.currentTimeMillis(),
                 isGroupValid = true,
                 members = members,

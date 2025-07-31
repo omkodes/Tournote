@@ -62,11 +62,11 @@ class GroupSelectorActivityViewModel : ViewModel() {
         val current = _usersIn.value?.toMutableList() ?: mutableListOf()
         if (current.isEmpty()) {
             val defaultUser = UserModel(
-                uid = null,
+                uid = "null",
                 email = GlobalClass.Me?.email.toString(),
                 name = "(You)",
-                phoneNumber = null,
-                profilePic = null
+                phoneNumber = "null",
+                profilePic = "null"
             )
             current.add(defaultUser)
         }
