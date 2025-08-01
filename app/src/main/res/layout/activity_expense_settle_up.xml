@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Functionality.Segments.Expenses.Activity.ExpenseSettleUpActivity"
-    android:background="@color/green_theme_Light">
+    android:background="@color/theme">
 
     <!-- Toolbar -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +17,7 @@
         android:paddingEnd="24dp"
         android:elevation="4dp"
         android:orientation="horizontal"
-        android:background="@color/green_theme_Light_taskbar"
+        android:background="@color/taskbar"
         app:layout_constraintTop_toTopOf="parent"
         android:gravity="center_vertical"
         android:visibility="visible">

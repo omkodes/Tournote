@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/green_theme_Light">
+    android:background="@color/theme">
 
     <RelativeLayout
         android:id="@+id/btnRedirectToGoogleMaps"

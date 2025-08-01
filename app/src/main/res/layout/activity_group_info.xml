@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Groups.Activity.activityGroupInfo"
-    android:background="@color/green_theme_Light">
+    android:background="@color/theme">
 
 
     <ProgressBar
@@ -30,7 +30,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/green_theme_Light"
+        android:background="@color/theme"
         android:elevation="8dp">
 
         <LinearLayout
@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:gravity="center_vertical"
-                android:background="@color/green_theme_Light_taskbar">
+                android:background="@color/taskbar">
 
                 <RelativeLayout
                     android:id="@+id/btnBack"
@@ -98,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="20dp"
-                app:cardBackgroundColor="@color/green_theme_Light"
+                app:cardBackgroundColor="@color/theme"
                 android:layout_gravity="center"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="10dp">
@@ -219,7 +219,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:cardCornerRadius="16dp"
-                    app:cardBackgroundColor="@color/green_theme_Light_taskbar"
+                    app:cardBackgroundColor="@color/taskbar"
                     android:layout_margin="2dp">
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -294,7 +294,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             app:cardCornerRadius="16dp"
-                            app:cardBackgroundColor="@color/green_theme_Light_taskbar"
+                            app:cardBackgroundColor="@color/taskbar"
                             android:layout_margin="2dp"
                             >
 

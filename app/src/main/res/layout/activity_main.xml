@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green_theme_Light"
+    android:background="@color/theme"
     tools:context=".Functionality.Activity.MainActivity">
 
 
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="@color/green_theme_Light_taskbar"
+        android:background="@color/taskbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +65,7 @@
                     android:layout_marginTop="5dp"
                     android:textSize="12sp"
                     android:layout_marginBottom="5dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/focused_feature_button_colour"
                     />
             </LinearLayout>
 
@@ -217,7 +217,7 @@
         android:id="@+id/relTrackingReqManualOverride"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/green_theme_Light_taskbar"
+        android:background="@color/taskbar"
         android:visibility="gone"
         android:elevation="10dp"
         >

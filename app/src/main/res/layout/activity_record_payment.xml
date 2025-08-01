@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Functionality.Segments.Expenses.Activity.ExpenseRecordPaymentActivity"
-    android:background="@color/green_theme_Light">
+    android:background="@color/theme">
 
     <!-- Toolbar -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +17,7 @@
         android:paddingEnd="24dp"
         android:elevation="4dp"
         android:orientation="horizontal"
-        android:background="@color/green_theme_Light_taskbar"
+        android:background="@color/taskbar"
         app:layout_constraintTop_toTopOf="parent"
         android:gravity="center_vertical"
         android:visibility="visible"
@@ -94,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="260dp"
-                app:cardBackgroundColor="@color/green_theme_Light"
+                app:cardBackgroundColor="@color/theme"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 >
@@ -121,7 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="260dp"
-                app:cardBackgroundColor="@color/green_theme_Light"
+                app:cardBackgroundColor="@color/theme"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 >

@@ -1,8 +1,6 @@
 package com.example.tournote.Groups.Activity
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -37,8 +35,8 @@ class GroupSelectorActivity : AppCompatActivity() {
         binding = ActivityGroupSelectorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        window.navigationBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
-        window.statusBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.taskbar)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.taskbar)
 
         viewPager=binding.viewPager
         viewPager.adapter= GroupSelectorActivityPagerAdapter(this)

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:background="@color/green_theme_Light"
+    android:background="@color/theme"
     android:layout_height="match_parent"
     tools:context=".Functionality.Segments.Memories.activity.ImageActivity">
 
@@ -16,7 +16,7 @@
         android:paddingEnd="24dp"
         android:elevation="4dp"
         android:orientation="horizontal"
-        android:background="@color/green_theme_Light_taskbar"
+        android:background="@color/taskbar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

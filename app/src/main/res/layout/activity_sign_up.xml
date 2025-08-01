@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Onboarding.Activity.SignUpActivity"
-    android:background="@color/green_theme_Light"
+    android:background="@color/theme"
     android:id="@+id/main">
     <ProgressBar
         android:id="@+id/progressBar"
@@ -95,7 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="260dp"
-                    app:cardBackgroundColor="@color/green_theme_Light"
+                    app:cardBackgroundColor="@color/theme"
                     android:layout_gravity="center"
                     android:layout_marginVertical="20dp"
                     >

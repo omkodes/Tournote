@@ -2,9 +2,6 @@ package com.example.tournote.Functionality.Segments.Memories.activity
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
@@ -17,17 +14,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.PlayerView
 import androidx.viewpager2.widget.ViewPager2
-import com.bumptech.glide.Glide
 import com.example.tournote.Functionality.Segments.Memories.adapter.FullScreenAdapter
 import com.example.tournote.Functionality.Segments.Memories.data.PhotosData
 import com.example.tournote.Functionality.Segments.Memories.memoriesRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.R
-import com.github.chrisbanes.photoview.PhotoView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
@@ -50,7 +43,7 @@ class ImageFullActivity : AppCompatActivity() {
             insets
         }
 
-        window.statusBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.taskbar)
 
         val imageList = intent.getParcelableArrayListExtra<PhotosData>("imageList") ?: listOf()
         val startIndex = intent.getIntExtra("startIndex", 0)

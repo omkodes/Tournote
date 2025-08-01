@@ -17,7 +17,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="Notification Title"
-            android:textColor="@color/green_theme_Light"
+            android:textColor="@color/theme"
             android:textSize="16sp"
             android:textStyle="bold" />
         <TextView
@@ -28,7 +28,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="by"
-            android:textColor="@color/green_theme_Light"
+            android:textColor="@color/theme"
             android:textSize="16sp"
             android:textStyle="bold" />
         <TextView
@@ -41,7 +41,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="abcd"
-            android:textColor="@color/green_theme_Light"
+            android:textColor="@color/theme"
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>

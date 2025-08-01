@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Functionality.Segments.SmartRoutePlanner.Fragment.SmartRoutePlannerFragment"
-    android:background="@color/green_theme_Light">
+    android:background="@color/theme">
 
 
     <FrameLayout
@@ -284,7 +284,7 @@
             android:id="@+id/frmFullRoute"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/green_theme_Light_taskbar"
+            android:background="@color/taskbar"
             android:elevation="100dp"
             android:visibility="gone"
             >
@@ -386,7 +386,7 @@
         android:id="@+id/frmSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/green_theme_Light"
+        android:background="@color/theme"
         android:visibility="gone"
         >
         <androidx.constraintlayout.widget.ConstraintLayout

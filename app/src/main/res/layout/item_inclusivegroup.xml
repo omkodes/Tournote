@@ -23,7 +23,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             app:cardCornerRadius="8dp"
-            app:cardBackgroundColor="@color/green_theme_Light"
+            app:cardBackgroundColor="@color/theme"
             android:layout_marginLeft="10dp"
             >
 

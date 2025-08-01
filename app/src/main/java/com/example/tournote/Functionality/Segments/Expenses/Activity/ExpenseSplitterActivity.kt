@@ -86,8 +86,8 @@ class ExpenseSplitterActivity : AppCompatActivity(), OnMemberSelectionChangeList
                 )
             }?.toMutableList() ?: mutableListOf()
 
-        window.statusBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
-        window.navigationBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.taskbar)
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.taskbar)
 
         slideInRight = AnimationUtils.loadAnimation(this, R.anim.slide_in_right)
         slideOutLeft = AnimationUtils.loadAnimation(this, R.anim.slide_out_left)

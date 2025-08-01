@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         checkLocationPermission()
 
         window.statusBarColor = ContextCompat.getColor(this@MainActivity, R.color.black)
-        window.navigationBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.taskbar)
 
         viewPager = binding.viewPager
         viewPager.adapter = FunctionalityPagerAdapter(this)
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
                         window.statusBarColor = ContextCompat.getColor(this@MainActivity, R.color.black)
                         binding.bottomButtons.visibility = View.VISIBLE
 
-                        binding.txtSmartRoute.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.black))
+                        binding.txtSmartRoute.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.focused_feature_text_colour))
                         binding.txtChats.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
                         binding.txtExpenses.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
                         binding.txtMemories.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
@@ -96,13 +96,13 @@ class MainActivity : AppCompatActivity() {
                         binding.imgMemories.setImageResource(R.drawable.memoriesactive)
                         binding.imgTrackGroupMates.setImageResource(R.drawable.trackfriendsnotactive)
 
-                        window.statusBarColor = ContextCompat.getColor(this@MainActivity, R.color.green_theme_Light_taskbar)
+                        window.statusBarColor = ContextCompat.getColor(this@MainActivity, R.color.taskbar)
                         binding.bottomButtons.visibility = View.VISIBLE
 
                         binding.txtSmartRoute.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
                         binding.txtChats.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
                         binding.txtExpenses.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
-                        binding.txtMemories.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.black))
+                        binding.txtMemories.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.focused_feature_text_colour))
                         binding.txtTrackGroupMates.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
                     }
                     2 -> {
@@ -112,12 +112,12 @@ class MainActivity : AppCompatActivity() {
                         binding.imgMemories.setImageResource(R.drawable.memoriesnotactive)
                         binding.imgTrackGroupMates.setImageResource(R.drawable.trackfriendsnotactive)
 
-                        window.statusBarColor = ContextCompat.getColor(this@MainActivity, R.color.green_theme_Light_taskbar)
+                        window.statusBarColor = ContextCompat.getColor(this@MainActivity, R.color.taskbar)
                         binding.bottomButtons.visibility = View.VISIBLE
 
                         binding.txtSmartRoute.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
                         binding.txtChats.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
-                        binding.txtExpenses.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.black))
+                        binding.txtExpenses.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.focused_feature_text_colour))
                         binding.txtMemories.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
                         binding.txtTrackGroupMates.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
                     }
@@ -128,11 +128,11 @@ class MainActivity : AppCompatActivity() {
                         binding.imgMemories.setImageResource(R.drawable.memoriesnotactive)
                         binding.imgTrackGroupMates.setImageResource(R.drawable.trackfriendsnotactive)
 
-                        window.statusBarColor = ContextCompat.getColor(this@MainActivity, R.color.green_theme_Light_taskbar)
+                        window.statusBarColor = ContextCompat.getColor(this@MainActivity, R.color.taskbar)
                         binding.bottomButtons.visibility = View.GONE
 
                         binding.txtSmartRoute.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
-                        binding.txtChats.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.black))
+                        binding.txtChats.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.focused_feature_text_colour))
                         binding.txtExpenses.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
                         binding.txtMemories.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
                         binding.txtTrackGroupMates.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity() {
                         binding.txtChats.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
                         binding.txtExpenses.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
                         binding.txtMemories.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.unfocused_feature_text_colour))
-                        binding.txtTrackGroupMates.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.black))
+                        binding.txtTrackGroupMates.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.focused_feature_text_colour))
                     }
                 }
             }

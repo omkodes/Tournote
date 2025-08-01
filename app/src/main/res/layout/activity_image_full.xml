@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green_theme_Light"
+    android:background="@color/theme"
     tools:context=".Functionality.Segments.Memories.activity.ImageFullActivity">
     <ProgressBar
         app:layout_constraintTop_toTopOf="parent"
@@ -25,7 +25,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/green_theme_Light_taskbar"
+        android:background="@color/taskbar"
         android:elevation="4dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"

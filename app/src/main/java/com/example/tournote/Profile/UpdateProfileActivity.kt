@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -14,10 +13,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.tournote.GlobalClass
-import com.example.tournote.Groups.Activity.GroupSelectorActivity
 import com.example.tournote.Onboarding.ViewModel.authViewModel
 import com.example.tournote.R
-import com.example.tournote.databinding.ActivityGroupSelectorBinding
 import com.example.tournote.databinding.ActivityUpdateProfileBinding
 import kotlin.getValue
 
@@ -50,7 +47,7 @@ class UpdateProfileActivity : AppCompatActivity() {
             insets
         }
 
-        window.statusBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.taskbar)
 
         binding.imgProfilePhoto.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*"

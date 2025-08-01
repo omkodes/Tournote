@@ -21,7 +21,7 @@
             android:layout_width="100dp"
             android:layout_height="60dp"
             android:background="@drawable/textbox"
-            android:textColor="@color/black"
+            android:textColor="@color/black1"
             android:textSize="18sp"
             android:entries="@array/country_codes"
             android:gravity="right"

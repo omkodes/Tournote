@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+
+    <color name="black1">#FF000000</color>
+    <color name="black">#F7F7F2</color>
+
+    <color name="lightBlue">#B5E2FA</color>
+    <color name="light">#F9F7F3</color>
+    <color name="theme">#112E31</color>
+    <color name="bluetext">#B5E2FA</color>
+
+    <color name="text_primary">#E0E0E0</color>
+    <color name="selected_bg">#245056</color>
+
+    <color name="taskbar">#0F2729</color>
+
+    <color name="mapEndPoint">#F44336</color>
+    <color name="mapWaypointsPoint">#FF9800</color>
+    <color name="mapStartPoint">#4CAF50</color>
+
+    <color name="blue">#0FA3B1</color>
+
+    <color name="customSplashScreenBackground">#D0D3C6</color>
+
+    <color name="textRed">#F44336</color>
+    <color name="textGreen">#4CAF50</color>
+    <color name="textBlue">#0FA3B1</color>
+
+    <color name="focused_feature_button_colour">#0FA3B1</color> <!-- light text -->
+    <color name="focused_feature_text_colour">#0FA3B1</color> <!-- light text -->
+    <color name="unfocused_feature_button_colour">#F9F7F3</color> <!-- dark background -->
+    <color name="unfocused_feature_text_colour">#F9F7F3</color>
+
+    <color name="textButton">#0FA3B1</color>
+
+    <color name="basic_actionbuttons_colour">#F7F7F2</color> <!-- dark, deep button bg -->
+
+    <color name="green_button">#5C8D66</color> <!-- muted green, consistent -->
+    <color name="red_button">#F0584D</color>
+
+    <color name="saperator">#3A4A4A</color> <!-- dark gray, subtle line -->
+
+    <color name="darkness">#33000000</color> <!-- slightly more visible alpha -->
+
+    <color name="sender_hallout">#1C1C1C</color> <!-- deeper gray for sender -->
+    <color name="me_hallout">#245056</color> <!-- match selected_bg -->
+
+    <!--add group button-->
+    <color name="add_group_button_background">#ffffff</color> <!-- matches theme/taskbar -->
+    <color name="add_group_button_plus">#0FA3B1</color> <!-- white/cream for visibility -->
+
+    <!--app logo name colour-->
+    <color name="app_name">#F9F7F3</color>
+
+</resources>

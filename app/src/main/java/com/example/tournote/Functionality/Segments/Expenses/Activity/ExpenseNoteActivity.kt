@@ -41,8 +41,8 @@ class ExpenseNoteActivity : AppCompatActivity() {
 
 
         // Set navigation bar color (status bar color is usually handled by theme or can be set here)
-        window.statusBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
-        window.navigationBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.taskbar)
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.taskbar)
         // If you want to explicitly set the status bar color, you can uncomment this:
         // window.statusBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
 

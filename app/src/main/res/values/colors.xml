@@ -6,12 +6,12 @@
 
     <color name="lightBlue">#A9D6E5</color>
     <color name="light">#F7F7F2</color>
-    <color name="green_theme_Light">#D0D3C6</color>
+    <color name="theme">#D0D3C6</color>
 
     <color name="text_primary">#2C2C2C</color>
     <color name="selected_bg">#3F6654</color>
 
-    <color name="green_theme_Light_taskbar">#A0A69C</color>
+    <color name="taskbar">#A0A69C</color>
 
     <color name="mapEndPoint">#E45858</color>
     <color name="mapWaypointsPoint">#F4A259</color>
@@ -28,6 +28,7 @@
     <color name="textButton">#4B6B50</color>
 
     <color name="focused_feature_button_colour">#2C3E50</color>
+    <color name="focused_feature_text_colour">#2C3E50</color> <!-- light text -->
     <color name="unfocused_feature_button_colour">#D0D3C6</color>
     <color name="unfocused_feature_text_colour">#5C5C5C</color>
 
@@ -42,4 +43,11 @@
 
     <color name="sender_hallout">#2C2C2C</color>
     <color name="me_hallout">#5C8D66</color>
+
+    <!--add group button-->
+    <color name="add_group_button_background">#F4F1BB</color>
+    <color name="add_group_button_plus">#1982C4</color>
+
+    <!--app logo name colour-->
+    <color name="app_name">#000000</color>
 </resources>

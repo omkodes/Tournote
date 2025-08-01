@@ -8,7 +8,7 @@
     android:clipToPadding="false"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Functionality.Segments.ChatRoom.Fragment.ChatsFragment"
-    android:background="@color/green_theme_Light">
+    android:background="@color/theme">
 
     <LinearLayout
         android:id="@+id/toolbar"
@@ -18,7 +18,7 @@
         android:paddingEnd="24dp"
         android:elevation="4dp"
         android:orientation="horizontal"
-        android:background="@color/green_theme_Light_taskbar"
+        android:background="@color/taskbar"
         android:gravity="center_vertical"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="visible"
@@ -103,12 +103,12 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            app:boxBackgroundColor="@color/green_theme_Light_taskbar"
+            app:boxBackgroundColor="@color/taskbar"
             app:boxCornerRadiusBottomEnd="20dp"
             app:boxCornerRadiusBottomStart="20dp"
             app:boxCornerRadiusTopEnd="20dp"
             android:textColorHint="@color/black"
-            app:boxStrokeColor="@color/green_theme_Light_taskbar"
+            app:boxStrokeColor="@color/taskbar"
             app:boxCornerRadiusTopStart="20dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 

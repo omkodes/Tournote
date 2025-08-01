@@ -3,7 +3,7 @@
     android:shape="rectangle">
 
     <!-- Darker fill background -->
-    <solid android:color="@color/green_theme_Light_taskbar" />
+    <solid android:color="@color/taskbar" />
 
     <!-- Rounded corners: 16.485dp -->
     <corners android:radius="16.485dp" />

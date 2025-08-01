@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Functionality.Segments.Expenses.Activity.ExpenseSplitterActivity"
-    android:background="@color/green_theme_Light">
+    android:background="@color/theme">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
@@ -17,7 +17,7 @@
         android:paddingEnd="24dp"
         android:elevation="4dp"
         android:orientation="horizontal"
-        android:background="@color/green_theme_Light_taskbar"
+        android:background="@color/taskbar"
         app:layout_constraintTop_toTopOf="parent"
         android:gravity="center_vertical"
         android:visibility="visible">
@@ -220,10 +220,9 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="25dp"
-                android:src="@drawable/equal"
                 android:layout_centerInParent="true"
-                />
+                android:layout_marginHorizontal="25dp"
+                android:src="@drawable/equal" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -313,7 +312,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/green_theme_Light_taskbar"
+        android:background="@color/taskbar"
         android:elevation="20dp">
 
         <ViewFlipper

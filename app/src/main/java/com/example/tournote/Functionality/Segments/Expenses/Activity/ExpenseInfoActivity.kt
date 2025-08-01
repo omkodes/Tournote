@@ -40,8 +40,8 @@ class ExpenseInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        window.statusBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
-        window.navigationBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.taskbar)
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.taskbar)
 
         binding = ActivityExpenseInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)

@@ -56,7 +56,7 @@ class ImageActivity : AppCompatActivity() {
             finish()
         }
 
-        window.statusBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.taskbar)
 
         binding.btnBack.setOnClickListener {
             finish()

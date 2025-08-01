@@ -1,6 +1,5 @@
 package com.example.tournote.Groups.Activity
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log // Added for logging
@@ -65,7 +64,7 @@ class activityGroupInfo : AppCompatActivity() {
             insets
         }
 
-        window.statusBarColor = ContextCompat.getColor(this, R.color.green_theme_Light_taskbar)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.taskbar)
 
         // 🔥 MODIFICATION: Retrieve the selected group's detailed data at the start
         val selectedGroupId = GlobalClass.selected_groupId

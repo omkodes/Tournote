@@ -23,7 +23,7 @@
         android:id="@+id/likeCountText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:textColor="@color/black"
         android:layout_gravity="bottom|start"
         android:layout_marginStart="65dp"
         android:textSize="20sp"
