@@ -2,6 +2,8 @@ package com.example.tournote.Onboarding.Activity
 
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -36,6 +38,12 @@ class CustomSplashScreen : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!isInternetAvailable()) {
+            startActivity(Intent(this, NoInternetActivity::class.java))
+            overridePendingTransition(0, 0) // No animation
+            finish()
+            return
+        }
         enableEdgeToEdge()
         setContentView(R.layout.activity_custom_splash_screen)
 
@@ -102,5 +110,16 @@ class CustomSplashScreen : AppCompatActivity() {
     private fun loadSmsWatcherPreference(): Boolean {
         val prefs = getSharedPreferences("MY_SETTING", MODE_PRIVATE)
         return prefs.getBoolean(PREF_SMS_READER_ENAMBELD, false)
+    }
+
+    private fun isInternetAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET))
     }
 }

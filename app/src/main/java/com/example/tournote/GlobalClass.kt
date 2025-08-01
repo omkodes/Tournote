@@ -14,4 +14,7 @@ object GlobalClass {
     var expenses : List<ExpensesDataClass> = emptyList()
 
     //var group_id: String ? = null
+
+    // ✅ New: Drive API service for global access (used in UploadWorker)
+    var driveService: com.google.api.services.drive.Drive? = null
 }

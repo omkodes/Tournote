@@ -10,8 +10,9 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.example.tournote.Database.LocalDatabase.NetworkResult
 import com.example.tournote.Database.LocalDatabase.RoomDBRepository
+import com.example.tournote.Database.LocalDatabase.TourNoteDatabase
 import com.example.tournote.GroupData_Detailed_Model
-import com.example.tournote.database.TourNoteDatabase
+import com.example.tournote.GlobalClass
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
@@ -50,7 +51,6 @@ class GroupSelectorActivityViewModel2(application: Application) : AndroidViewMod
         initializeGroups()
         // Start listening for Firebase changes as soon as the ViewModel is created
         repository.startListeningForGroupChanges()
-
     }
 
     private fun initializeGroups() {
@@ -78,8 +78,6 @@ class GroupSelectorActivityViewModel2(application: Application) : AndroidViewMod
         viewModelScope.launch {
             groupsFlow.collectLatest { detailedGroups ->
                 Log.d("GroupSelectorVM2", "Groups flow emitted: ${detailedGroups.size} groups")
-                Log.d("GroupSelectorVM2", "Group list: $detailedGroups")
-
 
                 // Only update GlobalClass after initial sync is attempted
                 // This prevents clearing valid data due to initial empty state

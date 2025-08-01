@@ -5,7 +5,7 @@ import com.example.tournote.GlobalClass
 import com.example.tournote.GroupData_Detailed_Model
 import com.example.tournote.Groups.ViewModel.GroupSelectorActivityViewModel2
 import com.example.tournote.UserModel
-import com.example.tournote.database.*
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -34,7 +34,7 @@ class RoomDBRepository(
 
     // Call this from ViewModel to start listening
     fun startListeningForGroupChanges() {
-        myUid = GlobalClass.Me?.uid
+        myUid = FirebaseAuth.getInstance().currentUser?.uid
         if (myUid == null) {
             val errorMsg = "User not logged in. Cannot start group listener."
             sharedViewModel.showError(errorMsg)

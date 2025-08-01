@@ -1,7 +1,8 @@
-package com.example.tournote.database
+package com.example.tournote.Database.LocalDatabase
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.tournote.Database.LocalDatabase.UserEntity
 
 @Entity(tableName = "groups")
 data class GroupEntity(

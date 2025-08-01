@@ -12,10 +12,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer // Import Observer
+import androidx.work.CoroutineWorker
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
+import com.example.tournote.Functionality.Segments.Memories.UploadWorker
+import com.example.tournote.Functionality.Segments.Memories.memoriesRepository
 import com.example.tournote.Functionality.Segments.Memories.memoriesViewModel
+import com.example.tournote.GlobalClass
 import com.example.tournote.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -28,6 +37,12 @@ import com.google.api.services.drive.DriveScopes
 
 import com.example.tournote.Groups.ViewModel.GroupSelectorActivityViewModel2 // Import your GroupSelectorActivityViewModel2
 import com.example.tournote.GroupData_Detailed_Model // Import your GroupData_Detailed_Model
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 
 
 class ReceiverActivity : AppCompatActivity() {
@@ -40,7 +55,7 @@ class ReceiverActivity : AppCompatActivity() {
     private lateinit var sharedImageUris: List<Uri>
     private var selectedGroup = ""
     val viewModel: memoriesViewModel by viewModels() // Your existing memoriesViewModel
-
+    val repository = memoriesRepository()
     // NEW: ViewModel to get group data
     private val groupSelectorViewModel: GroupSelectorActivityViewModel2 by viewModels()
 
@@ -48,6 +63,7 @@ class ReceiverActivity : AppCompatActivity() {
     private var isDriveServiceSetup = false
     private var hasGroupsDataBeenObserved = false
     private var isGroupDialogShowing = false
+    val repo01 = FirebaseRTDBRepository()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +74,9 @@ class ReceiverActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            GlobalClass.Me = repo01.getUserByMailId(FirebaseAuth.getInstance().currentUser?.email!!).getOrNull()
         }
         bar = findViewById(R.id.progressBar)
         bar.visibility = View.VISIBLE // Show loading bar initially
@@ -157,12 +176,16 @@ class ReceiverActivity : AppCompatActivity() {
             credential
         ).setApplicationName("Tournote").build()
 
-        viewModel.repository.setDriveService(driveService) // Assuming memoriesViewModel has a repository
-        observeViewModel() // Observe memoriesViewModel's upload state
+        // ✅ Make it globally available
+        GlobalClass.driveService = driveService
 
-        isDriveServiceSetup = true // Set flag that Drive service is ready
-        tryShowGroupSelectionDialog() // Attempt to show dialog now that Drive is set up
+        viewModel.repository.setDriveService(driveService) // Already here
+        observeViewModel() // Already here
+
+        isDriveServiceSetup = true
+        tryShowGroupSelectionDialog()
     }
+
 
     private fun observeViewModel() {
         // Observes upload state from memoriesViewModel
@@ -216,7 +239,26 @@ class ReceiverActivity : AppCompatActivity() {
                 selectedGroup = validGroups.getOrNull(which)?.groupID ?: ""
                 if (selectedGroup.isNotEmpty()) {
                     bar.visibility = View.VISIBLE // Show progress bar as upload begins
-                    viewModel.uploadMedia(sharedImageUris, this@ReceiverActivity, selectedGroup)
+                    CoroutineScope(Dispatchers.IO).launch {
+
+                        val safeUris = copyUrisToInternalStorage(sharedImageUris)
+
+                        val inputData = Data.Builder()
+                            .putStringArray(UploadWorker.KEY_URIS, safeUris.map { it.toString() }.toTypedArray())
+                            .putString(UploadWorker.KEY_GROUP, selectedGroup)
+                            .putString(UploadWorker.GRP_NAME, validGroups[which].name)
+                            .build()
+
+
+                        val work = OneTimeWorkRequestBuilder<UploadWorker>()
+                            .setInputData(inputData)
+                            .build()
+
+                        WorkManager.getInstance(this@ReceiverActivity).enqueue(work)
+
+                        finish() // Activity is done, upload continues 💪
+                    }
+
                 } else {
                     Toast.makeText(this, "Failed to get selected group ID.", Toast.LENGTH_SHORT).show()
                     finish()
@@ -229,4 +271,32 @@ class ReceiverActivity : AppCompatActivity() {
             }
             .show()
     }
+
+    private fun copyUrisToInternalStorage(uris: List<Uri>): List<Uri> {
+        val tempDir = File(cacheDir, "upload_temp")
+        tempDir.mkdirs()
+
+        return uris.mapNotNull { uri ->
+            try {
+                val inputStream = contentResolver.openInputStream(uri) ?: return@mapNotNull null
+                val fileName = "shared_${System.currentTimeMillis()}.jpg" // or detect extension
+                val tempFile = File(tempDir, fileName)
+
+                FileOutputStream(tempFile).use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+
+                FileProvider.getUriForFile(
+                    this,
+                    "$packageName.fileprovider",
+                    tempFile
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
+
 }

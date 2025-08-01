@@ -351,13 +351,6 @@ class SignUpActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please select a country code.", Toast.LENGTH_SHORT).show()
             } else {
                 val fullPhone = "$code$phone"
-                GlobalClass.Me = UserModel(
-                    uid = userId ?: "",
-                    name = name,
-                    email = email,
-                    phoneNumber = fullPhone,
-                    profilePic = "null")
-                Log.d("authViewModel", "User data set: ${GlobalClass.Me}")
                 viewModel.user_dataTO_firebase(userId, name, email, fullPhone, "null")
             }
 

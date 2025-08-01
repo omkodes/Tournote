@@ -60,39 +60,22 @@ class authViewModel: ViewModel() {
 
     private fun signInWithGoogle(account: GoogleSignInAccount) {
         viewModelScope.launch {
-            try {
-                isLoading.value = true
-
-                val authResult = repo.firebaseLoginWithGoogle(account)
-                Log.d("authViewModel", "firebaseLoginWithGoogle() returned: $authResult")
-
-                if (authResult != null) {
-//                    Log.d("authViewModel", "auth result ke andar aa gaya:${account.email}")
-//
-//                    Log.d("authViewModel", "Calling getUserByMailId...")
-//                    val userResult = withContext(Dispatchers.IO) {
-//                        repo1.getUserByMailId(account.email ?: "")
-//                    }
-//                    Log.d("authViewModel", "getUserByMailId call finished.")
-//
-//                    Log.d("authViewModel", "User fetched: ${userResult.isSuccess}")
-//                    userResult.onSuccess { user ->
-//                        GlobalClass.Me = user
-//                        Log.d("authViewModel", "User data set: ${GlobalClass.Me}")
-//                    }.onFailure {
-//                        Log.e("authViewModel", "Failed to fetch user: ${it.message}")
-//                    }
-
-                    Log.d("authViewModel", "Sign in with Google successful: ho gaya")
-                    _googleResponse.value = authResult
-                } else {
-                    Log.e("authViewModel", "firebaseLoginWithGoogle() returned null")
-                    _googleResponse.value = null
-                    loginError.value = "Google sign-in failed."
+            val result = repo.firebaseLoginWithGoogle(account)
+            if (result != null) {
+                //GlobalClass.uid=result.uid
+                if (account != null) {
+                    val result = repo1.getUserByMailId(account.email ?: "")
+                    result.onSuccess { user ->
+                        GlobalClass.Me = user
+                    }.onFailure {
+                        Log.e("authViewModel", "Failed to fetch user: ${it.message}")
+                    }
                 }
-            } catch (e: Exception) {
-                Log.e("authViewModel", "Exception in signInWithGoogle(): ${e.message}", e)
-                loginError.value = "Unexpected error during sign-in."
+
+                _googleResponse.value = result
+            } else {
+                _googleResponse.value = null
+                loginError.value = "Login failed."
             }
         }
     }

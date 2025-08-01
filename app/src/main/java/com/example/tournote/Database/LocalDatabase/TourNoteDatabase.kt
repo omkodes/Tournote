@@ -1,4 +1,4 @@
-package com.example.tournote.database
+package com.example.tournote.Database.LocalDatabase
 
 import android.content.Context
 import androidx.room.Database

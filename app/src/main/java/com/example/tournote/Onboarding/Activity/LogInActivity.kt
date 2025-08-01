@@ -172,17 +172,6 @@ class LogInActivity : AppCompatActivity() {
                         phone_Dialog(name, email, userId)
                     } else {
 
-                    val userResult = repo1.getUserByMailId(email)
-
-                    Log.d("authViewModel", "getUserByMailId call finished.")
-
-                    Log.d("authViewModel", "User fetched: ${userResult.isSuccess}")
-                    userResult.onSuccess { user ->
-                        GlobalClass.Me = user
-                        Log.d("authViewModel", "User data set: ${GlobalClass.Me}")
-                    }.onFailure {
-                        Log.e("authViewModel", "Failed to fetch user: ${it.message}")
-                    }
                         viewModel.isLoading.value = false
                         Toast.makeText(this@LogInActivity, "Login successful", Toast.LENGTH_SHORT)
                             .show()
@@ -294,14 +283,6 @@ class LogInActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please select a country code.", Toast.LENGTH_SHORT).show()
             } else {
                     val fullPhone = "$code$phone"
-                    GlobalClass.Me = UserModel(
-                        uid = userId ?: "",
-                        name = name,
-                        email = email,
-                        phoneNumber = fullPhone,
-                        profilePic = "null")
-                    Log.d("authViewModel", "User data set: ${GlobalClass.Me}")
-
                     viewModel.user_dataTO_firebase(userId!!, name, email, fullPhone, "null")
             }
 

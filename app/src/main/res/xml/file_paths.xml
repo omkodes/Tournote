@@ -4,4 +4,7 @@
     <cache-path
         name="media_zip"
         path="media_zip/" />
+    <cache-path
+        name="upload_temp"
+        path="upload_temp/" />
 </paths>
