@@ -20,7 +20,7 @@
       android:fillColor="#555555"/>
   <path
       android:pathData="M26.85,10.08a9.73,10.08 0,1 0,19.46 0a9.73,10.08 0,1 0,-19.46 0z"
-      android:fillColor="#F9F7F3"/>
+      android:fillColor="@color/loader_current_onboarding"/>
   <path
       android:pathData="M53.7,10.08a9.73,10.08 0,1 0,19.46 0a9.73,10.08 0,1 0,-19.46 0z"
       android:fillColor="#555555"/>

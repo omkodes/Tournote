@@ -50,4 +50,6 @@
 
     <!--app logo name colour-->
     <color name="app_name">#000000</color>
+
+    <color name="loader_current_onboarding">#ffffff</color>
 </resources>
