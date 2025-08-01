@@ -2,6 +2,7 @@ package com.example.tournote.Groups.Adapter
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +35,7 @@ class FetchIncludedGroupDetailsRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val group = getItem(position) // Use getItem() from ListAdapter
+        val group : GroupData_Detailed_Model = getItem(position) // Use getItem() from ListAdapter
         holder.name.text = group.name ?: "Unknown Group"
 
         // Handle profile picture loading
@@ -51,6 +52,7 @@ class FetchIncludedGroupDetailsRecyclerViewAdapter(
         holder.clickable.setOnClickListener {
             // Set the selected group ID
             GlobalClass.selected_groupId = group.groupID ?: ""
+            Log.d("group", "SelectedGroup: $group")
             GlobalClass.GroupDetails_Everything=group
             val intent = Intent(context, MainActivity::class.java)
             context.startActivity(intent)

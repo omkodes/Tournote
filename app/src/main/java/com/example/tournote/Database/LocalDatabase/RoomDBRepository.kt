@@ -152,12 +152,14 @@ class RoomDBRepository(
             Log.d("RoomDBRepository", "Upserting ${allUsers.size} users")
             tourNoteDao.upsertUsers(allUsers)
 
-            // Step 3: Create a mapping from sanitized email to uid for efficient lookups
+            // ... (existing code remains the same up to here)
+
+// Step 3: Create a mapping from sanitized email to uid for efficient lookups
             val sanitizedEmailToUidMap = allUsers.associate { userEntity ->
                 sanitizeEmail(userEntity.email ?: "") to userEntity.uid
             }
 
-            // Step 4: Fetch and upsert group details and cross-references for the user's groups
+// Step 4: Fetch and upsert group details and cross-references for the user's groups
             var successCount = 0
             myGroupsIdList.forEach { groupId ->
                 try {
@@ -170,8 +172,11 @@ class RoomDBRepository(
                     val isGroupValid = groupDetails["isGroupValid"] as? Boolean ?: true
                     val description = groupDetails["description"] as? String
                     val profilePic = groupDetails["profilePic"] as? String
-                    val ownerID = groupDetails["owner"] as? String
+                    val ownerSanitizedEmail = groupDetails["owner"] as? String // This is the sanitized email
                     val createdAt = groupDetails["createdAt"] as? Long
+
+                    // **Modification 1: Look up the owner's UID using the sanitized email**
+                    val ownerUid = ownerSanitizedEmail?.let { sanitizedEmailToUidMap[it] }
 
                     val groupEntity = GroupEntity(
                         groupID = groupId,
@@ -179,7 +184,7 @@ class RoomDBRepository(
                         description = description,
                         profilePic = profilePic,
                         isGroupValid = isGroupValid,
-                        ownerId = ownerID,
+                        ownerId = ownerUid, // Assign the looked-up UID here
                         createdAt = createdAt
                     )
 
@@ -229,13 +234,14 @@ class RoomDBRepository(
                     tourNoteDao.insertGroupTrackFriends(trackFriendCrossRefs)
 
                     successCount++
-                    Log.d("RoomDBRepository", "Successfully synced group: $groupId with ${memberCrossRefs.size} members, ${adminCrossRefs.size} admins, ${trackFriendCrossRefs.size} trackfriends")
+                    Log.d("RoomDBRepository", "Successfully synced group: $groupId with ${memberCrossRefs.size} members, ${adminCrossRefs.size} admins, ${trackFriendCrossRefs.size} trackfriends, Owner: $ownerUid")
 
                 } catch (e: Exception) {
                     Log.e("RoomDBRepository", "Error syncing group $groupId: ${e.message}", e)
                     // Continue with other groups instead of failing completely
                 }
             }
+// ... (rest of the code)
 
             val message = if (successCount == myGroupsIdList.size) {
                 "All $successCount groups synced successfully!"

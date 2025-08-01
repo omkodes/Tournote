@@ -3,14 +3,18 @@
     android:height="50dp"
     android:viewportWidth="50"
     android:viewportHeight="50">
+
+  <!-- Softer off-white background to contrast with toolbar -->
   <path
       android:pathData="M14,0L36,0A14,14 0,0 1,50 14L50,36A14,14 0,0 1,36 50L14,50A14,14 0,0 1,0 36L0,14A14,14 0,0 1,14 0z"
-      android:fillColor="#F9F7F3"/>
+      android:fillColor="@color/add_group_button_background" />
+
+  <!-- Plus symbol: Calm but noticeable teal -->
   <path
       android:pathData="M25,11V39M11,25H39"
       android:strokeLineJoin="round"
       android:strokeWidth="4"
       android:fillColor="#00000000"
-      android:strokeColor="#0FA3B1"
+      android:strokeColor="@color/add_group_button_plus"
       android:strokeLineCap="round"/>
 </vector>

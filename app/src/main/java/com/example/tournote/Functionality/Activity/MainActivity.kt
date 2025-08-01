@@ -64,6 +64,8 @@ class MainActivity : AppCompatActivity() {
 
         handleKeyboardVisibility()
 
+        Log.d("GlobalClass", "SelectedGroup: {${GlobalClass.GroupDetails_Everything}}")
+
         binding.viewPager.setPageTransformer(null)
         binding.viewPager.isUserInputEnabled = false
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
