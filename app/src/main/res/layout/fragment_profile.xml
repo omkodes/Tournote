@@ -43,7 +43,29 @@
             android:textSize="18sp"
             />
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/btnChangeTheme"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/greenbutton"
+        >
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Change Theme"
+            android:textColor="@color/black1"
+            android:layout_centerInParent="true"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            />
+    </RelativeLayout>
     <RelativeLayout
         android:id="@+id/sign_out_button"
         android:layout_width="match_parent"

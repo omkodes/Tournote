@@ -137,31 +137,40 @@ class FirebaseRTDBRepository (){
 
     suspend fun getUserByMailId(emailId: String): Result<UserModel> {
         return try {
+            Log.d("getUserByMailId", "Starting Firebase get...")
+
             val usersSnap = db.getReference("users").get().await()
 
-            usersSnap.children.forEach { userSnap ->
+            Log.d("getUserByMailId", "Fetched ${usersSnap.childrenCount} users")
+
+            for (userSnap in usersSnap.children) {
                 val personalDetails = userSnap.child("PersonalDetails")
                 val email = personalDetails.child("email").getValue(String::class.java)
 
-                if (email == emailId) {
+                Log.d("getUserByMailId", "Checking email: '$email' == '$emailId'")
+
+                if (email?.trim()?.lowercase() == emailId.trim().lowercase()) {
                     val user = UserModel(
                         uid = userSnap.key!!,
                         email = email,
-                        name = personalDetails.child("name").getValue(String::class.java)!!,
-                        phoneNumber = personalDetails.child("phone").getValue(String::class.java)!!,
-                        profilePic = personalDetails.child("profilePic")
-                            .getValue(String::class.java)
+                        name = personalDetails.child("name").getValue(String::class.java) ?: "",
+                        phoneNumber = personalDetails.child("phone").getValue(String::class.java) ?: "",
+                        profilePic = personalDetails.child("profilePic").getValue(String::class.java)
                     )
+                    Log.d("getUserByMailId", "User match found: $user")
                     return Result.success(user)
                 }
             }
 
+            Log.e("getUserByMailId", "No user found with email: $emailId")
             Result.failure(Exception("User with email $emailId not found"))
 
         } catch (e: Exception) {
+            Log.e("getUserByMailId", "Exception: ${e.message}", e)
             Result.failure(e)
         }
     }
+
 
 
 

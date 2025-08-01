@@ -13,8 +13,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.Switch
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -27,6 +29,7 @@ import com.example.tournote.Onboarding.ViewModel.authViewModel
 import com.example.tournote.R
 import com.example.tournote.Functionality.Segments.TrackFriends.Services.LocationTrackingService
 import com.example.tournote.Profile.UpdateProfileActivity
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.launch
@@ -37,6 +40,7 @@ class ProfileFragment : Fragment() {
     private val viewModel: authViewModel by viewModels()
     private lateinit var databaseRef: DatabaseReference
     private lateinit var sharedPrefs: SharedPreferences
+    private lateinit var status_Dialog: BottomSheetDialog
 
     // UI Elements
     private var locationSwitch: Switch? = null
@@ -120,6 +124,9 @@ class ProfileFragment : Fragment() {
 
         view.findViewById<RelativeLayout>(R.id.btnEnhanceProfile).setOnClickListener {
             startActivity(Intent(requireContext(), UpdateProfileActivity::class.java))
+        }
+        view.findViewById<RelativeLayout>(R.id.btnChangeTheme).setOnClickListener {
+            showDialogTheme()
         }
     }
 
@@ -437,4 +444,27 @@ class ProfileFragment : Fragment() {
             }
         }
     }
+
+    fun showDialogTheme() {
+        status_Dialog = BottomSheetDialog(requireContext())
+        status_Dialog.setContentView(R.layout.bsfragment_theme)
+        status_Dialog.setCancelable(true)
+        status_Dialog.setCanceledOnTouchOutside(true)
+
+        status_Dialog.show()
+        val light = status_Dialog.findViewById<TextView>(R.id.light_theme)
+        val dark = status_Dialog.findViewById<TextView>(R.id.dark_theme)
+
+        light?.setOnClickListener {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            status_Dialog.dismiss()
+        }
+        dark?.setOnClickListener {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            status_Dialog.dismiss()
+        }
+
+
+    }
+
 }

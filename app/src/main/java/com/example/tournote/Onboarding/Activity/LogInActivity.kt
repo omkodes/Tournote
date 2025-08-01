@@ -28,6 +28,7 @@ import com.example.tournote.Groups.Activity.GroupSelectorActivity
 import com.example.tournote.Groups.Fragment.ProfileFragment
 import com.example.tournote.R
 import com.example.tournote.Onboarding.ViewModel.authViewModel
+import com.example.tournote.UserModel
 import com.example.tournote.databinding.ActivityLogInBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -36,6 +37,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class LogInActivity : AppCompatActivity() {
@@ -44,6 +46,7 @@ class LogInActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLogInBinding
     private lateinit var phone_dialog : BottomSheetDialog
 
+    val repo1 = FirebaseRTDBRepository()
     private lateinit var googleSignInClient: GoogleSignInClient
 
     private val launcher =
@@ -151,13 +154,16 @@ class LogInActivity : AppCompatActivity() {
 
         viewModel.googleResponse.observe(this) { user ->
             if (user != null) {
-                Log.e("error SignUpActivity", "Google Sign In successful: ${user.email}")
+                Log.e("error authViewModel", "Google Sign In successful: ${user.email}")
                 val email = user.email ?: ""
                 val name = user.displayName ?: ""
                 val userId = user.uid
                 CoroutineScope(Dispatchers.Main).launch {
+                    Log.d("authViewModel", "saveFCM called with userId: $userId")
                     viewModel.saveFCM(userId)
+                    Log.d("authViewModel", "saveFCM call finished.")
                     val snapshot = viewModel.repo.userDetailGetLogin(userId)
+                    Log.d("authViewModel", "userDetailGetLogin call finished.")
                     if (snapshot == null) {
                         // Network error or permission issue
                         Toast.makeText(this@LogInActivity, "Network error or permission issue", Toast.LENGTH_SHORT).show()
@@ -165,7 +171,18 @@ class LogInActivity : AppCompatActivity() {
                         // User does not exist
                         phone_Dialog(name, email, userId)
                     } else {
-                        // User exists, proceed
+
+                    val userResult = repo1.getUserByMailId(email)
+
+                    Log.d("authViewModel", "getUserByMailId call finished.")
+
+                    Log.d("authViewModel", "User fetched: ${userResult.isSuccess}")
+                    userResult.onSuccess { user ->
+                        GlobalClass.Me = user
+                        Log.d("authViewModel", "User data set: ${GlobalClass.Me}")
+                    }.onFailure {
+                        Log.e("authViewModel", "Failed to fetch user: ${it.message}")
+                    }
                         viewModel.isLoading.value = false
                         Toast.makeText(this@LogInActivity, "Login successful", Toast.LENGTH_SHORT)
                             .show()
@@ -277,6 +294,14 @@ class LogInActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please select a country code.", Toast.LENGTH_SHORT).show()
             } else {
                     val fullPhone = "$code$phone"
+                    GlobalClass.Me = UserModel(
+                        uid = userId ?: "",
+                        name = name,
+                        email = email,
+                        phoneNumber = fullPhone,
+                        profilePic = "null")
+                    Log.d("authViewModel", "User data set: ${GlobalClass.Me}")
+
                     viewModel.user_dataTO_firebase(userId!!, name, email, fullPhone, "null")
             }
 
