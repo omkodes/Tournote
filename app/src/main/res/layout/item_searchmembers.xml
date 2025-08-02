@@ -23,13 +23,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cardCornerRadius="160dp"
-            app:cardBackgroundColor="#242626"
+            app:cardBackgroundColor="@color/taskbar"
             android:layout_marginLeft="10dp"
             >
             <RelativeLayout
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@drawable/avatar_select_circle"
                 >
 
                 <ImageView

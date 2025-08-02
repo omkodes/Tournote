@@ -94,8 +94,8 @@
 
             <!-- Profile Picture Section -->
             <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 app:cardCornerRadius="260dp"
                 app:cardBackgroundColor="@color/theme"
                 android:layout_gravity="center"
@@ -103,14 +103,12 @@
                 >
                 <ImageView
                     android:id="@+id/imgProfilePhoto"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:clickable="true"
                     android:focusable="true"
-                    android:layout_margin="5dp"
                     android:src="@drawable/imageselector"
-                    android:scaleType="fitXY"
+                    android:scaleType="centerCrop"
                     />
             </androidx.cardview.widget.CardView>
 

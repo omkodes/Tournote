@@ -54,7 +54,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/llDate"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:src="@drawable/defaultgroupimage"
+            android:src="@drawable/bill"
             android:layout_marginLeft="15dp"
             />
 
@@ -75,8 +75,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Description"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textColor="@color/black"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
+
             <TextView
                 android:id="@+id/txtWhoPaidToWhom"
                 android:layout_width="wrap_content"

@@ -30,6 +30,7 @@ class RoomDBRepository(
 ) {
 
     private var groupListListener: ValueEventListener? = null
+    private val groupDetailsListeners = mutableMapOf<String, ValueEventListener>()
     private var myUid: String? = null
 
     // Call this from ViewModel to start listening
@@ -51,6 +52,8 @@ class RoomDBRepository(
                 Log.d("RoomDBRepository", "Firebase 'Groups' node changed for user: $myUid. Initiating refresh.")
                 externalScope.launch {
                     refreshGroupsFromNetwork()
+                    // After refreshing, set up listeners for each group's GroupDetails
+                    setupGroupDetailsListeners()
                 }
             }
 
@@ -63,6 +66,57 @@ class RoomDBRepository(
         Log.d("RoomDBRepository", "Firebase listener added for user groups: $myUid")
     }
 
+    // Set up listeners for GroupDetails of each group
+    private suspend fun setupGroupDetailsListeners() {
+        try {
+            val currentUid = GlobalClass.Me?.uid ?: return
+
+            val myGroupsIdList = db.getReference("users")
+                .child(currentUid)
+                .child("Groups")
+                .get()
+                .await()
+                .children
+                .mapNotNull { it.key }
+
+            // Remove listeners for groups that are no longer in the user's list
+            val groupsToRemoveListeners = groupDetailsListeners.keys.filter { it !in myGroupsIdList }
+            groupsToRemoveListeners.forEach { groupId ->
+                groupDetailsListeners[groupId]?.let { listener ->
+                    db.getReference("groups").child(groupId).child("GroupDetails").removeEventListener(listener)
+                    groupDetailsListeners.remove(groupId)
+                    Log.d("RoomDBRepository", "Removed GroupDetails listener for group: $groupId")
+                }
+            }
+
+            // Add listeners for new groups
+            myGroupsIdList.forEach { groupId ->
+                if (!groupDetailsListeners.containsKey(groupId)) {
+                    val groupDetailsRef = db.getReference("groups").child(groupId).child("GroupDetails")
+
+                    val listener = object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            Log.d("RoomDBRepository", "GroupDetails changed for group: $groupId. Initiating refresh.")
+                            externalScope.launch {
+                                refreshGroupsFromNetwork()
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.e("RoomDBRepository", "GroupDetails listener cancelled for group $groupId: ${error.message}", error.toException())
+                        }
+                    }
+
+                    groupDetailsRef.addValueEventListener(listener)
+                    groupDetailsListeners[groupId] = listener
+                    Log.d("RoomDBRepository", "Added GroupDetails listener for group: $groupId")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("RoomDBRepository", "Error setting up GroupDetails listeners: ${e.message}", e)
+        }
+    }
+
     // Call this from ViewModel to stop listening (e.g., in onCleared)
     fun stopListeningForGroupChanges() {
         myUid?.let { uid ->
@@ -72,6 +126,13 @@ class RoomDBRepository(
             }
         }
         groupListListener = null
+
+        // Remove all GroupDetails listeners
+        groupDetailsListeners.forEach { (groupId, listener) ->
+            db.getReference("groups").child(groupId).child("GroupDetails").removeEventListener(listener)
+            Log.d("RoomDBRepository", "Removed GroupDetails listener for group: $groupId")
+        }
+        groupDetailsListeners.clear()
     }
 
     suspend fun getGroups(): Flow<List<GroupData_Detailed_Model>> {
@@ -93,7 +154,7 @@ class RoomDBRepository(
     // Return NetworkResult to indicate completion status
     suspend fun refreshGroupsFromNetwork(): NetworkResult {
         return try {
-            val currentUid = GlobalClass.Me?.uid ?: run {
+            val currentUid = FirebaseAuth.getInstance().currentUser?.uid ?: run {
                 val errorMsg = "User not logged in."
                 sharedViewModel.showError(errorMsg)
                 return NetworkResult.Error(errorMsg)

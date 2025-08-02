@@ -109,6 +109,12 @@ class ExpenseSettleUpActivity : AppCompatActivity() {
             it.shareAmount - (it.partialPayment ?: 0.0)
         }
 
+        if(settleUpItems.size==0){
+            binding.txtHead.text="You are settled up."
+        }else{
+            binding.txtHead.text="Which balance do you want to settle?"
+        }
+
         settleUpAdapter.updateData(settleUpItems)
 
         // Optional: Show empty state message

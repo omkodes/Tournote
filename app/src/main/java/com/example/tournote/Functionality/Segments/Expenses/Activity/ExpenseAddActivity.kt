@@ -192,7 +192,11 @@ class ExpenseAddActivity : AppCompatActivity() {
         }
 
         binding.btnCalender.setOnClickListener {
-            binding.rellayoutCalender.visibility=View.VISIBLE
+            if(binding.rellayoutCalender.visibility==View.VISIBLE){
+                binding.rellayoutCalender.visibility=View.GONE
+            }else{
+                binding.rellayoutCalender.visibility=View.VISIBLE
+            }
         }
 
         binding.btnSplit.setOnClickListener{

@@ -8,50 +8,58 @@
     android:layout_height="match_parent"
     tools:context=".Onboarding.Activity.CustomSplashScreen"
     android:background="#D0D3C6">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    android:orientation="vertical"
-    android:id="@+id/splash_layout"
-    >
-    <ImageView
-        android:id="@+id/img1"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/css3"
-        android:background="#D0D3C6"
+        android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:src="@drawable/appnamewordart"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img1"
-        app:layout_constraintBottom_toTopOf="@id/img2"
-        />
-
-    <ImageView
-        android:id="@+id/img2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/css2"
-        android:background="#D0D3C6"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        />
+        android:id="@+id/splash_layout">
 
-</LinearLayout>
+        <!-- App Name - centered vertically -->
+        <ImageView
+            android:id="@+id/appname"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/appnamewordart"
+            android:scaleType="centerInside"
+            android:adjustViewBounds="true"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Top Image - takes available space above app name -->
+        <ImageView
+            android:id="@+id/img1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/css3"
+            android:background="#D0D3C6"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/appname" />
+
+        <!-- Bottom Image - takes available space below app name -->
+        <ImageView
+            android:id="@+id/img2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/css2"
+            android:background="#D0D3C6"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appname"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/noInternetLayout"
@@ -82,8 +90,8 @@
             android:layout_gravity="center_horizontal"
             android:text="No Internet Connection"
             android:textColor="?attr/colorOnBackground"
-            android:textSize="20sp"
-            />
+            android:textSize="20sp" />
+
         <RelativeLayout
             android:id="@+id/btnTryAgain"
             android:layout_width="match_parent"
@@ -96,8 +104,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/greenbutton"
-            >
+            android:background="@drawable/greenbutton">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -106,10 +113,9 @@
                 android:textColor="@color/black1"
                 android:layout_centerInParent="true"
                 android:textStyle="bold"
-                android:textSize="18sp"
-                />
+                android:textSize="18sp" />
         </RelativeLayout>
 
     </LinearLayout>
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -82,8 +82,8 @@
                                     android:paddingLeft="20dp"
                                     android:paddingRight="40dp"
                                     android:hint="Choose Start Point"
-                                    android:textColorHint="@color/black1"
-                                    android:textColor="@color/black1"
+                                    android:textColorHint="@color/black"
+                                    android:textColor="@color/black"
                                     android:maxLines="1"
                                     android:enabled="true"
                                     android:gravity="center_vertical"/>
@@ -119,8 +119,8 @@
                                     android:paddingLeft="20dp"
                                     android:paddingRight="40dp"
                                     android:hint="Add Stops"
-                                    android:textColorHint="@color/black1"
-                                    android:textColor="@color/black1"
+                                    android:textColorHint="@color/black"
+                                    android:textColor="@color/black"
                                     android:maxLines="1"
                                     android:enabled="true"
                                     android:gravity="center_vertical"/>
@@ -137,6 +137,7 @@
 
                         <!--end point-->
                         <RelativeLayout
+                            android:theme="@style/ThemeOverlay.MaterialComponents.Light"
                             android:id="@+id/btnDestination"
                             android:clickable="true"
                             android:focusable="true"
@@ -150,8 +151,8 @@
                                 android:paddingLeft="20dp"
                                 android:paddingRight="40dp"
                                 android:hint="Choose End Point"
-                                android:textColorHint="@color/black1"
-                                android:textColor="@color/black1"
+                                android:textColorHint="@color/black"
+                                android:textColor="@color/black"
                                 android:maxLines="1"
                                 android:enabled="true"
                                 android:gravity="center_vertical"/>

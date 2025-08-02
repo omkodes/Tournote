@@ -3,20 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:id="@+id/rootLayout"
     android:clipToPadding="false"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Functionality.Segments.ChatRoom.Fragment.ChatsFragment"
     android:background="@color/theme">
 
+
     <LinearLayout
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
         android:elevation="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:orientation="horizontal"
         android:background="@color/taskbar"
         android:gravity="center_vertical"
@@ -25,17 +27,24 @@
         >
 
 
-        <ImageView
-            android:layout_width="40dp"
-            android:id="@+id/grp_logo"
-            android:layout_height="40dp"
-            android:scaleType="fitXY"
-            android:padding="6dp"
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/taskbar"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/defaultgroupimage"
-            android:layout_gravity="center_vertical"
-            android:layout_marginVertical="4dp"
-            />
+            android:layout_marginVertical="6dp"
+            android:padding="3dp"
+            app:cardCornerRadius="6dp"
+            >
+            <ImageView
+                android:layout_width="40dp"
+                android:id="@+id/grp_logo"
+                android:layout_height="40dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/defaultgroupimage"
+                android:layout_gravity="center_vertical"
+                />
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:layout_width="0dp"
@@ -65,21 +74,20 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/inputContainer"
         android:orientation="vertical"
         >
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewChat"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
             android:clipToPadding="false"
-            android:padding="4dp"
             android:overScrollMode="ifContentScrolls"
-            android:id="@+id/recyclerViewChat"
-            />
+            android:padding="4dp"
+            android:visibility="visible" />
 
     </LinearLayout>
 
@@ -94,6 +102,7 @@
         android:paddingTop="5dp"
         android:paddingBottom="6dp"
         android:paddingEnd="12dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

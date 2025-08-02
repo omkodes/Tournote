@@ -8,15 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".Onboarding.Activity.LogInActivity"
     android:background="@color/theme">
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        android:elevation="10dp"
-        android:indeterminate="true"
-        android:indeterminateTint="@android:color/holo_blue_dark" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -238,5 +229,32 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/theme"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center"
+        >
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:visibility="visible"
+            android:layout_centerInParent="true"
+            android:elevation="10dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@android:color/holo_blue_dark" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome back...getting you in!!"
+            android:textSize="18sp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/black"
+            />
+    </LinearLayout>
 
 </RelativeLayout>

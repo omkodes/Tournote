@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:background="@drawable/selectedmembers_rvitembackgorund">
+    android:background="@color/taskbar">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
                 <RelativeLayout
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:background="@drawable/avatar_select_circle">
+                    android:background="@drawable/selectedmembers_rvitembackgorund">
 
                     <ImageView
                         android:id="@+id/imgProfilePic"

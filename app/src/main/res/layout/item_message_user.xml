@@ -24,12 +24,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="User message text"
+            android:layout_gravity="right"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:lineSpacingMultiplier="1.2" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_gravity="right"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             >

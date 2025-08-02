@@ -6,7 +6,6 @@
     android:orientation="horizontal"
     android:padding="4dp">
 
-
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,28 +14,28 @@
         android:layout_marginEnd="8dp"
         android:layout_gravity="top"
         android:layout_marginTop="4dp"
-        android:background="@drawable/avatar_select_circle"
-        >
+        android:background="@drawable/avatar_select_circle">
+
         <ImageView
+            android:id="@+id/user_avatar"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
-            android:id="@+id/user_avatar"
             android:src="@drawable/baseline_person_24"
-            android:scaleType="fitXY"
-            />
+            android:scaleType="fitXY" />
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
+        android:id="@+id/halloutBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
-        android:id="@+id/halloutBody"
         android:layout_marginEnd="64dp"
         android:layout_marginBottom="4dp"
         android:background="@drawable/bg_message_bot"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="12dp"
+        android:minWidth="120dp">
 
         <TextView
             android:id="@+id/userNameText"
@@ -56,38 +55,39 @@
             android:text="Bot message text"
             android:textColor="@color/white"
             android:textSize="16sp"
-            android:lineSpacingMultiplier="1.2" />
+            android:lineSpacingMultiplier="1.2"
+            android:layout_marginBottom="4dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            >
+            android:minWidth="100dp">
+
+            <TextView
+                android:id="@+id/edited"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="edited"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/timeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:text="12:30 PM"
                 android:textColor="#E3F2FD"
-                android:textSize="12sp" />
-            <TextView
-                android:id="@+id/edited"
-                android:visibility="visible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginTop="4dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:text="edited"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="8dp" />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 

@@ -7,19 +7,6 @@
     tools:context=".Groups.Fragment.CreateGroupFragment"
     android:background="@color/theme">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_centerInParent="true"
-        android:elevation="10dp"
-        android:indeterminate="true"
-        android:indeterminateTint="@android:color/holo_blue_dark" />
 
     <RelativeLayout
         android:id="@+id/rellayout1"
@@ -330,6 +317,34 @@
         </RelativeLayout>
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/theme"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:elevation="20dp"
+        android:visibility="gone"
+        >
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:visibility="visible"
+            android:layout_centerInParent="true"
+            android:elevation="10dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@android:color/holo_blue_dark" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Packing the essentials for your journey..."
+            android:textSize="18sp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/black"
+            />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

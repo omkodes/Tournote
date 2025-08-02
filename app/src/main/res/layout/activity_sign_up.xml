@@ -8,15 +8,7 @@
     tools:context=".Onboarding.Activity.SignUpActivity"
     android:background="@color/theme"
     android:id="@+id/main">
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:visibility="gone"
-        android:layout_centerInParent="true"
-        android:elevation="10dp"
-        android:indeterminate="true"
-        android:indeterminateTint="@android:color/holo_blue_dark" />
+
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -92,24 +84,22 @@
                     android:layout_marginTop="60dp"/>
 
                 <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
                     app:cardCornerRadius="260dp"
                     app:cardBackgroundColor="@color/theme"
                     android:layout_gravity="center"
                     android:layout_marginVertical="20dp"
                     >
+
                     <ImageView
                         android:id="@+id/imgProfilePhoto"
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:layout_gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:clickable="true"
                         android:focusable="true"
-                        android:layout_margin="5dp"
-                        android:src="@drawable/imageselector"
-                        android:scaleType="fitXY"
-                        />
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/imageselector" />
                 </androidx.cardview.widget.CardView>
 
                 <RelativeLayout
@@ -184,7 +174,7 @@
                         android:layout_width="100dp"
                         android:layout_height="60dp"
                         android:background="@drawable/textbox"
-                        android:textColor="@color/black"
+                        android:textColor="@color/black1"
                         android:textSize="18sp"
                         android:entries="@array/country_codes"
                         android:gravity="right"
@@ -393,5 +383,33 @@
         </RelativeLayout>
 
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/theme"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center"
+        >
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:visibility="visible"
+            android:layout_centerInParent="true"
+            android:elevation="10dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@android:color/holo_blue_dark" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hold tight...thrusting you in!!"
+            android:textSize="18sp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/black"
+            />
+    </LinearLayout>
 
 </RelativeLayout>

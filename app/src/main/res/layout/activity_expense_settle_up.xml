@@ -67,6 +67,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/txtHead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"

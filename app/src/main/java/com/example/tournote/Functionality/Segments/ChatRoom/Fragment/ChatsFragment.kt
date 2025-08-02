@@ -15,6 +15,9 @@ import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -117,6 +120,28 @@ class ChatsFragment : androidx.fragment.app.Fragment(), MenuActionHandler {
         return view
     }
 
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val rootLayout = view.findViewById<ConstraintLayout>(R.id.rootLayout)
+        val inputContainer = view.findViewById<LinearLayout>(R.id.inputContainer)
+
+        ViewCompat.setOnApplyWindowInsetsListener(rootLayout) { _, insets ->
+            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+
+            inputContainer.setPadding(
+                inputContainer.paddingLeft,
+                inputContainer.paddingTop,
+                inputContainer.paddingRight,
+                if (imeVisible) imeHeight else 0
+            )
+
+            WindowInsetsCompat.CONSUMED
+        }
+
+
+    }
 //    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 //        super.onViewCreated(view, savedInstanceState)
 //
