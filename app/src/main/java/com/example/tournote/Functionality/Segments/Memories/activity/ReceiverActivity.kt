@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.webkit.MimeTypeMap
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.api.services.drive.Drive
@@ -19,6 +20,7 @@ import androidx.lifecycle.Observer // Import Observer
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.Functionality.Segments.Memories.UploadWorker
@@ -252,6 +254,7 @@ class ReceiverActivity : AppCompatActivity() {
 
                         val work = OneTimeWorkRequestBuilder<UploadWorker>()
                             .setInputData(inputData)
+                            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                             .build()
 
                         WorkManager.getInstance(this@ReceiverActivity).enqueue(work)
@@ -279,7 +282,13 @@ class ReceiverActivity : AppCompatActivity() {
         return uris.mapNotNull { uri ->
             try {
                 val inputStream = contentResolver.openInputStream(uri) ?: return@mapNotNull null
-                val fileName = "shared_${System.currentTimeMillis()}.jpg" // or detect extension
+
+                // 👇 Fix: Detect MIME type and extension
+                val mimeType = contentResolver.getType(uri) ?: "application/octet-stream"
+                val extension = MimeTypeMap.getSingleton()
+                    .getExtensionFromMimeType(mimeType) ?: "bin"
+
+                val fileName = "shared_${System.currentTimeMillis()}.$extension"
                 val tempFile = File(tempDir, fileName)
 
                 FileOutputStream(tempFile).use { outputStream ->
@@ -297,6 +306,7 @@ class ReceiverActivity : AppCompatActivity() {
             }
         }
     }
+
 
 
 }

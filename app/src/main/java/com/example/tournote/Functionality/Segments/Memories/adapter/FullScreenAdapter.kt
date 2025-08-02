@@ -40,6 +40,15 @@ class FullScreenAdapter(private val items: List<PhotosData>, private val lifecyc
         private const val TYPE_VIDEO = 1
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return if (items[position].mimeType.startsWith("image/")) {
+            TYPE_IMAGE
+        } else {
+            TYPE_VIDEO
+        }
+    }
+
+
     override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == TYPE_IMAGE) {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_fullscreen_image, parent, false)

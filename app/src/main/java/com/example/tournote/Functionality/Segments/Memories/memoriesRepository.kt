@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import com.example.tournote.Functionality.Segments.Memories.data.PhotoItem
@@ -61,12 +62,8 @@ class memoriesRepository {
     ): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             for (uri in uris) {
-                val mimeType = context.contentResolver.getType(uri) ?: "application/octet-stream"
-                val fileExt = when {
-                    mimeType.startsWith("image/") -> ".jpg"
-                    mimeType.startsWith("video/") -> ".mp4"
-                    else -> ""
-                }
+                val (mimeType, fileExt) = getMimeTypeAndExtension(context, uri)
+                Log.d("UploadDebug", "Uploading: ${uri} with MIME: $mimeType and Ext: $fileExt")
 
                 val inputStream = context.contentResolver.openInputStream(uri) ?: continue
 
@@ -387,6 +384,26 @@ class memoriesRepository {
         } catch (e: Exception) {
             return@withContext Result.failure(e)
         }
+    }
+    private fun getMimeTypeAndExtension(context: Context, uri: Uri): Pair<String, String> {
+        var mimeType = context.contentResolver.getType(uri)
+
+        if (mimeType == null) {
+            // Try manual extraction via extension
+            val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
+            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.lowercase(Locale.getDefault()))
+        }
+
+        // Fallback to binary stream if still null
+        if (mimeType == null) mimeType = "application/octet-stream"
+
+        val fileExt = when {
+            mimeType.startsWith("image/") -> ".jpg"
+            mimeType.startsWith("video/") -> ".mp4"
+            else -> ".bin"
+        }
+
+        return Pair(mimeType, fileExt)
     }
 
 

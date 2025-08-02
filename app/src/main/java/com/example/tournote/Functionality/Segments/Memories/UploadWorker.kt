@@ -1,7 +1,10 @@
 package com.example.tournote.Functionality.Segments.Memories
 
+import android.Manifest.permission.FOREGROUND_SERVICE_DATA_SYNC
 import android.app.Notification
 import android.content.Context
+import android.content.pm.ServiceInfo
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
 import android.net.Uri
 import android.util.Log
 import androidx.work.CoroutineWorker
@@ -70,7 +73,7 @@ class UploadWorker(private val context: Context,workerParams: WorkerParameters):
 
     private fun createForegroundInfo(title: String): ForegroundInfo {
         val notification: Notification = NotificationUtils.createUploadNotification(context, title)
-        return ForegroundInfo(NOTIFICATION_ID, notification)
+        return ForegroundInfo(NOTIFICATION_ID, notification, FOREGROUND_SERVICE_TYPE_DATA_SYNC)
     }
 
     private fun setupDriveService() {
