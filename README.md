@@ -125,14 +125,60 @@
 
 ## 🖼️ Screenshots
 
-Add screenshots of the main screens below:
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/3981904e-eb80-4e74-9cc6-e7477fa9479d" width="250" />
+  <img src="https://github.com/user-attachments/assets/3a98d777-6eca-45da-a863-a2c086e1c992" width="250" />
+  <img src="https://github.com/user-attachments/assets/560fb1d9-f198-401d-ac48-d8f0402e15f7" width="250" />
+</p>
 
-- Group selection and onboarding
-- Chat interface
-- Expense dashboard and split screen
-- Memories gallery
-- Route planning map
-- Friend tracker map
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/33c0c1dd-2612-49b8-8900-97c11ef19398" width="250" />
+  <img src="https://github.com/user-attachments/assets/2b82beb0-8a60-49f7-bdd7-f87acc95ac9a" width="250" />
+  <img src="https://github.com/user-attachments/assets/805398fa-9049-43fa-8fb3-18918f616db1" width="250" />
+</p>
+
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/6708ff35-b52a-4b35-86c7-839004df34ca" width="250" />
+  <img src="https://github.com/user-attachments/assets/d1ccbc4b-79d7-47bc-b22c-06dbd8aba6e2" width="250" />
+  <img src="https://github.com/user-attachments/assets/3c43a3ce-fc04-4147-9b27-385dc5edd455" width="250" />
+</p>
+
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/972c629c-d070-4ef5-a0cd-3abdc50c9c8d" width="250" />
+  <img src="https://github.com/user-attachments/assets/ba428ec5-ed4c-458f-aa39-5bc149860dc7" width="250" />
+  <img src="https://github.com/user-attachments/assets/e90ed0b4-712d-4b55-87cc-92e68663a92d" width="250" />
+</p>
+
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/765a8f7a-0d39-4b54-9a10-730b3388229f" width="250" />
+  <img src="https://github.com/user-attachments/assets/f2d8458c-2770-45ce-aaf4-6dc5f2bf7679" width="250" />
+  <img src="https://github.com/user-attachments/assets/0c42152d-31f5-4b29-8255-03e8082cccd7" width="250" />
+</p>
+
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/73c0ea9b-7dea-449e-b68e-f26b12463204" width="250" />
+  <img src="https://github.com/user-attachments/assets/9fb9f0fd-39c5-4c9d-a14f-9d8903e81845" width="250" />
+  <img src="https://github.com/user-attachments/assets/727f3c0e-baea-4757-8442-d4ed56d9032e" width="250" />
+</p>
+
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/cbd7526f-cb12-4191-8347-697e784df055" width="250" />
+  <img src="https://github.com/user-attachments/assets/4ff1ae45-fe4c-4fc9-b54f-548941a77b93" width="250" />
+  <img src="https://github.com/user-attachments/assets/98aa13e1-0fe9-4d68-90a1-b275862c289b" width="250" />
+</p>
+
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/51502c16-4df1-4d33-ab33-d4acea6dfd8e" width="250" />
+  <img src="https://github.com/user-attachments/assets/c472ee51-9d49-40cd-b8a2-4f002d3eba4b" width="250" />
+  <img src="https://github.com/user-attachments/assets/819b92c8-be79-49ef-af65-9ea9a60796c9" width="250" />
+</p>
+
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/c3b45691-a0b3-4039-b9c5-b893288a23d7" width="250" />
+  <img src="https://github.com/user-attachments/assets/9805791d-7f6a-4cc0-b55c-ad0921ac6608" width="250" />
+  <img src="https://github.com/user-attachments/assets/57d628ef-56e2-4bdd-aa6a-21a5ffb455b8" width="250" />
+</p>
+
 
 ---
 
