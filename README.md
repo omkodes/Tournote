@@ -1,6 +1,6 @@
-# Tournote Android App
+# 📱 Tournote Android App
 
-**Tournote** is an all-in-one mobile app designed to make group travel seamless, collaborative, and fun. Organize groups, chat in real time, manage trip expenses, share memories, plan routes, and track your friends—all in one place.
+**Tournote** is an all-in-one mobile app designed to make group travel seamless, collaborative, and fun. 🌍 Organize groups, chat in real time, manage trip expenses, share memories, plan routes, and track your friends—all in one place.
 
 ---
 
@@ -27,49 +27,49 @@
 
 ## 🚀 Features
 
-### 1. Group Management
+### 1. 👥 Group Management
 - **Create Groups:** Start a new travel group, invite members, and assign admins.  
 - **Group Profiles:** Manage group details and view all member roles.  
 - **Owner Controls:** Assign or revoke admin privileges for group members.
 
-### 2. Real-Time Chat
+### 2. 💬 Real-Time Chat
 - **Instant Messaging:** Send and receive messages instantly within your travel group.  
 - **Socket.io Integration:** Enables low-latency communication with reliable message delivery.  
-- **Push Notifications:** Get notified of new messages via Firebase Cloud Messaging (FCM).  
+- **Push Notifications:** Get notified of new messages via Firebase Cloud Messaging (FCM). 🔔  
 - **Message History:** Securely load past conversations using REST API.
 
-### 3. Expense Management
+### 3. 💰 Expense Management
 - **Add & Split Expenses:** Record shared costs and split them equally, by percentage, or exact amounts.  
-- **Settle Debts:** Track who owes whom and mark payments as settled.  
+- **Settle Debts:** Track who owes whom and mark payments as settled. ✅  
 - **Expense Overview:** View a summary of all group expenses, breakdowns, and balances.  
-- **Auto-Detection:** Automatically detect expenses and repayments from SMS (e.g., bank alerts).  
+- **Auto-Detection:** Automatically detect expenses and repayments from SMS (e.g., bank alerts). 📱  
 - **Location Tracking:** Save the location where each transaction occurred.
 
-### 4. Memories (Photo Sharing)
+### 4. 📸 Memories (Photo Sharing)
 - **Upload Photos:** Share trip photos with your group.  
-- **Gallery View:** Browse group photos in albums or full-screen mode.  
+- **Gallery View:** Browse group photos in albums or full-screen mode. 🖼️  
 - **Background Uploads:** Uploads are handled reliably using WorkManager.  
 - **Sort Memories:** Sort photos and videos by the date taken.  
-- **Download All:** Download all media as a ZIP file.
+- **Download All:** Download all media as a ZIP file. 📦
 
-### 5. Smart Route Planner
+### 5. 🗺️ Smart Route Planner
 - **Waypoints:** Add, remove, and reorder trip stops.  
-- **Geocoding:** Get location suggestions and map each stop.  
+- **Geocoding:** Get location suggestions and map each stop. 🔍  
 - **Optimal Routing:** Calculate the shortest route covering all waypoints.  
 - **Interactive Maps:** Visualize your routes in an embedded WebView map.  
 - **Redirect to Google Maps:** Get directions for the finalized route and share it.
 
-### 6. Track Friends
-- **Live Location:** Share and view real-time locations of group members.  
+### 6. 📍 Track Friends
+- **Live Location:** Share and view real-time locations of group members. 🌐  
 - **Map View:** Display all friends on an interactive map using HTML assets.  
-- **Safety Alerts:** Send and receive safety alerts within the group.  
+- **Safety Alerts:** Send and receive safety alerts within the group. 🚨  
 - **Background Location Service:** Location tracking continues even when the app is minimized.  
 - **End Trip:** Automatically revoke location permissions at the end of a trip.
 
-### 7. Onboarding & Authentication
-- **Animated Splash & Guided Onboarding:** Welcome new users and highlight key features.  
+### 7. 🔐 Onboarding & Authentication
+- **Animated Splash & Guided Onboarding:** Welcome new users and highlight key features. ✨  
 - **Sign Up / Log In:** Secure authentication via email and password using Firebase.  
-- **Offline Support:** Friendly offline messages with retry mechanisms.
+- **Offline Support:** Friendly offline messages with retry mechanisms. 📶
 
 ---
 
@@ -91,19 +91,19 @@
 
 ## ⚡ Setup and Installation
 
-1. **Clone the repository:**
+1. **Clone the repository:** 📥
    ```bash
    git clone https://github.com/your-org/tournote.git
    ```
 
-2. **Open the project in Android Studio.**
+2. **Open the project in Android Studio.** 💻
 
-3. **Firebase Setup:**
+3. **Firebase Setup:** 🔥
    - Download your `google-services.json` file from Firebase Console and place it in the `/app` directory.
 
-4. **Sync Gradle and build the project.**
+4. **Sync Gradle and build the project.** ⚙️
 
-5. **Run the app on an emulator or Android device.**
+5. **Run the app on an emulator or Android device.** 🚀
 
 ---
 
