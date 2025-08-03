@@ -165,11 +165,16 @@ class ExpenseAddActivity : AppCompatActivity() {
             val amount = intent.getStringExtra(EXTRA_AMOUNT)
             val description = intent.getStringExtra(EXTRA_DESCRIPTION)
 
-            binding.txtAmount.setText(amount)
+            if(amount!="Unknown"){
+                binding.txtAmount.setText(amount)
+                binding.txtAmount.isEnabled = false
+            }else{
+                binding.txtAmount.isEnabled = true
+            }
+
             binding.txtDescription.setText(description)
 
             // Optional: Disable editing for amount and description if auto-detected
-            binding.txtAmount.isEnabled = false
             binding.txtDescription.isEnabled = false
             Toast.makeText(this, "Expense details pre-filled from SMS.", Toast.LENGTH_LONG).show()
         }

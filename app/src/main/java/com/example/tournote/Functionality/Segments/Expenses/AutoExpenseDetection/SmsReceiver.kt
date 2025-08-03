@@ -54,8 +54,21 @@ class SmsReceiver : BroadcastReceiver() {
     }
 
     private fun extractAmount(body: String): String? {
-        val regex = Regex("""(?:INR|Rs\.?|₹|USD|\$|£|€)\s*([\d,]+(?:\.\d{1,2})?)""", RegexOption.IGNORE_CASE)
-        val match = regex.find(body)
-        return match?.groupValues?.get(1)
+        // First try to find amount with currency prefix
+        val currencyRegex = Regex("""(?:INR|Rs\.?|₹|USD|\$|£|€)\s*([\d,]+(?:\.\d{1,2})?)""", RegexOption.IGNORE_CASE)
+        val currencyMatch = currencyRegex.find(body)
+        if (currencyMatch != null) {
+            return currencyMatch.groupValues[1]
+        }
+
+        // If no currency prefix found, look for standalone decimal numbers
+        // This regex finds numbers with 1-2 decimal places (including .0)
+        val standaloneRegex = Regex("""(?<!\d)\d+\.\d{1,2}(?!\d)""")
+        val standaloneMatch = standaloneRegex.find(body)
+        if (standaloneMatch != null) {
+            return standaloneMatch.value
+        }
+
+        return null
     }
 }
