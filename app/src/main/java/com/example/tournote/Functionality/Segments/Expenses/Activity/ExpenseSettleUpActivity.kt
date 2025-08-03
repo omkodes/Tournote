@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.tournote.Functionality.Segments.Expenses.Activity.ExpenseAddActivity.Companion.EXTRA_IS_AUTO_DETECTED
 import com.example.tournote.GlobalClass
 import com.example.tournote.R
 import com.example.tournote.databinding.ActivityExpenseSettleUpBinding
@@ -19,12 +20,15 @@ class ExpenseSettleUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityExpenseSettleUpBinding
     private lateinit var settleUpAdapter: ExpensesSettleUpAdapter
+    // Flag to check if the expense is auto-detected
+    private var isAutoDetectedExpense: Boolean = false
 
     // Register for activity result to handle RecordPaymentActivity result
     private val recordPaymentLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         // Refresh regardless of result to ensure UI consistency
+        isAutoDetectedExpense = intent.getBooleanExtra(EXTRA_IS_AUTO_DETECTED, false)
         loadSettleUpData()
 
         // Optional: Show different messages based on result
@@ -55,7 +59,11 @@ class ExpenseSettleUpActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
         binding.btnCloseActivity.setOnClickListener {
-            finish()
+            if(isAutoDetectedExpense){
+                finishAffinity()
+            }else{
+                finish()
+            }
         }
     }
 

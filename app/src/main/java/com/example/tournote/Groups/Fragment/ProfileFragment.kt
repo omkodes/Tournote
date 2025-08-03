@@ -20,8 +20,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.ReplyReceiver
-import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.SmsReceiver
+import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.Debit.ReplyReceiver
+import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.Debit.SmsDebitReceiver
+import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.SmsCreditReceiver
 import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.Activity.GroupSelectorActivity
 import com.example.tournote.Onboarding.Activity.LogInActivity
@@ -271,7 +272,8 @@ class ProfileFragment : Fragment() {
             PackageManager.COMPONENT_ENABLED_STATE_DISABLED
         }
 
-        val receivers = arrayOf(SmsReceiver::class.java, ReplyReceiver::class.java)
+        val receivers = arrayOf(SmsDebitReceiver::class.java, ReplyReceiver::class.java,
+            SmsCreditReceiver::class.java)
 
         receivers.forEach { receiverClass ->
             val componentName = ComponentName(requireContext(), receiverClass)
@@ -281,6 +283,7 @@ class ProfileFragment : Fragment() {
                 PackageManager.DONT_KILL_APP
             )
         }
+
     }
 
     // MARK: - Permission Helpers
@@ -336,6 +339,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun saveSmsWatcherPreferences(isEnabled: Boolean) {
+        GlobalClass.isSmsWatched=isEnabled
         sharedPrefs.edit()
             .putBoolean(PREF_SMS_READER_ENABLED, isEnabled)
             .apply()

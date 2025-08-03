@@ -1,6 +1,5 @@
 package com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +16,7 @@ import androidx.lifecycle.Observer // Import Observer
 import androidx.lifecycle.lifecycleScope
 import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.Functionality.Segments.Expenses.Activity.ExpenseAddActivity
+import com.example.tournote.Functionality.Segments.Expenses.Activity.ExpenseSettleUpActivity
 import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.ViewModel.GroupSelectorActivityViewModel2 // Import your ViewModel
 import com.example.tournote.Onboarding.Activity.GettingStartedActivity
@@ -54,6 +54,7 @@ class SmsGroupSelectionActivity : AppCompatActivity() {
 
         val amount = intent.getStringExtra("amount")
         val description = intent.getStringExtra("description")
+        val functionality = intent.getStringExtra("functionality")
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -93,7 +94,7 @@ class SmsGroupSelectionActivity : AppCompatActivity() {
             isGroupsDataReady = !groups.isNullOrEmpty() // Set flag if groups are available
 
             // Attempt to show dialog only if user data is loaded, groups are ready, and dialog is not already showing
-            tryShowGroupSelectionDialog(amount, description)
+            tryShowGroupSelectionDialog(amount, description,functionality)
         })
 
         // --- End of changes to observe ViewModel data ---
@@ -113,7 +114,7 @@ class SmsGroupSelectionActivity : AppCompatActivity() {
                         isUserDataLoaded = true // Set flag that user data is loaded
                         Log.d("SmsGroupSelectionActivity", "Current user (GlobalClass.Me) set: ${user.name}")
                         // Attempt to show dialog now that user data is ready
-                        tryShowGroupSelectionDialog(amount, description)
+                        tryShowGroupSelectionDialog(amount, description,functionality)
 
                     }.onFailure { e ->
                         Log.e("SmsGroupSelectionActivity", "Failed to fetch current user data: ${e.message}")
@@ -136,13 +137,13 @@ class SmsGroupSelectionActivity : AppCompatActivity() {
     }
 
     // Helper function to centralize dialog showing logic based on flags
-    private fun tryShowGroupSelectionDialog(amount: String?, description: String?) {
+    private fun tryShowGroupSelectionDialog(amount: String?, description: String?, functionality: String?) {
         if (!isDialogShowing && isUserDataLoaded && isGroupsDataReady) {
             val groups = groupSelectionViewModel.groups.value // Get the current value from LiveData
             val validGroups = groups?.filter { it.isGroupValid == true } // Filter for valid groups
 
             if (!validGroups.isNullOrEmpty()) {
-                showGroupSelectionDialogInternal(validGroups, amount, description)
+                showGroupSelectionDialogInternal(validGroups, amount, description, functionality)
                 isDialogShowing = true // Set flag to prevent re-showing
             } else {
                 Toast.makeText(this@SmsGroupSelectionActivity, "No valid groups available. Please create a valid group first.", Toast.LENGTH_LONG).show()
@@ -153,7 +154,7 @@ class SmsGroupSelectionActivity : AppCompatActivity() {
 
 
     // Renamed this method to avoid conflict with the original structure if you call it directly elsewhere
-    private fun showGroupSelectionDialogInternal(groups: List<GroupData_Detailed_Model>, amount: String?, description: String?) {
+    private fun showGroupSelectionDialogInternal(groups: List<GroupData_Detailed_Model>, amount: String?, description: String?, functionality: String?) {
         // No need for lifecycleScope.launch here, as data is already provided by observer
         // No need to set bar visibility here, as ViewModel handles it via `isLoading`
 
@@ -170,12 +171,24 @@ class SmsGroupSelectionActivity : AppCompatActivity() {
 
                 GlobalClass.selected_groupId = selectedGroupId
 
-                val intent = Intent(this@SmsGroupSelectionActivity, ExpenseAddActivity::class.java).apply {
-                    putExtra(ExpenseAddActivity.EXTRA_AMOUNT, amount)
-                    putExtra(ExpenseAddActivity.EXTRA_DESCRIPTION, description)
-                    putExtra(ExpenseAddActivity.EXTRA_IS_AUTO_DETECTED, true)
+                if(functionality=="SettlingExpense"){
+                    val intent = Intent(this@SmsGroupSelectionActivity, ExpenseAddActivity::class.java).apply {
+                        putExtra(ExpenseAddActivity.EXTRA_AMOUNT, amount)
+                        putExtra(ExpenseAddActivity.EXTRA_DESCRIPTION, description)
+                        putExtra(ExpenseAddActivity.EXTRA_IS_AUTO_DETECTED, true)
+                    }
+
+                    startActivity(intent)
+                }else{
+                    val intent = Intent(this@SmsGroupSelectionActivity, ExpenseSettleUpActivity::class.java).apply {
+                        /*putExtra(ExpenseAddActivity.EXTRA_AMOUNT, amount)
+                        putExtra(ExpenseAddActivity.EXTRA_DESCRIPTION, description)*/
+                        putExtra(ExpenseAddActivity.EXTRA_IS_AUTO_DETECTED, true)
+                    }
+
+                    startActivity(intent)
                 }
-                startActivity(intent)
+
                 finish() // Finish this activity after launching ExpenseAddActivity
                 dialog.dismiss() // Dismiss the dialog
             }

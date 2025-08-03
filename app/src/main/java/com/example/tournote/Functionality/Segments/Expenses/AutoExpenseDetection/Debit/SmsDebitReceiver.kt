@@ -1,17 +1,16 @@
-package com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection
+package com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.Debit
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.provider.Telephony
 import android.telephony.SmsMessage
 import android.util.Log
-import android.os.Handler
-import android.os.Looper
 
-
-class SmsReceiver : BroadcastReceiver() {
+class SmsDebitReceiver : BroadcastReceiver() {
 
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -29,7 +28,7 @@ class SmsReceiver : BroadcastReceiver() {
 
                 val msgBody = msg.messageBody
 
-                if (containsExpenseKeyword(msgBody)) {
+                if (containsDebitKeyword(msgBody)) {
                     val amount = extractAmount(msgBody)
                     val displayText = if (amount != null) {
                         "Expense of $amount detected from SMS"
@@ -41,14 +40,14 @@ class SmsReceiver : BroadcastReceiver() {
                     val handler = Handler(Looper.getMainLooper())
 
                     handler.postDelayed({
-                        NotificationUtils.showNotificationWithReply(context, amount ?: "Unknown amount")
+                        NotificationDebitUtils.showNotificationWithReply(context, amount ?: "Unknown amount")
                     }, 1000) // delay in milliseconds (e.g., 1000ms = 1 second)
                 }
             }
         }
     }
 
-    private fun containsExpenseKeyword(body: String): Boolean {
+    private fun containsDebitKeyword(body: String): Boolean {
         val lower = body.lowercase()
         return listOf("debited", "deducted", "txn", "payment alert", "spent", "purchased").any { lower.contains(it) }
     }
