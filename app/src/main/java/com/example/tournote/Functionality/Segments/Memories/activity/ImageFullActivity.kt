@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -27,12 +28,14 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 class ImageFullActivity : AppCompatActivity() {
     private var exoPlayer: ExoPlayer? = null
     private lateinit var driveService: Drive
     private val repository = memoriesRepository()
+    private lateinit var delete_btn: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -46,20 +49,34 @@ class ImageFullActivity : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.taskbar)
 
         val imageList = intent.getParcelableArrayListExtra<PhotosData>("imageList") ?: listOf()
-        val startIndex = intent.getIntExtra("startIndex", 0)
+        var currentIndex = intent.getIntExtra("startIndex", 0)
 
         val viewPager = findViewById<ViewPager2>(R.id.viewPager)
 
         val adapter = FullScreenAdapter(imageList, lifecycle)
         viewPager.adapter = adapter
-        viewPager.setCurrentItem(startIndex, false)
-        val delete_btn = findViewById<ImageView>(R.id.btn_delete)
+        viewPager.setCurrentItem(currentIndex, false)
+         delete_btn = findViewById<ImageView>(R.id.btn_delete)
         val btnBack = findViewById<ImageView>(R.id.buttonBack)
         val bar = findViewById<ProgressBar>(R.id.progressBar)
+        updateButtonVisibility(imageList[currentIndex])
+
+        if (FirebaseAuth.getInstance().currentUser?.uid == null) {
+            delete_btn.visibility = android.view.View.GONE
+        } else {
+            delete_btn.visibility = android.view.View.VISIBLE
+        }
 
         btnBack.setOnClickListener {
             finish()
         }
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                currentIndex = position
+                updateButtonVisibility(imageList[position])
+            }
+        })
 
         delete_btn.setOnClickListener {
             setupDriveService()
@@ -71,13 +88,13 @@ class ImageFullActivity : AppCompatActivity() {
                 dialog.dismiss()
                 bar.visibility = android.view.View.VISIBLE
                 lifecycleScope.launch {
-                    val result = repository.deleteMediaByFileId(imageList[startIndex].fileId, GlobalClass.selected_groupId!!)
+                    val result = repository.deleteMediaByFileId(imageList[currentIndex].fileId, GlobalClass.selected_groupId!!)
                     if (result.isSuccess) {
                         bar.visibility = android.view.View.GONE
                         Toast.makeText(this@ImageFullActivity, "Deleted successfully", Toast.LENGTH_SHORT).show()
 
                         val intent = Intent().apply {
-                            putExtra("deleted_position", startIndex)
+                            putExtra("deleted_position", currentIndex)
                         }
                         setResult(Activity.RESULT_OK, intent)
                         finish()
@@ -120,6 +137,14 @@ class ImageFullActivity : AppCompatActivity() {
         super.onStop()
         exoPlayer?.release()
         exoPlayer = null
+    }
+
+    private fun updateButtonVisibility(data: PhotosData) {
+        if (data.userId == FirebaseAuth.getInstance().currentUser?.uid) {
+            delete_btn.visibility = View.VISIBLE
+        } else {
+            delete_btn.visibility = View.GONE
+        }
     }
 
 }
