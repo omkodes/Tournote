@@ -144,15 +144,25 @@
         </provider>
 
         <receiver
-            android:name=".Functionality.Segments.Expenses.AutoExpenseDetection.SmsReceiver"
+            android:name=".Functionality.Segments.Expenses.AutoExpenseDetection.Debit.SmsDebitReceiver"
             android:exported="true"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+
         <receiver
-            android:name=".Functionality.Segments.Expenses.AutoExpenseDetection.ReplyReceiver"
+            android:name=".Functionality.Segments.Expenses.AutoExpenseDetection.SmsCreditReceiver"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".Functionality.Segments.Expenses.AutoExpenseDetection.Debit.ReplyReceiver"
             android:exported="true" />
     </application>
 

@@ -1,15 +1,18 @@
-package com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection
+package com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.Debit
 
-import android.app.*
+import android.R
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
-import com.example.tournote.R // Make sure R is imported
+import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.SmsGroupSelectionActivity
 
-object NotificationUtils {
+object NotificationDebitUtils {
     private const val CHANNEL_ID_DEFAULT = "expense_alert_channel"
     private const val CHANNEL_NAME_DEFAULT = "Expense Alerts (Default)"
     private const val CHANNEL_ID_PROMINENT = "prominent_expense_channel"
@@ -34,15 +37,16 @@ object NotificationUtils {
         )
 
         val action = NotificationCompat.Action.Builder(
-            android.R.drawable.ic_menu_send,
+            R.drawable.ic_menu_send,
             "Add Description",
             replyPendingIntent
         ).addRemoteInput(remoteInput).build()
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID_DEFAULT) // Use default channel
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // Use your app's icon
+            .setSmallIcon(com.example.tournote.R.drawable.ic_launcher_foreground) // Use your app's icon
             .setContentTitle("Expense of $amount Detected!")
-            .setStyle(NotificationCompat.BigTextStyle()
+            .setStyle(
+                NotificationCompat.BigTextStyle()
                 .bigText("Expense of $amount detected. Tap 'Add Description' to label it and proceed."))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .addAction(action)
@@ -59,9 +63,10 @@ object NotificationUtils {
 
         // Intent to launch SmsGroupSelectionActivity when the confirmation notification is tapped
         val launchActivityIntent = Intent(context, SmsGroupSelectionActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP // Use 'flags' property
             putExtra("amount", amount)
             putExtra("description", description)
+            putExtra("functionality", "AddingExpense")
         }
 
         val pendingIntent = PendingIntent.getActivity(
@@ -72,11 +77,12 @@ object NotificationUtils {
         )
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID_PROMINENT) // Use prominent channel
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // Use your app's icon
-            .setContentTitle("Action Required: Register Expense!")
-            .setContentText("Tap to finalize the expense of $amount for '$description' by assigning it to a group.")
-            .setStyle(NotificationCompat.BigTextStyle()
-                .bigText("An expense of $amount for '$description' has been detected."))
+            .setSmallIcon(com.example.tournote.R.drawable.ic_launcher_foreground) // Use your app's icon
+            .setContentTitle("Action Required: Register Debit!")
+            .setContentText("Tap to finalize the debit of $amount for '$description' by assigning it to a group.")
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                .bigText("An debit of $amount for '$description' has been detected."))
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .setPriority(NotificationCompat.PRIORITY_HIGH) // Highest priority
             // .setFullScreenIntent(pendingIntent, true) // Optional: Highly intrusive, use with extreme caution!
@@ -96,7 +102,7 @@ object NotificationUtils {
                 CHANNEL_ID_DEFAULT, CHANNEL_NAME_DEFAULT,
                 NotificationManager.IMPORTANCE_HIGH // High for the initial reply
             ).apply {
-                description = "Notifications for initial expense detection and reply."
+                description = "Notifications for initial debit detection and reply."
                 enableLights(true)
                 lightColor = Color.BLUE
                 // Removed: enableVibration(true)
@@ -106,13 +112,13 @@ object NotificationUtils {
         }
     }
 
-    private fun createProminentChannel(context: Context) {
+    fun createProminentChannel(context: Context?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val prominentChannel = NotificationChannel(
                 CHANNEL_ID_PROMINENT, CHANNEL_NAME_PROMINENT,
                 NotificationManager.IMPORTANCE_HIGH // MAX for the most prominent
             ).apply {
-                description = "Urgent notifications requiring user action for expense registration."
+                description = "Urgent notifications requiring user action for debit registration."
                 enableLights(true)
                 lightColor = Color.RED // Different color for prominent
                 // Removed: enableVibration(true)
@@ -120,7 +126,7 @@ object NotificationUtils {
                 // If you want it to make noise even in Do Not Disturb mode for very critical cases
                 // setBypassDnd(true)
             }
-            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val manager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(prominentChannel)
         }
     }

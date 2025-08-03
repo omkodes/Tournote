@@ -1,12 +1,12 @@
-package com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection
+package com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.Debit
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.core.app.RemoteInput
 import android.util.Log
 import android.widget.Toast
+import androidx.core.app.RemoteInput
 
 class ReplyReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -21,7 +21,7 @@ class ReplyReceiver : BroadcastReceiver() {
             Log.d("ReplyReceiver", "User entered: $description for $amount")
 
             // Now show the confirmation notification, which will launch the activity on tap
-            NotificationUtils.showConfirmation(context, amount, description)
+            NotificationDebitUtils.showConfirmation(context, amount, description)
 
             // DO NOT launch SmsGroupSelectionActivity directly from here.
             // It will be launched when the user taps the confirmation notification.
@@ -29,7 +29,7 @@ class ReplyReceiver : BroadcastReceiver() {
             // Handle case where description is empty, maybe re-show the original notification or a different message
             Toast.makeText(context, "Description cannot be empty.", Toast.LENGTH_SHORT).show()
             // Optionally, re-show the reply notification or inform the user
-            NotificationUtils.showNotificationWithReply(context, amount) // Re-show if description is mandatory
+            NotificationDebitUtils.showNotificationWithReply(context, amount) // Re-show if description is mandatory
         }
     }
 }
