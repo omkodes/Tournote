@@ -1,7 +1,10 @@
 package com.example.tournote.Groups.Activity
 
+import android.Manifest
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -18,6 +21,12 @@ import com.example.tournote.Onboarding.Activity.LogInActivity
 import com.example.tournote.Onboarding.ViewModel.authViewModel
 import com.example.tournote.R
 import com.example.tournote.databinding.ActivityGroupSelectorBinding
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 
 
 class GroupSelectorActivity : AppCompatActivity() {
@@ -91,6 +100,8 @@ class GroupSelectorActivity : AppCompatActivity() {
         binding.btnAcc.setOnClickListener {
             viewPager.setCurrentItem(2, false)
         }
+
+        askNotificationPermission()
         /*binding.signOutButton.setOnClickListener {
             viewModel.signOut()
         }*/
@@ -154,4 +165,32 @@ class GroupSelectorActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Dexter.withContext(this)
+                .withPermission(Manifest.permission.POST_NOTIFICATIONS)
+                .withListener(object : PermissionListener {
+                    override fun onPermissionGranted(response: PermissionGrantedResponse) {
+                        // Proceed with showing notifications
+                    }
+
+                    override fun onPermissionDenied(response: PermissionDeniedResponse) {
+                        Toast.makeText(applicationContext, "Notification Permission Denied", Toast.LENGTH_SHORT).show()
+                        // You may want to show settings dialog
+                    }
+
+                    override fun onPermissionRationaleShouldBeShown(
+                        permission: PermissionRequest,
+                        token: PermissionToken
+                    ) {
+                        token.continuePermissionRequest()
+                    }
+                }).check()
+        } else {
+            // No need to ask for permission below Android 13
+            Log.d("GroupSelectorActivity", "Notification permission not required for Android versions below 13")
+        }
+    }
+
 }
