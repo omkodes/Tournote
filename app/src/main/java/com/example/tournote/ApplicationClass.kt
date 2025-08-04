@@ -7,6 +7,7 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.cloudinary.android.MediaManager
+import com.example.tournote.Groups.ThemeManager
 import com.example.tournote.R
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
@@ -45,7 +46,7 @@ class ApplicationClass : Application() {
 
         // Create notification channels
         createNotificationChannels()
-
+        ThemeManager.applyTheme(this)
 
 
         // IMPORTANT: Perform asynchronous initialization using coroutines
