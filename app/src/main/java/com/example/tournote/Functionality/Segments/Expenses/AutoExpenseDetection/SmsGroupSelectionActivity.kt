@@ -172,17 +172,17 @@ class SmsGroupSelectionActivity : AppCompatActivity() {
                 GlobalClass.selected_groupId = selectedGroupId
 
                 if(functionality=="SettlingExpense"){
-                    val intent = Intent(this@SmsGroupSelectionActivity, ExpenseAddActivity::class.java).apply {
-                        putExtra(ExpenseAddActivity.EXTRA_AMOUNT, amount)
-                        putExtra(ExpenseAddActivity.EXTRA_DESCRIPTION, description)
+                    val intent = Intent(this@SmsGroupSelectionActivity, ExpenseSettleUpActivity::class.java).apply {
+                        /*putExtra(ExpenseAddActivity.EXTRA_AMOUNT, amount)
+                        putExtra(ExpenseAddActivity.EXTRA_DESCRIPTION, description)*/
                         putExtra(ExpenseAddActivity.EXTRA_IS_AUTO_DETECTED, true)
                     }
 
                     startActivity(intent)
                 }else{
-                    val intent = Intent(this@SmsGroupSelectionActivity, ExpenseSettleUpActivity::class.java).apply {
-                        /*putExtra(ExpenseAddActivity.EXTRA_AMOUNT, amount)
-                        putExtra(ExpenseAddActivity.EXTRA_DESCRIPTION, description)*/
+                    val intent = Intent(this@SmsGroupSelectionActivity, ExpenseAddActivity::class.java).apply {
+                        putExtra(ExpenseAddActivity.EXTRA_AMOUNT, amount)
+                        putExtra(ExpenseAddActivity.EXTRA_DESCRIPTION, description)
                         putExtra(ExpenseAddActivity.EXTRA_IS_AUTO_DETECTED, true)
                     }
 
