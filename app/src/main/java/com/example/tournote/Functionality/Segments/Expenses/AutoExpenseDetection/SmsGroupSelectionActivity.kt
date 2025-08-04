@@ -174,6 +174,10 @@ class SmsGroupSelectionActivity : AppCompatActivity() {
 
                 GlobalClass.selected_groupId = selectedGroupId
 
+                if(GlobalClass.GroupDetails_Everything==null && selectedGroupId != null) {
+                    GlobalClass.GroupDetails_Everything=groups.find { it.groupID == selectedGroupId }
+                }
+
                 if(functionality=="SettlingExpense"){
                     bar.visibility = View.VISIBLE
                     lifecycleScope.launch {
@@ -200,7 +204,6 @@ class SmsGroupSelectionActivity : AppCompatActivity() {
                         putExtra(ExpenseAddActivity.EXTRA_DESCRIPTION, description)
                         putExtra(ExpenseAddActivity.EXTRA_IS_AUTO_DETECTED, true)
                     }
-
                     startActivity(intent)
                 }
 
