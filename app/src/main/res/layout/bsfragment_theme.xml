@@ -33,8 +33,22 @@
         android:clickable="true"
         android:id="@+id/dark_theme"
         android:textStyle="bold"
-        android:layout_marginBottom="10dp"
         android:text="Dark Theme"
+        android:gravity="center"
+        android:foreground="?attr/selectableItemBackground" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:textColor="@color/text_primary"
+        android:textSize="18sp"
+        android:padding="15dp"
+        android:clickable="true"
+        android:id="@+id/default_theme"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"
+        android:text="System Theme"
         android:gravity="center"
         android:foreground="?attr/selectableItemBackground" />
 

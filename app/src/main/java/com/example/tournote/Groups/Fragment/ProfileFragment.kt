@@ -29,6 +29,7 @@ import com.example.tournote.Onboarding.Activity.LogInActivity
 import com.example.tournote.Onboarding.ViewModel.authViewModel
 import com.example.tournote.R
 import com.example.tournote.Functionality.Segments.TrackFriends.Services.LocationTrackingService
+import com.example.tournote.Groups.ThemeManager
 import com.example.tournote.Profile.UpdateProfileActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.database.DatabaseReference
@@ -450,25 +451,58 @@ class ProfileFragment : Fragment() {
     }
 
     fun showDialogTheme() {
-        status_Dialog = BottomSheetDialog(requireContext())
+        val status_Dialog = BottomSheetDialog(requireContext())
         status_Dialog.setContentView(R.layout.bsfragment_theme)
         status_Dialog.setCancelable(true)
         status_Dialog.setCanceledOnTouchOutside(true)
-
         status_Dialog.show()
+
         val light = status_Dialog.findViewById<TextView>(R.id.light_theme)
         val dark = status_Dialog.findViewById<TextView>(R.id.dark_theme)
+        val system = status_Dialog.findViewById<TextView>(R.id.default_theme)
+
+        val currentTheme = requireContext()
+            .getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
+            .getInt("app_theme", ThemeManager.SYSTEM)
+
+        // Reset all drawables first
+        val clearIcon: () -> Unit = {
+            light?.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+            dark?.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+            system?.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+        }
+
+        val setCheck = { view: TextView? ->
+            view?.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.tick, 0)
+        }
+
+        clearIcon()
+        when (currentTheme) {
+            ThemeManager.LIGHT -> setCheck(light)
+            ThemeManager.DARK -> setCheck(dark)
+            ThemeManager.SYSTEM -> setCheck(system)
+        }
 
         light?.setOnClickListener {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            ThemeManager.saveTheme(requireContext(), ThemeManager.LIGHT)
+            AppCompatDelegate.setDefaultNightMode(ThemeManager.LIGHT)
             status_Dialog.dismiss()
         }
+
         dark?.setOnClickListener {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            ThemeManager.saveTheme(requireContext(), ThemeManager.DARK)
+            AppCompatDelegate.setDefaultNightMode(ThemeManager.DARK)
             status_Dialog.dismiss()
         }
 
-
+        system?.setOnClickListener {
+            ThemeManager.saveTheme(requireContext(), ThemeManager.SYSTEM)
+            AppCompatDelegate.setDefaultNightMode(ThemeManager.SYSTEM)
+            status_Dialog.dismiss()
+        }
     }
+
+
+
 
 }
