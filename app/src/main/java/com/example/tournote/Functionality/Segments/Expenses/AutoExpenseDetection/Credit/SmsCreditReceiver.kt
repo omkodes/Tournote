@@ -1,15 +1,12 @@
-package com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection
+package com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.Credit
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.provider.Telephony
 import android.telephony.SmsMessage
 import android.util.Log
-import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.Debit.NotificationDebitUtils
 
 
 class SmsCreditReceiver : BroadcastReceiver() {

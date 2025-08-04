@@ -125,7 +125,7 @@
                     <ImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:src="@drawable/bill"
+                        android:src="@drawable/expense_bill"
                         android:layout_centerInParent="true"
                         />
                 </RelativeLayout>

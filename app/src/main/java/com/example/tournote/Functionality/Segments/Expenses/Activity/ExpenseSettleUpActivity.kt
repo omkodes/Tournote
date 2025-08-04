@@ -90,7 +90,9 @@ class ExpenseSettleUpActivity : AppCompatActivity() {
         // Filter expenses paid by the current user
         GlobalClass.expenses.filter { it.paidBy == currentUserId }
             .forEach { expense ->
-                expense.splitMembers?.forEach { memberShare ->
+                expense.splitMembers?.filter { memberShare ->
+                    memberShare.memberUid != GlobalClass.Me!!.uid
+                }?.forEach { memberShare ->
                     // Only include members who have an outstanding balance (not fully paid)
                     val remainingAmount = memberShare.shareAmount - (memberShare.partialPayment ?: 0.0)
 
@@ -111,6 +113,7 @@ class ExpenseSettleUpActivity : AppCompatActivity() {
                     }
                 }
             }
+
 
         // Sort by remaining amount (highest first) for better UX
         settleUpItems.sortByDescending {

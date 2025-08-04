@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.Functionality.Segments.Expenses.Activity.ExpenseAddActivity
 import com.example.tournote.Functionality.Segments.Expenses.Activity.ExpenseSettleUpActivity
+import com.example.tournote.Functionality.Segments.Expenses.Repository.ExpensesRepository
 import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.ViewModel.GroupSelectorActivityViewModel2 // Import your ViewModel
 import com.example.tournote.Onboarding.Activity.GettingStartedActivity
@@ -40,6 +41,8 @@ class SmsGroupSelectionActivity : AppCompatActivity() {
 
     private lateinit var bar: ProgressBar
     private var selectedGroup: String = ""
+
+    private val expensesRepository = ExpensesRepository()
 
     // Flags to manage dialog display to ensure it shows only once when data is ready
     private var isUserDataLoaded = false
@@ -172,12 +175,24 @@ class SmsGroupSelectionActivity : AppCompatActivity() {
                 GlobalClass.selected_groupId = selectedGroupId
 
                 if(functionality=="SettlingExpense"){
+                    bar.visibility = View.VISIBLE
+                    lifecycleScope.launch {
+                        if (GlobalClass.expenses.isEmpty() || selectedGroup == null) {
+                            try {
+                                // Fetch expenses from repository only if empty or group not selected
+                                expensesRepository.getAllExpenseAsAList() // This updates GlobalClass.expenses
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                // Handle error, e.g., show a Toast message
+                            }
+                        }
+                    }
                     val intent = Intent(this@SmsGroupSelectionActivity, ExpenseSettleUpActivity::class.java).apply {
                         /*putExtra(ExpenseAddActivity.EXTRA_AMOUNT, amount)
                         putExtra(ExpenseAddActivity.EXTRA_DESCRIPTION, description)*/
                         putExtra(ExpenseAddActivity.EXTRA_IS_AUTO_DETECTED, true)
                     }
-
+                    bar.visibility=View.GONE
                     startActivity(intent)
                 }else{
                     val intent = Intent(this@SmsGroupSelectionActivity, ExpenseAddActivity::class.java).apply {

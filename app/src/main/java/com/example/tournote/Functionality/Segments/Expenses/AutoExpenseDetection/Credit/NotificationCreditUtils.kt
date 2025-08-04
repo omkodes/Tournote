@@ -1,19 +1,22 @@
-package com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection
+package com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.Credit
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.Debit.NotificationDebitUtils
+import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.SmsGroupSelectionActivity
+import com.example.tournote.R
 
 object NotificationCreditUtils {
     private const val CHANNEL_ID_PROMINENT = "prominent_expense_channel"
     private const val CHANNEL_NAME_PROMINENT = "Urgent Expense Actions"
 
-    fun showConfirmation(context: android.content.Context?, amount: String){
+    fun showConfirmation(context: Context?, amount: String){
         NotificationDebitUtils.createProminentChannel(context) // Ensure the prominent channel exists
 
         // Intent to launch SmsGroupSelectionActivity when the confirmation notification is tapped
@@ -33,7 +36,7 @@ object NotificationCreditUtils {
         val notification = NotificationCompat.Builder(context,
             CHANNEL_ID_PROMINENT
         ) // Use prominent channel
-            .setSmallIcon(com.example.tournote.R.drawable.ic_launcher_foreground) // Use your app's icon
+            .setSmallIcon(R.drawable.ic_launcher_foreground) // Use your app's icon
             .setContentTitle("Action Required: Register Credit!")
             .setContentText("Tap to assign the credit of $amount to previous expenses.")
             .setStyle(
@@ -48,11 +51,11 @@ object NotificationCreditUtils {
             // Removed: .setVibrate(longArrayOf(1000, 1000, 1000, 1000))
             .build()
 
-        val manager = context?.getSystemService(android.content.Context.NOTIFICATION_SERVICE) as NotificationManager
+        val manager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.notify(102, notification)
     }
 
-    fun createProminentChannel(context: android.content.Context) {
+    fun createProminentChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val prominentChannel = NotificationChannel(
                 CHANNEL_ID_PROMINENT, CHANNEL_NAME_PROMINENT,
@@ -66,7 +69,7 @@ object NotificationCreditUtils {
                 // If you want it to make noise even in Do Not Disturb mode for very critical cases
                 // setBypassDnd(true)
             }
-            val manager = context.getSystemService(android.content.Context.NOTIFICATION_SERVICE) as NotificationManager
+            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(prominentChannel)
         }
     }

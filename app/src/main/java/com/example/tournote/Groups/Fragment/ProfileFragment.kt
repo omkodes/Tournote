@@ -22,7 +22,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.Debit.ReplyReceiver
 import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.Debit.SmsDebitReceiver
-import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.SmsCreditReceiver
+import com.example.tournote.Functionality.Segments.Expenses.AutoExpenseDetection.Credit.SmsCreditReceiver
 import com.example.tournote.GlobalClass
 import com.example.tournote.Groups.Activity.GroupSelectorActivity
 import com.example.tournote.Onboarding.Activity.LogInActivity

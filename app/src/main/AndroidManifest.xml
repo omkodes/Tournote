@@ -153,7 +153,7 @@
         </receiver>
 
         <receiver
-            android:name=".Functionality.Segments.Expenses.AutoExpenseDetection.SmsCreditReceiver"
+            android:name=".Functionality.Segments.Expenses.AutoExpenseDetection.Credit.SmsCreditReceiver"
             android:exported="true"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
