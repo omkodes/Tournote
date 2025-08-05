@@ -130,6 +130,7 @@
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:focusable="true"
+                    android:id="@+id/forgot_password"
                     android:layout_gravity="right"
                     android:text="Forgot Password ?"
                     android:textColor="@color/black"

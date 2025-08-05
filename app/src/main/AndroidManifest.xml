@@ -33,6 +33,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Onboarding.Activity.ForgotPassword"
+            android:exported="false" />
+        <activity
             android:name=".Onboarding.Activity.NoInternetActivity"
             android:exported="false" />
 
@@ -45,8 +48,6 @@
             android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
-
-
 
         <activity
             android:name=".Profile.UpdateProfileActivity"
@@ -151,7 +152,6 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".Functionality.Segments.Expenses.AutoExpenseDetection.Credit.SmsCreditReceiver"
             android:exported="true"
@@ -160,7 +160,6 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".Functionality.Segments.Expenses.AutoExpenseDetection.Debit.ReplyReceiver"
             android:exported="true" />

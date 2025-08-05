@@ -1,8 +1,12 @@
 package com.example.tournote.Onboarding.ViewModel
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.os.bundleOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +16,7 @@ import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.GlobalClass
+import com.example.tournote.Onboarding.Activity.LogInActivity
 import com.example.tournote.Onboarding.Repository.authRepository
 import com.example.tournote.UserModel
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -202,18 +207,24 @@ class authViewModel: ViewModel() {
 
     }
 
-    fun forgot (email:String) {
+    fun forgot(email: String) {
+        Log.d("authViewModel", "Forgot password for email: $email")
         viewModelScope.launch {
             val result = repo.forgot_pass(email)
-            if (result.isSuccessful) {
+            if (result.isSuccess) {
                 _toastmsg.value = "Password reset email sent"
-                _navigateToLogin.value= true
+                _navigateToLogin.value = true
             } else {
-                _toastmsg.value = result.exception?.message ?: "Failed to send password reset email"
+                val error = result.exceptionOrNull()
+                _toastmsg.value = error?.message ?: "Failed to send password reset email"
+                Log.d("authViewModel", "Exception: ${error?.message}")
                 _navigateToLogin.value = false
             }
         }
     }
+
+
+
 
     fun saveFCM(userId: String) {
         viewModelScope.launch {

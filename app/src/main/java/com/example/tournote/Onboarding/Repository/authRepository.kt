@@ -22,6 +22,8 @@ import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class authRepository {
     val firebaseAuth = FirebaseAuth.getInstance()
@@ -65,9 +67,16 @@ class authRepository {
         }
     }
 
-    suspend fun forgot_pass(email: String): Task<Void?> {
-        return firebaseAuth.sendPasswordResetEmail(email)
+    suspend fun forgot_pass(email: String): Result<Unit> {
+        return try {
+            FirebaseAuth.getInstance().sendPasswordResetEmail(email).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
+
+
 
     suspend fun signOut(): Result<String> {
         return try {

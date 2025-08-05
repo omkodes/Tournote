@@ -97,6 +97,10 @@ class LogInActivity : AppCompatActivity() {
             binding.txtPass.setSelection(binding.txtPass.text?.length ?: 0)
         }
 
+        binding.forgotPassword.setOnClickListener {
+            redirectToActivity(ForgotPassword::class.java)
+        }
+
         binding.txtSignup.setOnClickListener {
             redirectToActivity(SignUpActivity::class.java)
         }
