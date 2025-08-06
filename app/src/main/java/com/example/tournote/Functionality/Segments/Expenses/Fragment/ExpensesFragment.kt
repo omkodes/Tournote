@@ -132,7 +132,8 @@ class ExpensesFragment : Fragment() {
     }
 
     private fun fetchAndDisplayExpenses() {
-        lifecycleScope.launch {
+        if (_binding == null) return
+        viewLifecycleOwner.lifecycleScope.launch {
             if (GlobalClass.expenses.isEmpty() || GlobalClass.selected_groupId == null) {
                 try {
                     // Fetch expenses from repository only if empty or group not selected
@@ -413,7 +414,8 @@ class ExpensesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // Ensure data is fresh when returning to the fragment
-        refreshExpensesList()
+        if (_binding != null) {
+            refreshExpensesList()
+        }
     }
 }
