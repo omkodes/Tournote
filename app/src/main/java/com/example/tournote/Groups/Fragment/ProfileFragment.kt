@@ -53,6 +53,14 @@ class ProfileFragment : Fragment() {
         const val PREF_NAME = "MY_SETTING"
         const val PREF_LOCATION_TRACKING_ENABLED = "location_tracking_enabled"
         const val PREF_SMS_READER_ENABLED = "sms_enabled"
+
+        val PREF_UID = "u_id"
+        val PREF_UEMAIL = "u_email"
+        val PREF_UNAME = "u_name"
+        val PREF_UPHONE = "u_phone"
+        val PREF_UPROFILEPIC = "u_profilepic"
+
+
         const val SMS_PERMISSION_CODE = 101
 
         val LOCATION_PERMISSIONS = arrayOf(
@@ -121,6 +129,16 @@ class ProfileFragment : Fragment() {
 
     private fun setupClickListeners(view: View) {
         view.findViewById<RelativeLayout>(R.id.sign_out_button).setOnClickListener {
+            sharedPrefs = requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+
+            sharedPrefs.edit()
+                .putString(PREF_UID,"null")
+                .putString(PREF_UEMAIL,"null")
+                .putString(PREF_UNAME,"null")
+                .putString(PREF_UPHONE,"null")
+                .putString(PREF_UPROFILEPIC,"null")
+                .apply()
+
             viewModel.signOut()
         }
 
