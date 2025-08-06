@@ -49,6 +49,14 @@ class LogInActivity : AppCompatActivity() {
     val repo1 = FirebaseRTDBRepository()
     private lateinit var googleSignInClient: GoogleSignInClient
 
+    private lateinit var sharedPrefs: SharedPreferences
+    val PREF_NAME = "MY_SETTING"
+    val PREF_UID = "u_id"
+    val PREF_UEMAIL = "u_email"
+    val PREF_UNAME = "u_name"
+    val PREF_UPHONE = "u_phone"
+    val PREF_UPROFILEPIC = "u_profilepic"
+
     private val launcher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -179,6 +187,7 @@ class LogInActivity : AppCompatActivity() {
                         viewModel.isLoading.value = false
                         Toast.makeText(this@LogInActivity, "Login successful", Toast.LENGTH_SHORT)
                             .show()
+                        saveUserToSharedPreff((GlobalClass.Me)!!)
                         val intent = Intent(this@LogInActivity, GroupSelectorActivity::class.java)
                         intent.flags =
                             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -222,6 +231,7 @@ class LogInActivity : AppCompatActivity() {
 
         viewModel.navigateToMain.observe(this) { shouldNavigate ->
             if (shouldNavigate) {
+                saveUserToSharedPreff((GlobalClass.Me)!!)
                 val intent = Intent(this, GroupSelectorActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
@@ -231,6 +241,20 @@ class LogInActivity : AppCompatActivity() {
         }
 
     }
+
+    fun saveUserToSharedPreff(user : UserModel){
+        sharedPrefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+
+        sharedPrefs.edit()
+            .putString(PREF_UID,user.uid)
+            .putString(PREF_UEMAIL,user.email)
+            .putString(PREF_UNAME,user.name)
+            .putString(PREF_UPHONE,user.phoneNumber)
+            .putString(PREF_UPROFILEPIC,user.profilePic)
+            .apply()
+    }
+
+
     fun phone_Dialog(name: String, email: String, userId: String?) {
         phone_dialog = BottomSheetDialog(this)
         phone_dialog.setContentView(R.layout.bsfragment_phone)

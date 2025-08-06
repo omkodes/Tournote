@@ -20,6 +20,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.tournote.GlobalClass
@@ -46,6 +47,16 @@ class SignUpActivity : AppCompatActivity() {
     private var selectedImageUri: Uri? = null
     private var isPasswordVisible = false
     private var isReEnterPasswordVisible = false
+
+    private lateinit var sharedPrefs: SharedPreferences
+    val PREF_NAME = "MY_SETTING"
+    val PREF_UID = "u_id"
+    val PREF_UEMAIL = "u_email"
+    val PREF_UNAME = "u_name"
+    val PREF_UPHONE = "u_phone"
+    val PREF_UPROFILEPIC = "u_profilepic"
+
+
 
     private val launcher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -238,6 +249,18 @@ class SignUpActivity : AppCompatActivity() {
         finish()
     }
 
+    fun saveUserToSharedPreff(user : UserModel){
+        sharedPrefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+
+        sharedPrefs.edit()
+            .putString(PREF_UID,user.uid)
+            .putString(PREF_UEMAIL,user.email)
+            .putString(PREF_UNAME,user.name)
+            .putString(PREF_UPHONE,user.phoneNumber)
+            .putString(PREF_UPROFILEPIC,user.profilePic)
+            .apply()
+    }
+
     private fun observeModel() {
         viewModel.googleResponse.observe(this) { user ->
             if (user != null) {
@@ -286,6 +309,7 @@ class SignUpActivity : AppCompatActivity() {
         }
         viewModel.navigateToMain.observe(this) { shouldNavigate ->
             if (shouldNavigate) {
+                saveUserToSharedPreff((GlobalClass.Me)!!)
                 val intent = Intent(this, GroupSelectorActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)

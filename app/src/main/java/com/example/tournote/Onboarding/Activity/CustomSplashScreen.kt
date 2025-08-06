@@ -26,13 +26,20 @@ import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.launch
 
 class CustomSplashScreen : AppCompatActivity() {
-    private val authViewModel: authViewModel by viewModels()
+    //private val authViewModel: authViewModel by viewModels()
     private val viewModel: GroupSelectorActivityViewModel2 by viewModels()
     private val repo = FirebaseRTDBRepository()
 
     private val fixedSplashDurationForGettingStarted = 5000L
+    private val fixedSplashDurationForGroupSelectorActivity = 3000L
     private val PREF_LOCATION_TRACKING_ENABLED = "location_tracking_enabled"
     private val PREF_SMS_READER_ENAMBELD = "sms_enabled"
+
+    val PREF_UID = "u_id"
+    val PREF_UEMAIL = "u_email"
+    val PREF_UNAME = "u_name"
+    val PREF_UPHONE = "u_phone"
+    val PREF_UPROFILEPIC = "u_profilepic"
 
     private var hasRedirected = false
 
@@ -60,7 +67,7 @@ class CustomSplashScreen : AppCompatActivity() {
         GlobalClass.isTracking = loadLocationTrackingPreference()
         GlobalClass.isSmsWatched = loadSmsWatcherPreference()
 
-        if (authViewModel.repo.getuser() != null) {
+        /*if (authViewModel.repo.getuser() != null) {
             val email = authViewModel.repo.getuser()
             if (email != null) {
                 lifecycleScope.launch {
@@ -81,7 +88,15 @@ class CustomSplashScreen : AppCompatActivity() {
         } else {
             Log.d("CustomSplashScreen", "No user found, redirecting to GettingStartedActivity.")
             redirectToActivityWithDelay(GettingStartedActivity::class.java, fixedSplashDurationForGettingStarted)
+        }*/
+
+        GlobalClass.Me=loadUserDataFromPreference()
+        if(GlobalClass.Me?.uid!="null"){
+            redirectToActivityWithDelay(GroupSelectorActivity::class.java,fixedSplashDurationForGroupSelectorActivity)
+        }else{
+            redirectToActivityWithDelay(GettingStartedActivity::class.java, fixedSplashDurationForGettingStarted)
         }
+
     }
 
     private fun redirectToActivity(activityClass: Class<*>) {
@@ -102,6 +117,17 @@ class CustomSplashScreen : AppCompatActivity() {
         }, delay)
     }
 
+    private fun loadUserDataFromPreference(): UserModel{
+        val prefs = getSharedPreferences("MY_SETTING", MODE_PRIVATE)
+        val user = UserModel(
+            uid = prefs.getString(PREF_UID, "null")?:"null",
+            email = prefs.getString(PREF_UEMAIL, "null")?:"null",
+            name = prefs.getString(PREF_UNAME, "null")?:"null",
+            phoneNumber = prefs.getString(PREF_UPHONE, "null")?:"null",
+            profilePic =  prefs.getString(PREF_UPROFILEPIC, "null")?:"null"
+        )
+        return user
+    }
     private fun loadLocationTrackingPreference(): Boolean {
         val prefs = getSharedPreferences("MY_SETTING", MODE_PRIVATE)
         return prefs.getBoolean(PREF_LOCATION_TRACKING_ENABLED, false)
