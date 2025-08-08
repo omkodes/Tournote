@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@color/theme">
 
+
     <RelativeLayout
         android:id="@+id/btnRedirectToGoogleMaps"
         android:layout_width="match_parent"
@@ -45,6 +46,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Share google maps route"
+            android:textColor="@color/black"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/btnPublish"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:paddingRight="40dp"
+        android:paddingLeft="40dp"
+        android:clickable="true"
+        android:visibility="gone"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:focusable="true"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Publish route"
             android:textColor="@color/black"
             android:layout_centerVertical="true"
             android:textStyle="bold"

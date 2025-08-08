@@ -126,7 +126,7 @@
                         android:id="@+id/imgexpenseCategory"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-										    android:src="@drawable/expense_other"
+                        android:src="@drawable/expense_other"
                         android:layout_centerInParent="true"
                         />
                 </RelativeLayout>

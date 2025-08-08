@@ -24,11 +24,14 @@ import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.tournote.Database.RemoteDatabase.FirebaseRTDBRepository
 import com.example.tournote.Functionality.Segments.SmartRoutePlanner.Adapter.GeocodingResultsAdapter
 import com.example.tournote.Functionality.Segments.SmartRoutePlanner.DataClass.GeocodingResultsDataClass
 import com.example.tournote.Functionality.Segments.SmartRoutePlanner.Adapter.RoutePointsAdapter
 import com.example.tournote.Functionality.Segments.SmartRoutePlanner.DataClass.RoutePointDataClass
+import com.example.tournote.GlobalClass
 import com.example.tournote.R
 import com.example.tournote.databinding.FragmentSmartRoutePlannerBinding
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -55,10 +58,12 @@ class SmartRoutePlannerFragment: Fragment() {
     private lateinit var webView: WebView
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    private val fbrtbRepo = FirebaseRTDBRepository()
+
     private val LOCATION_PERMISSION_REQUEST_CODE = 100
 
     // New: List to hold all route points (start, stops, end)
-    private val fullRoutePoints = mutableListOf<RoutePointDataClass>()
+    private var fullRoutePoints = mutableListOf<RoutePointDataClass>()
     private lateinit var routePointsAdapter: RoutePointsAdapter
 
     // Search related
@@ -96,58 +101,7 @@ class SmartRoutePlannerFragment: Fragment() {
         // Initialize location client
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        // Initialize fullRoutePoints with default start and end points
-        if (fullRoutePoints.isEmpty()) {
-            // Try to fetch current location
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                    if (location != null) {
-                        fullRoutePoints.add(
-                            RoutePointDataClass(
-                                "Current Location",
-                                location.latitude,
-                                location.longitude,
-                                isStartPoint = true
-                            )
-                        )
-                        updateRoutePointsUI()
-                    } else {
-                        // Fallback: prompt user or show placeholder
-                        fullRoutePoints.add(
-                            RoutePointDataClass(
-                                "Set Start Point",
-                                0.0,
-                                0.0,
-                                isStartPoint = true
-                            )
-                        )
-                    }
-                }
-            } else {
-                // Request permission or show placeholder
-                fullRoutePoints.add(
-                    RoutePointDataClass(
-                        "Set Start Point",
-                        0.0,
-                        0.0,
-                        isStartPoint = true
-                    )
-                )
-            }
-            // Add a placeholder for the end point if the list is empty or only has a start point
-            if (fullRoutePoints.size == 1 && fullRoutePoints.first().isStartPoint) {
-                fullRoutePoints.add(
-                    RoutePointDataClass(
-                        "Set Destination",
-                        0.0,
-                        0.0,
-                        isEndPoint = true
-                    )
-                )
-            }
-        }
-
-        // Setup WebView
+        // Setup WebView first
         setupWebView()
 
         // Setup RecyclerView for search results
@@ -162,11 +116,112 @@ class SmartRoutePlannerFragment: Fragment() {
         // Setup button click listeners
         setupButtons()
 
-        // Initial UI update
-        updateRoutePointsUI()
-        updateStopsCountText()
+// Then call this method after Firebase data is loaded
+        lifecycleScope.launch {
+            try {
+                val fetchedRoutes = fbrtbRepo.PublishRouteFetcher()
+                if (fetchedRoutes.isNotEmpty()) {
+                    fullRoutePoints.clear()
+                    fullRoutePoints.addAll(fetchedRoutes)
 
+                    // Update UI
+                    updateRoutePointsUI()
+                    updateStopsCountText()
+
+                    // Refresh map with new data
+                    refreshMapWithLoadedData()
+                } else {
+                    initializeDefaultRoutePoints()
+                }
+            } catch (e: Exception) {
+                Log.e("SmartRoutePlanner", "Error fetching route from Firebase: ${e.message}")
+                initializeDefaultRoutePoints()
+            }
+        }
         return binding.root
+    }
+
+    private fun initializeDefaultRoutePoints() {
+        // Try to fetch current location
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    fullRoutePoints.add(
+                        RoutePointDataClass(
+                            "Current Location",
+                            location.latitude,
+                            location.longitude,
+                            isStartPoint = true
+                        )
+                    )
+                } else {
+                    fullRoutePoints.add(
+                        RoutePointDataClass(
+                            "Set Start Point",
+                            0.0,
+                            0.0,
+                            isStartPoint = true
+                        )
+                    )
+                }
+
+                // Add placeholder end point
+                fullRoutePoints.add(
+                    RoutePointDataClass(
+                        "Set Destination",
+                        0.0,
+                        0.0,
+                        isEndPoint = true
+                    )
+                )
+
+                updateRoutePointsUI()
+                updateStopsCountText()
+            }
+        } else {
+            // Add placeholder points
+            fullRoutePoints.add(
+                RoutePointDataClass(
+                    "Set Start Point",
+                    0.0,
+                    0.0,
+                    isStartPoint = true
+                )
+            )
+            fullRoutePoints.add(
+                RoutePointDataClass(
+                    "Set Destination",
+                    0.0,
+                    0.0,
+                    isEndPoint = true
+                )
+            )
+
+            updateRoutePointsUI()
+            updateStopsCountText()
+        }
+    }
+
+    private fun refreshMapWithLoadedData() {
+        // Check if WebView is loaded and we have valid route points
+        if (::webView.isInitialized && fullRoutePoints.isNotEmpty()) {
+            val validRoutePoints = fullRoutePoints.filter {
+                it.latitude != 0.0 || it.longitude != 0.0
+            }
+
+            if (validRoutePoints.isNotEmpty()) {
+                // Center map on start point or first valid point
+                val startPoint = validRoutePoints.firstOrNull { it.isStartPoint }
+                    ?: validRoutePoints.first()
+
+                updateMapLocation(startPoint.latitude, startPoint.longitude)
+
+                // Create route if we have enough points
+                if (validRoutePoints.size >= 2) {
+                    mediator_createRouteToDestination_ForInitialRoutes()
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -652,6 +707,11 @@ class SmartRoutePlannerFragment: Fragment() {
         val share = dialog.findViewById<RelativeLayout>(R.id.btnShareRoute)
         val google = dialog.findViewById<RelativeLayout>(R.id.btnRedirectToGoogleMaps)
         val oldRouteSetter = dialog.findViewById<RelativeLayout>(R.id.btnOldRoute)
+        val publishRoute = dialog.findViewById<RelativeLayout>(R.id.btnPublish)
+
+        if((GlobalClass.GroupDetails_Everything?.owner?.uid==GlobalClass.Me?.uid)||(GlobalClass.GroupDetails_Everything?.admins?.any { it.uid == GlobalClass.Me?.uid }==true)){
+            publishRoute?.visibility=View.VISIBLE
+        }
 
         share?.setOnClickListener {
             shareGoogleMapsRoute(generateRouteGoogleMapsLink())
@@ -686,6 +746,14 @@ class SmartRoutePlannerFragment: Fragment() {
 
             dialog.dismiss()
         }
+
+        publishRoute?.setOnClickListener {
+            lifecycleScope.launch {
+                fbrtbRepo.PublishRoutePusher(fullRoutePoints)
+            }
+            dialog.dismiss()
+        }
+
 
         dialog.show()
     }
@@ -782,13 +850,33 @@ class SmartRoutePlannerFragment: Fragment() {
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                // Center map on initial start point
-                val startPoint = fullRoutePoints.firstOrNull { it.isStartPoint }
 
-                if (startPoint != null && (startPoint.latitude != 0.0 || startPoint.longitude != 0.0)) {
-                    updateMapLocation(startPoint.latitude, startPoint.longitude)
+                // Check if we have valid route points to display
+                val validRoutePoints = fullRoutePoints.filter {
+                    it.latitude != 0.0 || it.longitude != 0.0
+                }
+
+                if (validRoutePoints.isNotEmpty()) {
+                    // If we have a valid start point, center on it
+                    val startPoint = validRoutePoints.firstOrNull { it.isStartPoint }
+                    if (startPoint != null) {
+                        updateMapLocation(startPoint.latitude, startPoint.longitude)
+
+                        // If we have enough points for a route, create it
+                        if (validRoutePoints.size >= 2) {
+                            // Small delay to ensure map is fully loaded
+                            view?.postDelayed({
+                                mediator_createRouteToDestination_ForInitialRoutes()
+                            }, 500)
+                        }
+                    } else {
+                        // Center on first valid point
+                        val firstValid = validRoutePoints.first()
+                        updateMapLocation(firstValid.latitude, firstValid.longitude)
+                    }
                 } else {
-                    updateMapLocation(28.6139, 77.2090) // Default to New Delhi
+                    // Default to New Delhi if no valid points
+                    updateMapLocation(28.6139, 77.2090)
                 }
             }
 
