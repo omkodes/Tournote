@@ -569,12 +569,7 @@ class SmartRoutePlannerFragment: Fragment() {
             binding.txtSearch.requestFocus()
             showKeyboard(binding.txtSearch)
             val currentStartName = fullRoutePoints.firstOrNull { it.isStartPoint }?.name
-
-            if (currentStartName != "Current Location") {
-                binding.txtSearch.setText(currentStartName)
-            } else {
-                binding.txtSearch.setText("")
-            }
+            binding.txtSearch.setText("")
 
             binding.txtSearch.setSelection(binding.txtSearch.text.length)
         }
@@ -587,7 +582,7 @@ class SmartRoutePlannerFragment: Fragment() {
             binding.txtSearch.requestFocus()
             showKeyboard(binding.txtSearch)
             val currentEndName = fullRoutePoints.firstOrNull { it.isEndPoint }?.name
-            binding.txtSearch.setText(currentEndName)
+            binding.txtSearch.setText("")
 
             binding.txtSearch.setSelection(binding.txtSearch.text.length)
         }

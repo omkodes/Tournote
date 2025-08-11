@@ -32,6 +32,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="visible"
         android:elevation="8dp"
+        android:paddingHorizontal="5dp"
         android:paddingTop="6dp"
         >
 
@@ -52,9 +53,9 @@
                 android:layout_centerHorizontal="true">
                 <ImageView
                     android:id="@+id/imgSmartRoute"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/smartplanneractive"/>
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/trackfriendsactive"/>
                 <TextView
                     android:id="@+id/txtSmartRoute"
                     android:layout_width="wrap_content"
@@ -63,7 +64,7 @@
                     android:textAlignment="center"
                     android:textStyle="bold"
                     android:layout_marginTop="5dp"
-                    android:textSize="12sp"
+                    android:textSize="10sp"
                     android:layout_marginBottom="5dp"
                     android:textColor="@color/focused_feature_button_colour"
                     />
@@ -88,8 +89,8 @@
                 android:layout_centerHorizontal="true">
                 <ImageView
                     android:id="@+id/imgMemories"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/memoriesnotactive"/>
                 <TextView
                     android:id="@+id/txtMemories"
@@ -99,7 +100,7 @@
                     android:textStyle="bold"
                     android:textAlignment="center"
                     android:layout_marginTop="5dp"
-                    android:textSize="13sp"
+                    android:textSize="11sp"
                     android:layout_marginBottom="5dp"
                     android:textColor="@color/unfocused_feature_text_colour"
                     />
@@ -123,8 +124,8 @@
                 android:layout_centerHorizontal="true">
                 <ImageView
                     android:id="@+id/imgExpenses"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/expensenotactive"/>
                 <TextView
                     android:id="@+id/txtExpenses"
@@ -133,7 +134,7 @@
                     android:text="Expenses"
                     android:layout_marginTop="5dp"
                     android:textStyle="bold"
-                    android:textSize="13sp"
+                    android:textSize="11sp"
                     android:layout_marginBottom="5dp"
                     android:textColor="@color/unfocused_feature_text_colour"
                     />
@@ -158,8 +159,8 @@
                 android:layout_centerHorizontal="true">
                 <ImageView
                     android:id="@+id/imgChats"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/chatsnotactive"/>
                 <TextView
                     android:id="@+id/txtChats"
@@ -169,7 +170,7 @@
                     android:textStyle="bold"
                     android:textAlignment="center"
                     android:layout_marginTop="5dp"
-                    android:textSize="13sp"
+                    android:textSize="11sp"
                     android:layout_marginBottom="5dp"
                     android:textColor="@color/unfocused_feature_text_colour"
                     />
@@ -193,9 +194,9 @@
                 android:layout_centerHorizontal="true">
                 <ImageView
                     android:id="@+id/imgTrackGroupMates"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/trackfriendsnotactive"/>
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/smartplannernotactive"/>
                 <TextView
                     android:id="@+id/txtTrackGroupMates"
                     android:layout_width="wrap_content"
@@ -204,7 +205,7 @@
                     android:textStyle="bold"
                     android:textAlignment="center"
                     android:layout_marginTop="5dp"
-                    android:textSize="13sp"
+                    android:textSize="11sp"
                     android:layout_marginBottom="5dp"
                     android:textColor="@color/unfocused_feature_text_colour"
                     />

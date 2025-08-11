@@ -8,7 +8,7 @@
     <color name="lightBlue">#B5E2FA</color>
     <color name="light">#F9F7F3</color>
     <color name="theme">#112E31</color>
-    <color name="bluetext">#B5E2FA</color>
+<!--    <color name="bluetext">#B5E2FA</color>-->
 
     <color name="text_primary">#E0E0E0</color>
     <color name="selected_bg">#245056</color>
