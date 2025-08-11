@@ -166,37 +166,57 @@ class LogInActivity : AppCompatActivity() {
 
         viewModel.googleResponse.observe(this) { user ->
             if (user != null) {
-                Log.e("error authViewModel", "Google Sign In successful: ${user.email}")
+                Log.e("authViewModel", "Google Sign In successful: ${user.email}")
+
+                // Immediately show loader so UI doesn't freeze without feedback
+                viewModel.isLoading.value = true
+
                 val email = user.email ?: ""
                 val name = user.displayName ?: ""
                 val userId = user.uid
-                CoroutineScope(Dispatchers.Main).launch {
-                    Log.d("authViewModel", "saveFCM called with userId: $userId")
-                    viewModel.saveFCM(userId)
-                    Log.d("authViewModel", "saveFCM call finished.")
-                    val snapshot = viewModel.repo.userDetailGetLogin(userId)
-                    Log.d("authViewModel", "userDetailGetLogin call finished.")
-                    if (snapshot == null) {
-                        // Network error or permission issue
-                        Toast.makeText(this@LogInActivity, "Network error or permission issue", Toast.LENGTH_SHORT).show()
-                    } else if (!snapshot.exists()) {
-                        // User does not exist
-                        phone_Dialog(name, email, userId)
-                    } else {
 
+                // Set a basic user object for instant reflection in UI
+                GlobalClass.Me = UserModel(
+                    uid = userId,
+                    email = email,
+                    name = name,
+                    phoneNumber = "",
+                    profilePic = user.photoUrl?.toString() ?: ""
+                )
+
+                lifecycleScope.launch {
+                    try {
+                        viewModel.saveFCM(userId)
+                        val snapshot = withContext(Dispatchers.IO) {
+                            viewModel.repo.userDetailGetLogin(userId)
+                        }
+
+                        if (snapshot == null) {
+                            Toast.makeText(this@LogInActivity, "Network error or permission issue", Toast.LENGTH_SHORT).show()
+                        } else if (!snapshot.exists()) {
+                            // No DB record — ask for phone number
+                            phone_Dialog(name, email, userId)
+                        } else {
+                            // DB record found — update GlobalClass.Me and save
+                            GlobalClass.Me = snapshot.getValue(UserModel::class.java)
+                            saveUserToSharedPreff(GlobalClass.Me!!)
+                            Toast.makeText(this@LogInActivity, "Login successful", Toast.LENGTH_SHORT).show()
+
+                            startActivity(Intent(this@LogInActivity, GroupSelectorActivity::class.java).apply {
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            })
+                            finish()
+                        }
+                    } catch (e: Exception) {
+                        Log.e("GoogleLogin", "Error: ${e.message}", e)
+                        Toast.makeText(this@LogInActivity, "Something went wrong", Toast.LENGTH_SHORT).show()
+                    } finally {
                         viewModel.isLoading.value = false
-                        Toast.makeText(this@LogInActivity, "Login successful", Toast.LENGTH_SHORT)
-                            .show()
-                        saveUserToSharedPreff((GlobalClass.Me)!!)
-                        val intent = Intent(this@LogInActivity, GroupSelectorActivity::class.java)
-                        intent.flags =
-                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                        finish()
                     }
                 }
             }
         }
+
 
 
         viewModel.loginError.observe(this)
