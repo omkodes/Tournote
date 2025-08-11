@@ -162,13 +162,10 @@ class LogInActivity : AppCompatActivity() {
         return isValid
     }
 
-    private fun observeModel(){
-
+    private fun observeModel() {
         viewModel.googleResponse.observe(this) { user ->
             if (user != null) {
                 Log.e("authViewModel", "Google Sign In successful: ${user.email}")
-
-                // Immediately show loader so UI doesn't freeze without feedback
                 viewModel.isLoading.value = true
 
                 val email = user.email ?: ""
@@ -193,42 +190,40 @@ class LogInActivity : AppCompatActivity() {
 
                         if (snapshot == null) {
                             Toast.makeText(this@LogInActivity, "Network error or permission issue", Toast.LENGTH_SHORT).show()
+                            viewModel.isLoading.value = false // Hide loader on network error
                         } else if (!snapshot.exists()) {
                             // No DB record — ask for phone number
+                            viewModel.isLoading.value = false // Hide loader before showing dialog
                             phone_Dialog(name, email, userId)
                         } else {
                             // DB record found — update GlobalClass.Me and save
                             GlobalClass.Me = snapshot.getValue(UserModel::class.java)
-                            saveUserToSharedPreff(GlobalClass.Me!!)
-                            Toast.makeText(this@LogInActivity, "Login successful", Toast.LENGTH_SHORT).show()
-
-                            startActivity(Intent(this@LogInActivity, GroupSelectorActivity::class.java).apply {
-                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            })
-                            finish()
+                            GlobalClass.Me?.let {
+                                saveUserToSharedPreff(it)
+                                Toast.makeText(this@LogInActivity, "Login successful", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(this@LogInActivity, GroupSelectorActivity::class.java).apply {
+                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                })
+                                finish()
+                            }
                         }
                     } catch (e: Exception) {
                         Log.e("GoogleLogin", "Error: ${e.message}", e)
                         Toast.makeText(this@LogInActivity, "Something went wrong", Toast.LENGTH_SHORT).show()
-                    } finally {
-                        viewModel.isLoading.value = false
+                        viewModel.isLoading.value = false // Hide loader on any exception
                     }
                 }
             }
         }
 
-
-
-        viewModel.loginError.observe(this)
-        { error ->
+        viewModel.loginError.observe(this) { error ->
             error?.let {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                viewModel.isLoading.value = false // Hide loader on login error
             }
         }
 
-        viewModel.isLoading.observe(this)
-        { loading ->
-            // Show/hide progress bar based on `loading`
+        viewModel.isLoading.observe(this) { loading ->
             binding.progressBar.visibility = if (loading == true) View.VISIBLE else View.GONE
         }
 
@@ -251,29 +246,28 @@ class LogInActivity : AppCompatActivity() {
 
         viewModel.navigateToMain.observe(this) { shouldNavigate ->
             if (shouldNavigate) {
-                saveUserToSharedPreff((GlobalClass.Me)!!)
+                GlobalClass.Me?.let {
+                    saveUserToSharedPreff(it)
+                }
                 val intent = Intent(this, GroupSelectorActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
-                finish() // 👈 kills the hosting activity so it's not in the back stack
+                finish()
                 viewModel.clearRoleLoadingMain()
             }
         }
-
     }
 
-    fun saveUserToSharedPreff(user : UserModel){
+    fun saveUserToSharedPreff(user: UserModel) {
         sharedPrefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-
         sharedPrefs.edit()
-            .putString(PREF_UID,user.uid)
-            .putString(PREF_UEMAIL,user.email)
-            .putString(PREF_UNAME,user.name)
-            .putString(PREF_UPHONE,user.phoneNumber)
-            .putString(PREF_UPROFILEPIC,user.profilePic)
+            .putString(PREF_UID, user.uid)
+            .putString(PREF_UEMAIL, user.email)
+            .putString(PREF_UNAME, user.name)
+            .putString(PREF_UPHONE, user.phoneNumber)
+            .putString(PREF_UPROFILEPIC, user.profilePic)
             .apply()
     }
-
 
     fun phone_Dialog(name: String, email: String, userId: String?) {
         phone_dialog = BottomSheetDialog(this)
