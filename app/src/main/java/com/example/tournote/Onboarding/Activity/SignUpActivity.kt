@@ -265,21 +265,35 @@ class SignUpActivity : AppCompatActivity() {
         viewModel.googleResponse.observe(this) { user ->
             if (user != null) {
                 Log.e("error SignUpActivity", "Google Sign In successful: ${user.email}")
+                // Start the loading process
+                viewModel.isLoading.value = true
+
                 val email = user.email ?: ""
                 val name = user.displayName ?: ""
                 val userId = user.uid
                 CoroutineScope(Dispatchers.Main).launch {
-                    viewModel.saveFCM(userId)
-                    val snapshot = viewModel.repo.userDetailGetLogin(userId)
-                    if (snapshot == null) {
-                        // Network error or permission issue
-                        Toast.makeText(this@SignUpActivity, "Network error or permission issue", Toast.LENGTH_SHORT).show()
-                    } else if (!snapshot.exists()) {
-                        // User does not exist
-                        phone_Dialog(name, email, userId)
-                    } else {
-                        // User exists, proceed
-                        Toast.makeText(this@SignUpActivity, "User already exists", Toast.LENGTH_SHORT).show()
+                    try {
+                        viewModel.saveFCM(userId)
+                        val snapshot = viewModel.repo.userDetailGetLogin(userId)
+
+                        if (snapshot == null) {
+                            // Network error or permission issue
+                            Toast.makeText(this@SignUpActivity, "Network error or permission issue", Toast.LENGTH_SHORT).show()
+                            viewModel.isLoading.value = false // Hide loader on network error
+                        } else if (!snapshot.exists()) {
+                            // User does not exist, ask for phone number
+                            viewModel.isLoading.value = false // Hide loader before showing dialog
+                            phone_Dialog(name, email, userId)
+                        } else {
+                            // User exists, stop loading and inform the user
+                            Toast.makeText(this@SignUpActivity, "User already exists", Toast.LENGTH_SHORT).show()
+                            viewModel.isLoading.value = false // Hide loader when user already exists
+                        }
+                    } catch (e: Exception) {
+                        // Catch any other exceptions and hide the loader
+                        Log.e("SignUp", "Error during Google sign-up: ${e.message}", e)
+                        Toast.makeText(this@SignUpActivity, "An unexpected error occurred", Toast.LENGTH_SHORT).show()
+                        viewModel.isLoading.value = false
                     }
                 }
             }
@@ -287,15 +301,17 @@ class SignUpActivity : AppCompatActivity() {
         viewModel.loginError.observe(this) { error ->
             error?.let {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                viewModel.isLoading.value = false // Hide loader on login error
             }
         }
         viewModel.isLoading.observe(this) { loading ->
-            binding.progressBar.visibility = if (loading == true) View.VISIBLE else View.GONE
+            binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
         }
         viewModel.toastmsg.observe(this) {
             it?.let {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
                 viewModel.clearToast()
+                viewModel.isLoading.value = false // Hide loader after showing a toast message from a task
             }
         }
         viewModel.navigateToLogin.observe(this) {
@@ -309,11 +325,13 @@ class SignUpActivity : AppCompatActivity() {
         }
         viewModel.navigateToMain.observe(this) { shouldNavigate ->
             if (shouldNavigate) {
-                saveUserToSharedPreff((GlobalClass.Me)!!)
+                GlobalClass.Me?.let {
+                    saveUserToSharedPreff(it)
+                }
                 val intent = Intent(this, GroupSelectorActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
-                finish() // 👈 kills the hosting activity so it's not in the back stack
+                finish()
                 viewModel.clearRoleLoadingMain()
             }
         }
@@ -326,7 +344,7 @@ class SignUpActivity : AppCompatActivity() {
         phone_dialog.setCancelable(true)
         phone_dialog.show()
 
-        var code : String?= null
+        var code: String? = null
 
         val spinner = phone_dialog.findViewById<Spinner>(R.id.cmbcountrycode)
         val countryCodes = resources.getStringArray(R.array.country_codes)
@@ -339,6 +357,8 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
         spinner?.adapter = adapter
+
+        // Explicitly handle cancellation of the dialog to hide the loader
         phone_dialog.setOnCancelListener {
             viewModel.isLoading.value = false
         }
@@ -376,12 +396,9 @@ class SignUpActivity : AppCompatActivity() {
             } else {
                 val fullPhone = "$code$phone"
                 viewModel.user_dataTO_firebase(userId, name, email, fullPhone, "null")
+                phone_dialog.dismiss() // Dismiss the dialog after initiating the Firebase call
             }
-
         }
-
-
-
     }
 
 }
