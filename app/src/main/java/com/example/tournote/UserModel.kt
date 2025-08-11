@@ -5,9 +5,9 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class UserModel(
-    val uid: String,
-    val email: String,
-    var name: String,
-    val phoneNumber: String,
+    var uid: String = "",
+    var email: String = "",
+    var name: String = "",
+    var phoneNumber: String = "",
     var profilePic: String? = "null"
 ):Parcelable
