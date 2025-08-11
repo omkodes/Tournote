@@ -1,6 +1,7 @@
 package com.example.tournote.Database.RemoteDatabase
 
 import android.util.Log
+import com.example.tournote.Functionality.Segments.SmartRoutePlanner.DataClass.RoutePointDataClass
 import com.example.tournote.GlobalClass
 import com.example.tournote.GroupData_Detailed_Model
 import com.example.tournote.UserModel
@@ -436,6 +437,75 @@ class FirebaseRTDBRepository (){
             throw e
         }
 
+    }
+
+    suspend fun PublishRouteFetcher(): List<RoutePointDataClass> {
+        try {
+            val groupID = GlobalClass.selected_groupId ?: return emptyList()
+            val groupRef = db.getReference("groups").child(groupID).child("FinalisedRoute")
+
+            // Get the raw route string from Firebase
+            val snapshot = groupRef.get().await()
+            val routeString = snapshot.getValue(String::class.java) ?: return emptyList()
+
+            // Remove outer braces { ... }
+            val trimmed = routeString.removePrefix("{").removeSuffix("}")
+            if (trimmed.isBlank()) return emptyList()
+
+            val segments = trimmed.split(";")
+            val finalList = mutableListOf<RoutePointDataClass>()
+
+            segments.forEachIndexed { index, segment ->
+                // Remove parentheses around each point
+                val pointData = segment.removePrefix("(").removeSuffix(")")
+                val parts = pointData.split("|")
+
+                if (parts.size == 3) {
+                    val name = parts[0]
+                    val lat = parts[1].toDoubleOrNull() ?: 0.0
+                    val lon = parts[2].toDoubleOrNull() ?: 0.0
+
+                    finalList.add(
+                        RoutePointDataClass(
+                            name = name,
+                            latitude = lat,
+                            longitude = lon,
+                            isStartPoint = index == 0,
+                            isEndPoint = index == segments.size - 1
+                        )
+                    )
+                }
+            }
+
+            return finalList
+
+        } catch (e: Exception) {
+            Log.e("PublishRoute", "Error fetching finalised route: ${e.message}")
+            return emptyList()
+        }
+    }
+
+
+
+    suspend fun PublishRoutePusher(fullRoutePoints : List<RoutePointDataClass>){
+        try {
+            val groupID = GlobalClass.selected_groupId ?: return
+            val groupRef = db.getReference("groups").child(groupID).child("FinalisedRoute")
+
+            //format of data {(name,lat,long);(name,lat,long)...;(name,lat,long)}
+            var finalString = "{"
+            for(waypoint in fullRoutePoints){
+                finalString+="(${waypoint.name}|${waypoint.latitude}|${waypoint.longitude})"
+                if(waypoint.isEndPoint!=true){
+                    finalString+=";"
+                }
+            }
+            finalString+="}"
+            groupRef.setValue(finalString).await()
+
+        } catch (e: Exception) {
+            Log.e("PublishRoute", "Error publishing finalised route: ${e.message}")
+        }
     }
 
 }
