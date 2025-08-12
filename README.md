@@ -206,9 +206,9 @@ Built by:
 
 ## 📬 Contact
 
-📧 **Parth:** parthpshroff@gmail.com — [GitHub](https://github.com/parth-shroff)
+📧 **Parth:** parthpshroff@gmail.com — [GitHub](https://github.com/parthpranav2)
 
-📧 **Omkar:** sanapomkar685@gmail.com — [GitHub](https://github.com/Omkarsanap-019)
+📧 **Omkar:** sanapomkar685@gmail.com — [GitHub](https://github.com/Omkarsanap-19)
 
 🔗 **GitHub Project:** [Tournote](https://github.com/Parthpranav2/Tournote)
 
