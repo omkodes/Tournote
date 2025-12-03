@@ -58,6 +58,7 @@
 - **Optimal Routing:** Calculate the shortest route covering all waypoints.  
 - **Interactive Maps:** Visualize your routes in an embedded WebView map.  
 - **Redirect to Google Maps:** Get directions for the finalized route and share it.
+- **Finalised Route:** Publish finalised route to intimate to other group members.
 
 ### 6. 📍 Track Friends
 - **Live Location:** Share and view real-time locations of group members. 🌐  
@@ -198,18 +199,18 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 Built by:
 
-- **Parth Shroff** - [GitHub](https://github.com/parth-shroff)
-- **Omkar Sanap** - [GitHub](https://github.com/omkar-sanap)
+- **Parth Shroff** - [Linkedin](https://www.linkedin.com/in/parth-shroff-0655ba320?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)
+- **Omkar Sanap** - [Linkedin](https://www.linkedin.com/in/omkar-sanap-app?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)
 
 ---
 
 ## 📬 Contact
 
-📧 **Parth:** parthpshroff@gmail.com — [GitHub](https://github.com/parth-shroff)
+📧 **Parth:** parthpshroff@gmail.com — [GitHub](https://github.com/parthpranav2)
 
-📧 **Omkar:** sanapomkar685@gmail.com — [GitHub](https://github.com/omkar-sanap)
+📧 **Omkar:** sanapomkar685@gmail.com — [GitHub](https://github.com/Omkarsanap-19)
 
-🔗 **GitHub Project:** [Tournote](https://github.com/your-org/tournote)
+🔗 **GitHub Project:** [Tournote](https://github.com/Parthpranav2/Tournote)
 
 ---
 
