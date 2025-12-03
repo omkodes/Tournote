@@ -49,6 +49,8 @@ import okhttp3.Request
 import okhttp3.Response
 import org.json.JSONArray
 import java.io.IOException
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 class SmartRoutePlannerFragment: Fragment() {
 
@@ -754,10 +756,20 @@ class SmartRoutePlannerFragment: Fragment() {
     }
 
     private fun performGeocodingSearch(query: String) {
-        val url = "https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=10"
+        /*val url = "https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=10"
         val request = Request.Builder()
             .url(url)
             .header("User-Agent", "TourNoteAndroidApp/1.0 (contact@example.com - replace with your app info)")
+            .build()*/
+
+        val encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8.toString())
+        val url = "https://nominatim.openstreetmap.org/search?format=json&q=$encodedQuery&limit=10"
+        val request = Request.Builder()
+            .url(url)
+            .header(
+                "User-Agent",
+                "TourNote/1.0 ({${GlobalClass.Me?.email.toString()}})" // put REAL email / URL here
+            )
             .build()
         httpClient.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
