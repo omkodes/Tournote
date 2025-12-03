@@ -73,7 +73,12 @@ class SmartRoutePlannerFragment: Fragment() {
     private val geocodingResultsList = mutableListOf<GeocodingResultsDataClass>()
     private val searchScope = CoroutineScope(Dispatchers.Main)
     private var searchJob: Job? = null
-    private val httpClient = OkHttpClient()
+    private val httpClient = OkHttpClient.Builder()
+        .connectTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
+        .readTimeout(20, java.util.concurrent.TimeUnit.SECONDS)
+        .writeTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
+        .build()
+
 
     private var RouteTime: Int = 0
     private var RouteDistance: Int = 0
@@ -797,10 +802,14 @@ class SmartRoutePlannerFragment: Fragment() {
                         for (i in 0 until jsonArray.length()) {
                             val jsonObject = jsonArray.getJSONObject(i)
                             val name = jsonObject.optString("display_name")
-                            val lat = jsonObject.optDouble("lat")
-                            val lon = jsonObject.optDouble("lon")
 
-                            if (name.isNotEmpty() && lat != 0.0 && lon != 0.0) {
+                            val latString = jsonObject.optString("lat")
+                            val lonString = jsonObject.optString("lon")
+
+                            val lat = latString.toDoubleOrNull()
+                            val lon = lonString.toDoubleOrNull()
+
+                            if (name.isNotEmpty() && lat != null && lon != null) {
                                 results.add(GeocodingResultsDataClass(name, lat, lon))
                             }
                         }
