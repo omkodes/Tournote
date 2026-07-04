@@ -16,11 +16,12 @@
    - [Onboarding & Authentication](#7-onboarding--authentication)  
 2. [Tech Stack](#️-tech-stack)  
 3. [Setup and Installation](#setup-and-installation)  
-4. [Usage](#usage)  
-5. [Screenshots](#️-screenshots)  
-6. [Contributing](#contributing)  
-7. [License](#license)  
-8. [Contact](#contact)
+4. [Usage](#usage)
+5. [Presentation](#-presentation)
+6. [Screenshots](#️-screenshots)  
+7. [Contributing](#contributing)  
+8. [License](#license)  
+9. [Contact](#contact)
 
 
 ---
@@ -121,6 +122,14 @@
 5. **Plan Routes:** Use the route planner to visualize your travel itinerary.
 
 6. **Track Friends:** Enable location sharing to view friends on the map.
+
+---
+
+## 🎬 Presentation 
+
+The demonstration of the application:
+
+**Demo Video:** https://drive.google.com/file/d/1cQ2cYO6aJdclv5EONrPWfpLeO19ohxYa/view
 
 ---
 
